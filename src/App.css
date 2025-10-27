@@ -1,0 +1,606 @@
+:root {
+  --purple: #3f0f5a;
+  --purple-dark: #2d0738;
+  --accent: #e93b68;
+  --topbar-height: 72px;
+  --subnav-height: 50px;
+}
+
+/* Basic reset and fonts */
+* {
+  box-sizing: border-box;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #fff;
+}
+
+/* Reserve space to prevent jump when sticky elements appear */
+body {
+  scroll-padding-top: calc(var(--topbar-height) + var(--subnav-height));
+}
+
+/* ---------- TOPBAR ---------- */
+.topbar {
+  background: #ffffff;
+  color: #2d0738;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: var(--topbar-height);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+}
+
+.topbar-left {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.logo {
+  font-weight: 800;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+.logo-img {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  cursor: pointer;
+}
+.location {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 8px 12px;
+  border-radius: 18px;
+  color: #2d0738;
+  font-weight: 500;
+}
+
+/* center search */
+.topbar-center {
+  color: black;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.top-search {
+  color: black;
+  width: 60%;
+  min-width: 180px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  outline: none;
+  border: 0.7px solid #000;
+  background: #fff;
+}
+.top-search::placeholder {
+  color: #777;
+}
+
+/* right side actions */
+.topbar-right {
+  color: black;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.top-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.action {
+  cursor: pointer;
+  opacity: 0.95;
+  color: var(--purple);
+  font-weight: 500;
+}
+.call {
+  color: #2d0738;
+  font-size: 14px;
+  opacity: 0.95;
+}
+
+/* ---------- TRANSLUCENT SUBNAV ---------- */
+.subnav {
+  position: sticky;
+  top: var(--topbar-height);
+  z-index: 900;
+  height: var(--subnav-height);
+  padding: 10px 0;
+  
+  /* translucent glass effect */
+  background: rgba(84, 0, 21, 0.65); /* same color but semi-transparent */
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  color: #fff;
+  transition: background 0.4s ease, backdrop-filter 0.3s ease;
+}
+.subnav-inner {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 0 28px;
+  overflow: auto;
+}
+.sub-item {
+  white-space: nowrap;
+  cursor: pointer;
+  opacity: 0.95;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+.sub-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- HERO / CAROUSEL ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(#f6eaf5, #f2e9f8);
+}
+
+/* dynamic height */
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 65vh;
+  min-height: 360px;
+  max-height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  display: block;
+}
+.slide.active {
+  opacity: 1;
+}
+
+/* image fills slide; focus on right side */
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 70% 50%;
+  display: block;
+  filter: brightness(0.7) saturate(1.1);
+}
+
+/* left gradient overlay for contrast */
+.carousel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 48%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(15, 15, 15, 0.65) 0%, rgba(15, 15, 15, 0.25) 40%, rgba(0, 0, 0, 0) 100%);
+  z-index: 2;
+}
+
+/* hero text */
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 6%;
+  transform: translateY(-50%);
+  color: #fff;
+  max-width: 46%;
+  z-index: 3;
+}
+.hero-text h1 {
+  font-size: clamp(1.6rem, 3.2vw, 3rem);
+  margin: 6px 0;
+  font-weight: 700;
+}
+.hero-text p {
+  margin: 6px 0 16px;
+  font-size: clamp(0.9rem, 1.1vw, 1.2rem);
+  opacity: 0.95;
+}
+.primary {
+  background: var(--accent);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(233, 59, 104, 0.18);
+}
+
+/* arrows */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.22);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 4;
+}
+.arrow.left {
+  left: 14px;
+}
+.arrow.right {
+  right: 14px;
+}
+
+/* dots */
+.dots {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  display: flex;
+  gap: 8px;
+  z-index: 4;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  display: inline-block;
+  cursor: pointer;
+}
+.dot.active {
+  background: white;
+  transform: scale(1.2);
+}
+
+/* ---------- TOGGLE PILL ---------- */
+.toggle-card {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+.pill {
+  background: white;
+  padding: 8px;
+  border-radius: 12px;
+  box-shadow: 0 10px 26px rgba(15, 15, 15, 0.08);
+  display: flex;
+  gap: 6px;
+}
+.pill-btn {
+  padding: 12px 28px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  font-weight: 600;
+}
+.pill-btn.active {
+  background: var(--purple);
+  color: white;
+  box-shadow: 0 8px 18px rgba(63, 15, 90, 0.18);
+}
+
+/* ---------- BENEFITS ---------- */
+.benefits {
+  padding: 36px 20px;
+  background: linear-gradient(#f3e9f6, #fff);
+  text-align: center;
+}
+.benefits h2 {
+  color: var(--purple);
+  margin-bottom: 18px;
+}
+.cards {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.card {
+  background: white;
+  padding: 18px;
+  border-radius: 14px;
+  min-width: 200px;
+  max-width: 320px;
+  box-shadow: 0 8px 18px rgba(51, 20, 66, 0.05);
+  text-align: left;
+}
+
+/* ---------- FOOTER ---------- */
+.footer {
+  padding: 22px;
+  text-align: center;
+  color: #666;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 1024px) {
+  .carousel {
+    height: 52vh;
+    min-height: 300px;
+  }
+  .carousel::before {
+    width: 56%;
+  }
+  .hero-text {
+    max-width: 60%;
+    left: 5%;
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel {
+    height: 45vh;
+    min-height: 260px;
+  }
+  .slide img {
+    height: 100%;
+  }
+  .hero-text {
+    left: 6%;
+    top: 22%;
+    transform: none;
+    max-width: 72%;
+  }
+  .hero-text h1 {
+    font-size: 1.4rem;
+  }
+  .hero-text p {
+    font-size: 0.95rem;
+  }
+  .topbar {
+    padding: 10px 12px;
+    flex-wrap: wrap;
+    height: auto;
+  }
+  .topbar-center {
+    order: 3;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .top-search {
+    width: 100%;
+  }
+  .top-actions {
+    display: none;
+  }
+  .subnav-inner {
+    padding: 0 12px;
+    gap: 12px;
+  }
+  .toggle-card {
+    margin-top: 8px;
+  }
+  .cards {
+    flex-direction: column;
+    align-items: center;
+  }
+  .carousel::before {
+    width: 100%;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.15) 40%, rgba(0, 0, 0, 0) 100%);
+  }
+  .logo-img {
+    height: 48px;
+  }
+}
+
+/* ensure no unexpected gap under carousel */
+.carousel + * {
+  margin-top: 0;
+}
+
+/* ---------- DROPDOWN MENU STYLES ---------- */
+.dropdown {
+  position: relative;
+}
+
+.action {
+  cursor: pointer;
+  opacity: 0.95;
+  color: var(--purple);
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
+.action:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* dropdown content */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  background: #fff;
+  color: #2d0738;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 2000;
+}
+
+/* dropdown item style */
+.dropdown-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.25s ease;
+  font-size: 14px;
+}
+.dropdown-item:hover {
+  background: rgba(127, 10, 205, 0.08);
+}
+
+/* show dropdown on hover */
+.dropdown:hover .dropdown-menu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* keep dropdown visible when hovering over menu */
+.dropdown:hover > .action {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Responsive: hide dropdowns inside menu for mobile (optional tweak later) */
+@media (max-width: 768px) {
+  .dropdown-menu {
+    position: static;
+    box-shadow: none;
+    border-radius: 0;
+    background: transparent;
+    padding: 0;
+  }
+  .dropdown-item {
+    padding: 8px 12px;
+  }
+}
+
+
+
+
+
+/* ---------- FIXED SUBNAV + WORKING DROPDOWNS ---------- */
+
+/* .subnav {
+  position: sticky;
+  top: var(--topbar-height);
+  z-index: 1000;
+  overflow: visible !important;
+  background: rgba(84, 0, 21, 0.65); 
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+} */
+
+.subnav-inner {
+  display: flex;
+  flex-wrap: wrap;        /* ✅ Instead of scroll, wrap to new line on small screens */
+
+  
+  gap: 20px;
+  overflow: visible !important; /* ✅ Let dropdowns show fully */
+}
+
+.dropdown {
+  position: relative;
+}
+
+.sub-item {
+  color: #fbfbfb;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  align-items: center; 
+  transition: background 0.3s ease;
+  white-space: nowrap;
+}
+
+.sub-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* dropdown box */
+.dropdown-menu.dark {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: rgba(244, 243, 243, 0.97);
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
+  padding: 8px 0;
+  min-width: 200px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 9999; /* ✅ ensures it appears on top of everything */
+}
+
+/* show on hover */
+/* .dropdown:hover .dropdown-menu.dark .dropdown-menu.dark:hover {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+} */
+
+.dropdown:hover .dropdown-menu.dark,
+.dropdown-menu.dark:hover {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* dropdown item style */
+.dropdown-item {
+  padding: 10px 16px;
+  font-size: 14px;
+  color: #070606;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+
+.dropdown::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 10px; /* safe hover area */
+}
+
+/* mobile fix: dropdowns stay inline */
+@media (max-width: 768px) {
+  .subnav-inner {
+    flex-wrap: wrap;
+    padding: 10px 16px;
+  }
+  .dropdown-menu.dark {
+    position: static;
+    opacity: 1;
+    transform: none;
+    box-shadow: none;
+    background: transparent;
+    backdrop-filter: none;
+    padding: 0;
+  }
+  .dropdown-item {
+    padding: 8px 12px;
+  }
+}
