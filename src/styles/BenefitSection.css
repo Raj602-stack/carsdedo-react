@@ -1,0 +1,133 @@
+/* ---------- BENEFITS SECTION ---------- */
+.benefits-section {
+    background: linear-gradient(#f6eaf5, #fff);
+    padding: 30px 0;
+    
+    text-align: center;
+  }
+  
+  .benefits-container {
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .toggle-card{
+    margin-bottom:20px;
+  }
+  
+  .benefits-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #3f0f5a;
+    margin-bottom: 30px;
+  }
+  
+  /* Cards Grid */
+  .benefit-cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 30px;
+  }
+  
+  .benefit-card {
+    background: #fff;
+    border-radius: 16px;
+    width: 230px;
+    padding: 12px;
+    text-align: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 8px 20px rgba(63, 15, 90, 0.1);
+  }
+  
+  .benefit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(63, 15, 90, 0.1);
+  }
+  
+  .benefit-image {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 150px;
+  }
+  
+  .benefit-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .benefit-icon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    padding: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .benefit-card h3 {
+    color: #3f0f5a;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-top: 12px;
+  }
+  
+  .benefit-card p {
+    color: #444;
+    font-size: 0.9rem;
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+  
+  /* Footer buttons */
+  .benefit-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .watch-film {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #3f0f5a;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  
+  .browse-cars {
+    background: #e93b68;
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.25s ease;
+  }
+  
+  .browse-cars:hover {
+    background: #cf2e59;
+  }
+  
+  .learn-more {
+    background: none;
+    border: none;
+    color: #3f0f5a;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
