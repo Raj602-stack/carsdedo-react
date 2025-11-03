@@ -1,0 +1,124 @@
+/* Basic section */
+.btc-section {
+    max-width: 1200px;
+    margin: 24px auto 80px;
+    padding: 0 20px;
+    padding-bottom: 100px;
+    text-align: center;
+  }
+  .btc-title {
+    font-size: 28px;
+    color: #3f0f5a;
+    margin: 6px 0 18px;
+    font-weight: 700;
+  }
+  
+  /* Toggle pill */
+  .btc-toggle-wrap { display:flex; justify-content:center; margin-bottom: 28px; }
+  .btc-toggle {
+    display:inline-flex;
+    gap: 12px;
+    background: #b8023325;;
+    padding: 8px;
+    border-radius: 14px;
+    box-shadow: 0 8px 26px rgba(63,15,90,0.06);
+  }
+
+  .btc-icon-img{
+    height: 50px;
+    align-items: center;
+    margin-left: 10px;
+  }
+  .btc-toggle-btn {
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: #6d2b86;
+    min-width: 120px;
+  }
+  .btc-toggle-btn .btc-icon { display:inline-flex; width:36px; height:28px; align-items:center; justify-content:center; color:#6d2b86; }
+  .btc-toggle-btn .btc-label { font-size:14px; color:inherit; }
+  
+  .btc-toggle-btn.active {
+    background: #b802337b;;
+    color: white;
+    box-shadow: 0 8px 18px rgba(74,19,122,0.18);
+  }
+  .btc-toggle-btn.active .btc-icon { color: #fff; }
+  
+  /* Carousel wrapper */
+  .btc-carousel-wrap {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top: 6px;
+  }
+  
+  /* arrows */
+  .btc-arrow {
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    border:none;
+    background:#fff;
+    box-shadow: 0 6px 18px rgba(15,15,15,0.06);
+    cursor:pointer;
+    font-size:22px;
+    color:#4a137a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .btc-arrow:disabled { opacity: 0.35; cursor: default; }
+  
+  /* viewport & track */
+  .btc-viewport { overflow:hidden; flex:1; }
+  .btc-track { display:flex; transition: transform 420ms cubic-bezier(.2,.9,.2,1); align-items:stretch; }
+  
+  /* item and card */
+  .btc-item { padding: 8px; }
+  .btc-card {
+    background:#fff;
+    border-radius:10px;
+    border:1px solid rgba(15,15,15,0.06);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    box-shadow: 0 6px 18px rgba(15,15,15,0.04);
+  }
+  .btc-card-media { background:#fafafa; min-height:160px; display:flex; align-items:center; justify-content:center; }
+  .btc-card-media img { width:100%; height:160px; object-fit:cover; display:block; }
+  .btc-card-body { padding:12px; text-align:left; }
+  .btc-card-title { font-weight:700; color:#3f0f5a; margin-bottom:6px; font-size:16px; }
+  .btc-card-price { color:#6c6c6c; font-weight:700; font-size:18px; }
+  
+  /* CTA */
+  .btc-cta { margin-top:28px; display:flex; justify-content:center; }
+  .btc-view-all {
+    padding:12px 28px;
+    border-radius:28px;
+    border:2px solid #6d2b86;
+    background:transparent;
+    color:#6d2b86;
+    font-weight:700;
+    cursor:pointer;
+  }
+  
+  /* Responsive breakpoints */
+  @media (max-width: 1100px) {
+    .btc-item { width: 50% !important; } /* 2 per row */
+  }
+  @media (max-width: 720px) {
+    .btc-item { width: 100% !important; } /* 1 per row */
+    .btc-card-media img { height:220px; }
+    .btc-toggle { gap:8px; padding:6px; }
+    .btc-toggle-btn { padding:10px 12px; min-width: 80px; font-size:13px; }
+  }
+  

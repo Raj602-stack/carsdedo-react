@@ -8,6 +8,17 @@ import Footer from "./components/Footer";
 import "./styles/App.css"; 
 import BenefitsSection from "./components/BenefitsSection";
 import SellPanel from "./components/SellPanel";
+import HowItWorks from "./components/HowItWorks";
+import CarCatalog from "./components/CarCatalogue";
+import BodyTypeCatalog from "./components/BodyTypeCatalog";
+import BrandsGrid from "./components/BrandsGrid";
+import LocationsSlider from "./components/LocationsSlider";
+import ExploreMore from "./components/ExploreMore";
+import SpinnyBuzz from "./components/SpinnyBuzz";
+import InsightsCards from "./components/InsightsCards";
+import StoriesSection from "./components/StoriesSection";
+import FAQ from "./components/FAQ";
+import WhyBuySection from "./components/WhyBuySection";
 
 
 export default function App() {
@@ -48,6 +59,21 @@ export default function App() {
     </div>
   </div>
 </section>
+
+<HowItWorks/>
+<CarCatalog/>
+<BodyTypeCatalog/>
+<BrandsGrid/>
+
+<LocationsSlider/>
+<ExploreMore/>
+
+<SpinnyBuzz/>
+<InsightsCards/>
+<StoriesSection/>
+<FAQ/>
+<WhyBuySection/>
+<Footer/>
 
 
 

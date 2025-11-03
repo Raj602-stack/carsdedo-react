@@ -3,7 +3,7 @@
 .toggle-card { display:flex; justify-content:center; margin-top:-28px; }
 .pill { background: white; padding:8px; border-radius:12px; box-shadow:0 10px 26px rgba(15,15,15,0.08); display:flex; gap:6px; }
 .pill-btn { padding:12px 28px; border-radius:10px; border:none; cursor:pointer; background:transparent; font-weight:600; color:#6b2b7a; }
-.pill-btn.active { background:#3f0f5a; color:#fff; box-shadow:0 8px 18px rgba(63,15,90,0.18); }
+.pill-btn.active { background:#e93b68; color:#fff; box-shadow:0 8px 18px rgba(63,15,90,0.18); }
 
 /* Container */
 /* .sell-panel { padding: 40px 20px; background: linear-gradient(#f6eaf5,#fff); } */

@@ -1,0 +1,185 @@
+.stories-section {
+    padding: 48px 18px 80px;
+    background: transparent;
+  }
+  
+  .stories-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* title */
+  .stories-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    font-weight: 800;
+    font-size: 30px;
+    color: #2d063b;
+    margin-bottom: 28px;
+  }
+  
+  .rule {
+    flex: 1 1 150px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.02));
+    border-radius: 1px;
+  }
+  
+  /* wrapper + arrows */
+  .stories-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .stories-arrow {
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 8px 22px rgba(63, 15, 90, 0.08);
+    cursor: pointer;
+    font-size: 22px;
+    color: #6f1a7a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  .stories-arrow:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  
+  /* carousel viewport */
+  .stories-viewport {
+    overflow: hidden;
+    flex: 1 1 auto;
+  }
+  .stories-track {
+    display: flex;
+    transition: transform 400ms cubic-bezier(0.25, 0.9, 0.35, 1);
+    gap: 18px;
+  }
+  
+  /* card */
+  .story-card {
+    position: relative;
+    flex: 0 0 calc(100% / 3);
+    height: 420px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 14px;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  
+  /* dark overlay for text readability */
+  .story-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.65) 0%,
+      rgba(0, 0, 0, 0.25) 45%,
+      rgba(0, 0, 0, 0) 80%
+    );
+    z-index: 2;
+  }
+  
+  /* bottom caption area */
+  .story-footer {
+    position: relative;
+    z-index: 3;
+    padding: 18px;
+  }
+  
+  .story-meta {
+    color: #fff;
+  }
+  
+  .story-name {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  
+  .story-name .city {
+    font-weight: 600;
+    opacity: 0.9;
+  }
+  
+  .story-text {
+    font-weight: 400;
+    opacity: 0.95;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  
+  /* hover */
+  .story-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* responsive */
+  @media (max-width: 1000px) {
+    .story-card {
+      flex: 0 0 calc(100% / 2);
+      height: 360px;
+    }
+  }
+  @media (max-width: 600px) {
+    .story-card {
+      flex: 0 0 100%;
+      height: 320px;
+    }
+    .stories-arrow {
+      display: none;
+    }
+  }
+
+  
+  /* logo styling */
+.story-logo {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 90px;          /* adjust size as needed */
+    height: auto;
+    z-index: 5;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+    transition: transform 0.2s ease;
+  }
+  
+  .story-card:hover .story-logo {
+    transform: scale(1.05);
+  }
+  
+  .story-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 6px;
+    vertical-align: middle;
+    transform: translateY(2px);
+  }
+  
+  .story-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 6px;
+    color: #fff;
+  }
+  

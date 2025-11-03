@@ -1,0 +1,194 @@
+/* LocationsSlider.css - paste into your styles folder and import */
+
+/* section */
+.ls-section {
+    padding: 48px 18px 80px;
+    background: linear-gradient(180deg, #ffffff 0%, #faf8fb 100%);
+  }
+  .ls-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* heading with rules */
+  .ls-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    font-weight: 800;
+    font-size: 30px;
+    color: #3f0f5a;
+    margin: 0 0 28px;
+  }
+  .ls-rule {
+    flex: 1 1 150px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02));
+    border-radius: 1px;
+  }
+  
+  /* slider wrapper */
+  .ls-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* arrows */
+  .ls-arrow {
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 8px 22px rgba(63,15,90,0.06);
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 24px;
+    color: #6f1a7a;
+    transition: transform 160ms ease;
+    z-index: 30;
+  }
+  .ls-arrow:disabled { opacity: 0.45; cursor: default; transform:none; }
+  .ls-arrow.left { margin-right: 10px; }
+  .ls-arrow.right { margin-left: 10px; }
+  
+  /* viewport (masked area) */
+  .ls-viewport {
+    overflow: hidden;
+    flex: 1 1 auto;
+  }
+  
+  /* track: long row */
+  .ls-track {
+    display: flex;
+    align-items: stretch;
+    transition: transform 420ms cubic-bezier(.2,.9,.3,1);
+    will-change: transform;
+  }
+  
+  /* single item */
+  .ls-item { display: flex; align-items: stretch; }
+  
+  /* card */
+  .ls-card {
+    border-radius: 14px;
+    padding: 28px 18px;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    color: #fff;
+    position: relative;
+    overflow: visible;
+  }
+  
+  /* title (top) */
+  .ls-card-title {
+    margin: 0;
+    font-weight: 700;
+    font-size: 20px;
+    color: rgba(0,0,0,0.9);
+    text-align: center;
+  }
+  
+  /* diamond container */
+  .ls-diamond-wrap {
+    width: 220px;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 6px;
+  }
+  
+  /* rotated diamond */
+  .ls-diamond {
+    width: 160px;
+    height: 160px;
+    transform: rotate(45deg);
+    overflow: hidden;
+    border-radius: 24px;
+    box-shadow: 0 6px 18px rgba(15,15,15,0.12);
+    background: #fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  
+  /* inner image rotated back so it looks upright */
+  .ls-diamond img {
+    width: 140%;
+    height: 140%;
+    object-fit: cover;
+    transform: rotate(-45deg) translate(0, 0);
+    display:block;
+  }
+  
+  /* meta at bottom */
+  .ls-meta {
+    margin-top: auto;
+    font-weight: 700;
+    color: rgba(0,0,0,0.85);
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    font-size:16px;
+  }
+  
+  /* CTA */
+  .ls-cta { display:flex; justify-content:center; margin-top:28px; }
+  .ls-view-all {
+    border: 2px solid #6f1a7a;
+    background: transparent;
+    color: #6f1a7a;
+    padding: 12px 36px;
+    border-radius: 22px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  
+  /* responsive tweaks */
+  @media (max-width: 1000px) {
+    .ls-diamond-wrap { width: 180px; height: 180px; }
+    .ls-diamond { width: 140px; height: 140px; border-radius: 20px; }
+    .ls-diamond img { width: 160%; height: 160%; }
+    .ls-card { min-height: 300px; padding: 22px 14px; }
+  }
+  
+  @media (max-width: 720px) {
+    .ls-wrapper { gap: 8px; }
+    .ls-card { min-height: 260px; padding: 16px; border-radius: 12px; }
+    .ls-diamond-wrap { width: 140px; height: 140px; }
+    .ls-diamond { width: 110px; height: 110px; border-radius: 18px; }
+    .ls-diamond img { width: 185%; height: 185%; }
+    .ls-title { font-size: 20px; }
+    .ls-rule { display: none; }
+  }
+  
+
+  /* hover lift effect */
+.ls-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .ls-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(15, 15, 15, 0.1);
+  }
+  
+  /* lift the diamond image upward on hover */
+  .ls-card:hover .ls-diamond {
+    transform: rotate(45deg) translateY(-10px);
+    transition: transform 0.35s ease;
+  }
+  
+  /* smooth the transition back */
+  .ls-diamond {
+    transition: transform 0.35s ease;
+  }
+  
