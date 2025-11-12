@@ -1,0 +1,99 @@
+import React, { useRef, useState, useEffect } from "react";
+import "../styles/MobileCarousel.css";
+
+const promoSlides = [
+  {
+    id: 1,
+    title: "buying a car is picnic",
+    subtitle: "god promise",
+    tag: "Introducing Hot Wheels — limited time deals",
+    logo: process.env.PUBLIC_URL + "/hotwheels.png",
+    image: process.env.PUBLIC_URL + "/slide1.png",
+  },
+  {
+    id: 2,
+    title: "best offers",
+    subtitle: "trusted cars",
+    tag: "Certified cars — limited time offers",
+    logo: process.env.PUBLIC_URL + "/hotwheels.png",
+    image: process.env.PUBLIC_URL + "/slide2.png",
+  },
+  {
+    id: 3,
+    title: "easy finance",
+    subtitle: "peace of mind",
+    tag: "Hassle-free ownership",
+    logo: process.env.PUBLIC_URL + "/hotwheels.png",
+    image: process.env.PUBLIC_URL + "/slide3.png",
+  },
+];
+
+export default function MobileCarousel() {
+  const [index, setIndex] = useState(0);
+  const startX = useRef(0);
+  const translateX = useRef(0);
+
+  const handleTouchStart = (e) => {
+    startX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    translateX.current = e.touches[0].clientX - startX.current;
+  };
+
+  const handleTouchEnd = () => {
+    const threshold = 50;
+    if (translateX.current < -threshold && index < promoSlides.length - 1) {
+      setIndex(index + 1);
+    } else if (translateX.current > threshold && index > 0) {
+      setIndex(index - 1);
+    }
+    translateX.current = 0;
+  };
+
+  return (
+    <div className="promo-carousel">
+      <div
+        className="promo-track"
+        style={{ transform: `translateX(-${index * 100}%)` }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {promoSlides.map((s) => (
+  <div
+    key={s.id}
+    className="promo-slide"
+    style={{ backgroundImage: `url(${s.image})` }}
+  >
+    <div className="promo-overlay">
+      {/* Titles now at the top */}
+      <div className="promo-titles promo-titles--top">
+        <h4 className="promo-title">{s.title}</h4>
+        <h2 className="promo-subtitle">{s.subtitle}</h2>
+      </div>
+
+      {/* Tag banner moved just above CTA */}
+      <div className="promo-bottom-content">
+        <div className="promo-tag">
+          <span>INTRODUCING</span>
+          <img src={s.logo} alt="Hot Wheels" className="promo-logo" />
+          <span>LIMITED TIME DEALS</span>
+        </div>
+
+        <button className="promo-btn">View all cars</button>
+      </div>
+    </div>
+  </div>
+))}
+
+      </div>
+
+      <div className="promo-dots">
+        {promoSlides.map((_, i) => (
+          <div key={i} className={`promo-dot ${i === index ? "active" : ""}`} />
+        ))}
+      </div>
+    </div>
+  );
+}

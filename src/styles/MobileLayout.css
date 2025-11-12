@@ -1,0 +1,187 @@
+/* MobileLayout.css - updated topbar to match screenshot */
+
+:root{
+    --ml-bg: #2d063b;       /* deep purple */
+    --ml-accent: #e93b68;   /* pink/red CTA */
+    --ml-white: #ffffff;
+    --ml-muted: rgba(255,255,255,0.08);
+    --ml-pill-bg: rgba(255,255,255,0.95);
+  }
+  
+  /* Root */
+  .ml-root {
+    min-height: 100vh;
+    /* min-width: 100vw; */
+    display: flex;
+    flex-direction: column;
+    background: #e38c3a65;
+    color: var(--ml-white);
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Topbar container (two stacked rows) */
+  .ml-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 80;
+    background: #de8d4a;
+    padding: 10px 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.22);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* ROW 1 - hamburger, logo (left) & Sell/Buy (right) */
+  .ml-topbar-row1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  /* left cluster (hamburger + logo) */
+  .ml-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* right cluster (Sell / Buy) */
+  .ml-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  /* top actions (Sell/Buy) */
+  .ml-top-action {
+    color: rgba(255,255,255,0.8);
+    background: transparent;
+    border: none;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 0.95;
+  }
+  .ml-top-action--active {
+    color: var(--ml-white);
+    opacity: 1;
+  }
+  
+  /* brand logo sizing */
+  .ml-brand {
+    display: inline-flex;
+    align-items: center;
+  }
+  .ml-logo {
+    height: 26px;
+    display: block;
+    object-fit: contain;
+  }
+  
+  /* generic small control */
+  .ml-btn {
+    background: transparent;
+    border: 0;
+    color: var(--ml-white);
+    padding: 6px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* hamburger look */
+  .ml-hamburger {
+    width: 36px;
+    height: 36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: var(--ml-muted);
+    border-radius: 10px;
+  }
+  
+  /* ROW 2 - location pill and search */
+  .ml-topbar-row2 {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  /* location pill */
+  .ml-location {
+    display:flex;
+    gap:8px;
+    align-items:center;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 24px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ml-white);
+    border: 1px solid rgba(255,255,255,0.04);
+    min-width: 92px;
+    justify-content: center;
+  }
+  
+  /* search wrap spans remaining width */
+  .ml-search-wrap {
+    flex: 1 1 auto;
+    min-width: 0;   
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(231, 226, 226, 0.03);
+    padding: 8px;
+    border-radius: 28px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.03);
+  }
+  
+  /* search input styling */
+  .ml-search-input {
+    flex: 1 1 auto;
+    min-width: 0; 
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 14px;
+    padding: 6px 8px;
+  }
+  
+  .ml-search-input::placeholder {
+    color: rgba(237, 227, 227, 0.905); /* softer white for placeholder */
+    opacity: 1; /* Safari fix */
+  }
+  /* search icon button on right */
+  .ml-search-icon {
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    width: 40px;
+    height: 36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border: 0;
+    cursor: pointer;
+    color: var(--ml-white);
+  }
+  
+  /* Main content below topbar */
+  .ml-main {
+    flex: 1 1 auto;
+    padding: 14px;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.02) 100%);
+  }
+  
+  /* small responsive tweaks */
+  @media (min-width: 420px) {
+    .ml-logo { height: 30px; }
+    .ml-search-input { font-size: 15px; }
+  }
+  

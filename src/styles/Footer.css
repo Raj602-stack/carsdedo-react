@@ -2,7 +2,7 @@
     --crimson: #b42838b1;
     --light-text: #ffffff;
     --white: #fff;
-    --muted: rgba(255, 255, 255, 0.85);
+    --muted: rgb(244, 240, 240);
   }
   
   /* Footer container */
@@ -27,13 +27,13 @@
   /* Left brand section */
   .footer-logo {
     width: 160px;
-    margin-bottom: 22px;
+    /* margin-bottom: 22px; */
   }
   
   .footer-desc {
     font-size: 15px;
     line-height: 1.8;
-    color: var(--muted);
+    color: #fff;
     max-width: 480px;
     margin-bottom: 24px;
   }
@@ -77,7 +77,7 @@
   
   .footer-col a {
     display: block;
-    color: var(--muted);
+    color: #fff;
     text-decoration: none;
     font-size: 14px;
     line-height: 1.8;
@@ -122,7 +122,7 @@
   }
   
   .footer-btn.outline:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(176, 166, 166, 0.15);
   }
   
   /* Responsive */

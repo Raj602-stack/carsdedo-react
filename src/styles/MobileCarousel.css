@@ -1,0 +1,240 @@
+.promo-carousel {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 12px;              /* small outer padding for the rounded card look */
+  box-sizing: border-box;
+}
+
+.promo-track {
+  display: flex;
+  transition: transform 0.38s cubic-bezier(.2,.9,.3,1);
+  width: 100%;
+}
+
+.promo-slide {
+  flex: 0 0 100%;
+  height: 440px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
+  position: relative;        /* IMPORTANT: overlay will be absolute inside */
+  display: block;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0;                /* keep internal paddings to overlay content */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* full-slide gradient layer (covers whole slide) */
+.promo-slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.074) 0%, rgba(0, 0, 0, 0.179) 55%, rgba(0, 0, 0, 0.166) 100%);
+  z-index: 10;
+}
+
+
+.promo-slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(221, 216, 216, 0.051) 0%,
+    rgba(132, 127, 127, 0.015) 60%,
+    rgba(96, 92, 92, 0.059) 100%
+  );
+  z-index: 10;
+}
+
+/* content wrapper — absolute so we can precisely place items (titles, tag, CTA) */
+.promo-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;   /* push CTA to bottom */
+  align-items: center;
+  padding: 20px;
+  z-index: 20;                 /* above the gradient ::before */
+  pointer-events: none;        /* allow CTA to be clicked via child override */
+}
+
+/* Top titles container (placed above middle) */
+.promo-titles {
+  position: absolute;
+  top: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 22;
+  pointer-events: none;
+  width: 92%;
+}
+
+/* small upper title */
+.promo-title {
+  color: #ffffff;
+  font-family: "Poppins", "Inter", sans-serif;
+  font-size: 19px;              /* slightly larger than before */
+  font-weight: 1500;             /* medium */
+  line-height: 1.3;
+  letter-spacing: 0.3px;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* main subtitle / hero heading */
+.promo-subtitle {
+  color: #ffffff;
+  font-family: "Poppins", "Inter", sans-serif;
+  font-size: 40px;              /* increased for strong presence */
+  font-weight: 800;             /* very bold */
+  text-transform: lowercase;
+  line-height: 1.1;
+  letter-spacing: -0.5px;       /* tighter kerning */
+  margin: 0;
+  text-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.45),
+    0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* tag ribbon (middle) */
+
+
+/* small logo inside tag */
+.promo-logo {
+  height: 16px;
+  display: inline-block;
+  object-fit: contain;
+}
+
+
+/* bottom CTA - placed above everything else so it's clickable */
+.promo-bottom {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 24;
+  pointer-events: none;
+}
+
+.promo-btn {
+  background-color: #e15367;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  width: 280px;
+  font-size: 15px;
+  box-shadow: 0 4px 12px rgba(225, 81, 103, 0.25);
+}
+
+/* small dots below */
+.promo-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.promo-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.26);
+  opacity: 0.9;
+  transition: transform 0.22s, background 0.22s;
+}
+
+.promo-dot.active {
+  background: #e15367;
+  transform: scale(1.1);
+}
+
+/* small responsive adjustments */
+@media (max-width: 400px) {
+  .promo-slide { height: 420px; }
+  .promo-subtitle { font-size: 28px; }
+  .promo-tag { top: 150px; }
+}
+
+
+.promo-titles--top {
+  position: absolute;
+  top: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92%;
+  text-align: center;
+  z-index: 22;
+}
+
+.promo-bottom-content {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 23;
+}
+
+.promo-tag {
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+/* Black banner (tag) just above CTA) */
+.promo-tag {
+  background: rgba(0, 0, 0, 0.88);  /* darker, richer black */
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* subtle lift */
+  border: 1px solid rgba(255, 255, 255, 0.15); /* soft outline for clarity */
+  z-index: 25;
+}
+
+/* Add small space between ribbon and button */
+.promo-bottom-content {
+  position: absolute;
+  bottom: 30px; /* was 22px */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px; /* extra breathing room */
+  z-index: 23;
+}
+
+/* Adjust logo contrast inside tag */
+.promo-logo {
+  height: 18px;
+  filter: brightness(1.2); /* brighten slightly if it's dark */
+  display: inline-block;
+  object-fit: contain;
+}

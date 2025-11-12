@@ -1,0 +1,198 @@
+/* MobileCards.css - shared styles for the two mobile cards */
+
+:root{
+    --brand-purple: #2d063b;
+    --card-radius: 12px;
+    --white: #ffffff;
+    --muted: #6b5b8a;
+    --cta-red: #e15367;
+    --soft-gray: #f6f6f8;
+  }
+  
+  /* Stack wrapper */
+  .mc-stack {
+    /* padding: 16px; */
+    padding: 7px 3px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
+  
+  /* Generic card baseline */
+  .mc-card {
+    background: var(--white);
+    border-radius: var(--card-radius);
+    padding: 18px;
+    box-shadow: 0 12px 30px rgba(15,15,15,0.06);
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  
+  /* FindMyCar specific layout */
+  .mc-find {
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px;
+  }
+  
+  /* left column */
+  .mc-left {
+    max-width: 62%;
+  }
+  
+  /* title (supports line breaks) */
+  .mc-heading {
+    margin: 0 0 10px;
+    color: var(--brand-purple);
+    font-size: 22px;
+    line-height: 1.05;
+    font-weight: 800;
+    white-space: pre-line; /* allows \n in string to break lines */
+  }
+  
+  /* description */
+  .mc-desc {
+    margin: 0 0 18px;
+    color: #5a4d6f;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  /* CTA button */
+  .mc-cta {
+    background: var(--cta-red);
+    border: 0;
+    color: white;
+    font-weight: 700;
+    padding: 10px 16px;
+    border-radius: 28px;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(225,81,103,0.2);
+  }
+  
+  /* right illustration area - fixed size box so layout stable */
+  .mc-right {
+    width: 110px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+ 
+
+
+  .mc-illustration {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  
+  /* Services card header */
+  .mc-services {
+    flex-direction: column;
+    padding: 18px;
+  }
+  
+  .mc-services-header {
+    margin-bottom: 12px;
+  }
+  
+  .mc-services-title {
+    margin: 0 0 6px;
+    color: var(--brand-purple);
+    font-size: 20px;
+    font-weight: 800;
+  }
+  
+  .mc-services-sub {
+    margin: 0;
+    color: #6b5b8a;
+    font-size: 13px;
+  }
+  
+  .mc-fine {
+    font-family: "Segoe Script", "Brush Script MT", cursive;
+    font-weight: 600;
+    color: var(--brand-purple);
+  }
+  
+  /* grid row */
+  .mc-services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    align-items: start;
+  }
+  
+  /* single service tile */
+  .mc-service {
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .mc-service-box {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 8px;
+    background: var(--soft-gray);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  overflow: hidden;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .mc-service-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* fills div, crops if needed */
+  }
+  
+  .mc-service:hover .mc-service-box,
+  .mc-service:focus .mc-service-box {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 22px rgba(15,15,15,0.08);
+  }
+  
+  /* icon image sizing */
+  /* .mc-service-icon {
+    width: 56%;
+    height: 56%;
+    object-fit: contain;
+  } */
+  
+  /* see all tile style */
+  .mc-seeall-box {
+    font-size: 28px;
+    color: var(--brand-purple);
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  
+  /* label */
+  .mc-service-label {
+    font-size: 12px;
+    color: #4b3c5a;
+    line-height: 1.1;
+    width: 80px;
+    margin: 0 auto;
+  }
+  
+  /* responsive */
+  @media (max-width: 420px) {
+    .mc-left { max-width: 58%; }
+    .mc-heading { font-size: 20px; }
+    .mc-right { width: 92px; height:92px; }
+    .mc-services-grid { gap: 10px; }
+    .mc-service-label { font-size: 11px; width: 70px; }
+  }
+  

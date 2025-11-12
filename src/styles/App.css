@@ -747,3 +747,92 @@ body {
 
 
 
+/* ===== Global safe defaults (paste near top of your global CSS) ===== */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+/* prevent the whole page from horizontal scrolling */
+html, body, #root {
+  width: 100%;
+  overflow-x: hidden; /* hide any accidental horizontal overflow */
+}
+
+/* make media responsive */
+img, picture, video, iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* container helper to center and limit width */
+.container,
+.site-inner,
+.ls-inner, /* if you have this class already */
+.benefits, /* any large sections you use as example */
+.mode-section {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;  /* keep symmetric padding */
+  padding-right: 16px;
+}
+
+/* make sure tracks & carousels respect overflow:hidden on their wrapper */
+.mode-wrapper,
+.btc-viewport,
+.stories-viewport,
+.ls-viewport {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+/* flexible track items must not add extra space */
+.mode-inner,
+.btc-track,
+.stories-track,
+.ls-track {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* panels across slides — ensure they use percent widths and no extra margin */
+.panel,
+.btc-item,
+.story-card,
+.ls-item {
+  flex: 0 0 auto;
+  box-sizing: border-box;
+}
+
+/* if you use translateX on a track that's wider than parent, make sure it's calculated from the parent's width,
+   and the wrapper has overflow:hidden (above) so nothing leaks out. */
+
+/* avoid using 100vw in layouts because it includes scrollbar width and can overflow */
+.fullwidth-avoid {
+  /* e.g. replace width:100vw with width:100% */
+  width: 100%;
+}
+
+/* Toggle wrapper centering: avoid pushing viewport horizontally */
+.toggle-wrapper,
+.ml-toggle-pill {
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+  z-index: 40;
+  /* DON'T use translate(-50%, -50%) if it affects layout; keep only X translation unless needed */
+}
+
+/* Fix for mobile pill widths overflowing */
+.ml-toggle-pill { max-width: calc(100% - 32px); }
+
+/* Debug helper: outlines any element that extends past viewport (optional to paste then remove) */
+/*
+* {
+  outline: 0.5px dashed rgba(255,0,0,0.06);
+}
+*/

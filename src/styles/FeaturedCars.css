@@ -1,0 +1,238 @@
+:root{
+    --fc-accent: #2d063b;
+    --fc-pill-bg: #f0e8f7;
+    --fc-pill-active: #5b1de6;
+    --fc-border: #eee;
+    --fc-radius: 14px;
+    --fc-gap: 14px;
+  }
+  
+  /* section shell */
+  .fc-section {
+    padding: 36px 18px;
+    border-radius: 14px;
+    margin:20px 5px;
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(180deg, #fff 0%, #faf8ff 100%);
+  }
+  
+  .fc-inner {
+    width: 100%;
+    max-width: 820px;
+    box-sizing: border-box;
+  }
+  
+  /* heading */
+  .fc-title {
+    text-align: center;
+    color: var(--fc-accent);
+    font-size: 28px;
+    margin: 0 0 18px;
+    font-weight: 800;
+  }
+  
+  /* pill toggle */
+  .fc-pill-wrap {
+    display: flex; /* not inline-flex → fills horizontal space */
+    justify-content: center; /* centers the pill container */
+    margin: 0 auto 20px;
+  }
+  
+  /* Add a sub-container that acts as the "track" for the pills */
+  .fc-pill-wrap {
+    background: var(--fc-pill-bg);
+    padding: 6px;
+    border-radius: 12px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    max-width: 420px; /* optional: control total pill width */
+    width: 90%; /* responsive */
+    box-sizing: border-box;
+  }
+  
+  /* each pill exactly 50/50 */
+  .fc-pill {
+    flex: 1 1 0;          /* force equal widths */
+    min-width: 0;
+    text-align: center;
+    align-items: center;
+    padding: 12px 0;      /* vertical padding only */
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    color: #827c88;
+    background: transparent;
+    transition: all 160ms ease;
+  }
+  
+  /* active */
+  .fc-pill.active {
+    background: #e93b68;
+    color: white;
+    box-shadow: 0 6px 18px rgba(91,29,230,0.18);
+    transform: translateY(-2px);
+  }
+  
+  /* optional: tweak small screens */
+  @media (max-width: 480px) {
+    .fc-pill-wrap { max-width: 360px; padding: 5px; }
+    .fc-pill { font-size: 14px; padding: 10px 0; }
+  }
+  
+  
+  /* carousel wrap (nav + viewport) */
+  .fc-carousel-wrap {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+  }
+  
+  /* nav buttons - simple circular */
+  .fc-nav {
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    border: 0;
+    background: white;
+    color: var(--fc-accent);
+    box-shadow: 0 6px 20px rgba(15,15,15,0.06);
+    cursor: pointer;
+    flex: 0 0 36px;
+    display: none; /* hide on mobile; show on larger screens */
+  }
+  @media (min-width: 820px) {
+    .fc-nav { display: inline-flex; align-items:center; justify-content:center; }
+  }
+  
+  /* viewport */
+  .fc-viewport {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    display: block;
+    width: 100%;
+    padding-bottom: 6px;
+    touch-action: pan-y; /* important to allow horizontal swipe */
+  }
+
+
+
+  
+  /* remove default scrollbar on modern browsers (optional aesthetics) */
+  .fc-viewport::-webkit-scrollbar { height: 8px; }
+  .fc-viewport::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 8px; }
+  
+  /* track holds cards inline */
+  .fc-track {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+    padding: 6px 6px;
+    box-sizing: border-box;
+  }
+  
+  /* card */
+  .fc-card {
+    background: #fff;
+    border: 1px solid var(--fc-border);
+    border-radius: 12px;
+    min-width: 86%;
+    max-width: 86%;
+    box-shadow: 0 10px 26px rgba(15,15,15,0.04);
+    scroll-snap-align: center;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  
+  /* for slightly wider screens show smaller cards so multiple appear */
+  @media (min-width: 600px) {
+    .fc-card { min-width: 46%; max-width: 46%; }
+  }
+  @media (min-width: 1000px) {
+    .fc-card { min-width: 31%; max-width: 31%; }
+  }
+  
+  /* image area */
+  .fc-image {
+    height: 160px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center right;
+    background-color: transparent;
+    border-bottom: 1px solid var(--fc-border);
+    border-radius: 12px 12px 0 0;
+  }
+  
+  /* body */
+  .fc-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* title row */
+  .fc-row {
+    display:flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .fc-title-line {
+    color: var(--fc-accent);
+    font-weight: 800;
+    font-size: 18px;
+  }
+  .fc-price {
+    color: var(--fc-accent);
+    font-weight: 800;
+    font-size: 16px;
+    text-align: right;
+  }
+  
+  /* trim */
+  .fc-trim {
+    color: #6a6a6a;
+    font-size: 13px;
+  }
+  
+  /* tags */
+  .fc-tags { display:flex; gap: 8px; flex-wrap: wrap; margin-top:4px; }
+  .fc-tag {
+    background: #f5f5f6;
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #666;
+  }
+  
+  /* bottom row */
+  .fc-bottom-row {
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap:10px;
+    margin-top:auto;
+    font-size: 12px;
+    color: #9a9a9a;
+  }
+  
+  /* action */
+  .fc-action { margin-top: 18px; display:flex; justify-content:center; }
+  .fc-view-all {
+    background: transparent;
+    border: 2px solid var(--fc-accent);
+    padding: 12px 28px;
+    border-radius: 12px;
+    color: var(--fc-accent);
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  /* make sure cards are clickable on mobile and the whole card is visible */
+  .fc-card:active { transform: translateY(0); }
+  

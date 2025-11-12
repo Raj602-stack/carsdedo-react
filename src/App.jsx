@@ -1,84 +1,49 @@
-import React, { useState } from "react";
-import Topbar from "./components/Topbar";
-import Subnav from "./components/Subnav";
-import Carousel from "./components/Carousel";
-import ToggleCard from "./components/ToggleCard";
-import Benefits from "./components/Benefits";
-import Footer from "./components/Footer";
-import "./styles/App.css"; 
-import BenefitsSection from "./components/BenefitsSection";
-import SellPanel from "./components/SellPanel";
-import HowItWorks from "./components/HowItWorks";
-import CarCatalog from "./components/CarCatalogue";
-import BodyTypeCatalog from "./components/BodyTypeCatalog";
-import BrandsGrid from "./components/BrandsGrid";
-import LocationsSlider from "./components/LocationsSlider";
-import ExploreMore from "./components/ExploreMore";
-import SpinnyBuzz from "./components/SpinnyBuzz";
-import InsightsCards from "./components/InsightsCards";
-import StoriesSection from "./components/StoriesSection";
-import FAQ from "./components/FAQ";
-import WhyBuySection from "./components/WhyBuySection";
+// src/App.jsx
+import React from "react";
+import { Routes, Route } from "react-router-dom";
 
+/* Desktop pages/layout (existing) */
+import Layout from "./pages/Layout";
+import Home from "./pages/Home";
 
+/* Mobile layout & page (you should add these files) */
+import useIsMobile from "./hooks/useIsMobile";
+import MobileLayout from "./layouts/MobileLayout";
+import MobileHome from "./components/MobileHome";
+import MobileCarousel from "./components/MobileCarousel";
+
+/**
+ * App - chooses between mobile shell and desktop routes.
+ *
+ * Strategy:
+ * - If viewport <= breakpoint (useIsMobile), render a single mobile layout (no react-router routes inside).
+ * - Otherwise render your normal <Routes> with Layout wrapper.
+ *
+ * This keeps desktop routing untouched while giving a dedicated mobile shell.
+ */
 export default function App() {
-  const [mode, setMode] = useState("buy");
+  const isMobile = useIsMobile(900); // change breakpoint as needed
+
+  if (isMobile) {
+    // Mobile: render the mobile shell and mobile homepage directly.
+    // If you want mobile routing later you can replace this with <Routes> inside MobileLayout.
+    return (
+      <MobileLayout>
+        <MobileHome />
+        {/* <MobileCarousel/> */}
+      </MobileLayout>
+      
+    );
+  }
+
+  // Desktop: Keep existing routes/layout.
   return (
-    <div className="page">
-      <Topbar />
-      <Subnav />
-      <Carousel />
-      {/* <ToggleCard /> */}
-      {/* <Benefits />
-      <Footer /> */}
-
-
-{/* <ToggleCard mode={mode} setMode={setMode} />
-
-<div className={`mode-wrapper ${mode}`}>
-  <div className="mode-inner">
-    <div className="panel buy-panel">
-      <BenefitsSection />
-    
-    </div>
-    <div className="panel sell-panel">
-    <SellPanel/>
-    </div>
-  </div>
-</div> */}
-
-<section className="mode-section">
-  
-<div className="toggle-wrapper"><ToggleCard mode={mode} setMode={setMode} /></div>
-  <div className={`mode-wrapper ${mode}`}>
- 
-    <div className="mode-inner">
-   
-      <div className="panel buy-panel"><BenefitsSection /></div>
-      <div className="panel sell-panel"><SellPanel /></div>
-    </div>
-  </div>
-</section>
-
-<HowItWorks/>
-<CarCatalog/>
-<BodyTypeCatalog/>
-<BrandsGrid/>
-
-<LocationsSlider/>
-<ExploreMore/>
-
-<SpinnyBuzz/>
-<InsightsCards/>
-<StoriesSection/>
-<FAQ/>
-<WhyBuySection/>
-<Footer/>
-
-
-
-      {/* <ToggleCard /> 
-      <BenefitsSection/> */}
-    </div>
+    <Routes>
+      {/* public layout wraps these pages (Topbar/Subnav/Footer inside Layout) */}
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        {/* Add other desktop routes here */}
+      </Route>
+    </Routes>
   );
 }
