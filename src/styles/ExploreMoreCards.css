@@ -1,0 +1,141 @@
+:root{
+    --purple:#2d063b;
+    --purple-dark:#3a0b4a;
+    --cta:#e15367;
+    --card-radius:14px;
+    --card-w: clamp(260px, 78vw, 320px);
+  }
+  
+  .em-section {
+    padding: 18px 16px;
+    box-sizing: border-box;
+    background: transparent;
+  }
+  
+  .em-inner {
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  
+  .em-title {
+    font-size: 26px;
+    color: var(--purple);
+    margin: 8px 4px 18px;
+    font-weight: 800;
+  }
+  
+  /* viewport: native horizontal scrolling */
+  .em-viewport {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+    box-sizing: border-box;
+    scroll-snap-type: x mandatory;
+    padding-inline: 8px;
+  }
+  
+  /* hide default scrollbar but keep accessible */
+  .em-viewport::-webkit-scrollbar { height: 8px; }
+  .em-viewport::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.505); border-radius: 8px; }
+  
+  /* card */
+  .em-card {
+    flex: 0 0 var(--card-w);
+    width: var(--card-w);
+    border-radius: var(--card-radius);
+    overflow: hidden; /* important so bg and inner rounded */
+    background: linear-gradient(180deg,#2e0d43 0%, #2d063b 100%);
+    color: #fff;
+    box-shadow: 0 8px 28px rgba(45,6,59,0.12);
+    scroll-snap-align: center;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* allow optional background image */
+  .em-card[style*="background-image"] {
+    background-size: cover;
+    background-position: center;
+  }
+  
+  /* hero area inside card — keeps rounded top corners visible */
+  .em-card-hero {
+    padding: 20px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    min-height: 140px;
+    box-sizing: border-box;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.834), rgba(0, 0, 0, 0.731));
+  }
+  
+  /* icon on top left */
+  .em-card-icon {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    flex: 0 0 56px;
+  }
+  
+  /* headline block */
+  .em-card-headline {
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  
+  .em-card-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+  }
+  
+  .em-card-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    opacity: 0.9;
+  }
+  
+  /* CTA area pinned at bottom - red button across full card width */
+  .em-card-cta-wrap {
+    margin-top: auto;
+    padding: 16px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.03));
+  }
+  
+  .em-card-cta {
+    width: 100%;
+    border: none;
+    background: var(--cta);
+    color: #fff;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  /* last card (if you want a special 'view more' card) - override look */
+  .em-card.more {
+    background: linear-gradient(180deg,#4b1a5d,#2d063b);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 24px;
+  }
+  
+  .em-card.more .em-card-cta {
+    background: rgba(255, 255, 255, 0.655);
+    color: #fff;
+  }
+  
+  /* responsive tweaks */
+  @media (max-width:420px) {
+    .em-card-hero { min-height: 120px; padding: 16px; }
+    .em-card-title { font-size: 20px; }
+    .em-card-icon { width:48px; height:48px; flex:0 0 48px; }
+    :root{ --card-w: calc(100% - 56px); }
+  }
+  

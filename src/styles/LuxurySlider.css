@@ -1,0 +1,174 @@
+:root{
+    --accent-purple: #2d063b;
+    --cta-red: #e15367;
+    --card-gap: 14px;
+    --card-w: clamp(260px, 78vw, 340px);
+  }
+  
+  /* wrapper */
+  .lux-section {
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+  
+  /* card shell */
+  .lux-card-shell {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #f5f4f7 0%, #fff 30%);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+  }
+  
+  /* purple hero */
+  .lux-hero {
+    background: linear-gradient(180deg, #3a0b4a 0%, var(--accent-purple) 100%);
+    padding: 26px 18px 34px;
+    text-align: center;
+    color: #fff;
+  }
+  .lux-hero-inner { display:flex; flex-direction:column; align-items:center; gap:8px;}
+  .lux-logo { height:28px; object-fit:contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2)); }
+  .lux-title { font-size: 44px; font-weight:800; color:#ff6b6b; letter-spacing:1px; }
+  .lux-sub { font-size:18px; font-weight:700; color:#fff; margin-top:6px; }
+  
+  /* carousel row */
+  .lux-carousel-row {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding: 18px 12px;
+  }
+  
+  /* nav arrows (small round) */
+  .lux-arrow {
+    display: none; 
+  }
+  
+  /* viewport with native scrolling */
+  .lux-viewport {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    flex: 1 1 auto;
+  }
+  
+  /* track and centering pads so first/last center */
+  .lux-track {
+    display:flex;
+    gap: var(--card-gap);
+    align-items:center;
+    padding-inline: calc((100% - var(--card-w)) / 2);
+    box-sizing: border-box;
+  }
+  
+  /* card */
+  .lux-card {
+    flex: 0 0 var(--card-w);
+    width: var(--card-w);
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    overflow: hidden;
+    scroll-snap-align: center;
+    display:flex;
+    flex-direction: column;
+  }
+  
+  /* card image: keep contained and centered */
+  .lux-card-img {
+    height: 160px;  
+    background-size: contain;
+    object-fit: contain;  
+    /* background-repeat: no-repeat; */
+    border-radius: 14px;
+    background-position: center;
+    /* background-color: #fff; */
+    padding: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  
+  /* card body */
+  .lux-card-body {
+    padding: 12px 14px 18px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .lux-row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .lux-title-line { font-weight:800; font-size:16px; color:#2a0b3a; }
+  .lux-price { font-weight:800; color:#2a0b3a; font-size:16px; text-align:right; }
+  .lux-subline { font-size:13px; color:#6b6b6b; }
+  .lux-emi { font-weight:700; color:#7c7c7c; font-size:13px; }
+  
+  /* last 'view more' card */
+  .lux-more {
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: linear-gradient(180deg,#36103a 0%, #2d063b 100%);
+    color:#fff;
+  }
+  .lux-more-bg { position:absolute; inset:0; opacity:0.18; background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.04)); }
+  .lux-more-content { position:relative; z-index:2; padding:18px; text-align:center; }
+  .lux-more-text { font-weight:800; font-size:18px; }
+  
+  /* bottom CTA */
+  .lux-cta-wrap { padding: 12px; display:flex; justify-content:center; border-top:1px solid rgba(0,0,0,0.04); }
+  .lux-cta {
+    width:92%;
+    background: var(--cta-red);
+    color:#fff;
+    border:0;
+    padding:14px;
+    border-radius:10px;
+    font-weight:800;
+    font-size:18px;
+    cursor:pointer;
+  }
+  
+  /* responsive tweaks */
+  @media (max-width: 380px) {
+    :root { --card-w: calc(100% - 72px); }
+    .lux-hero { padding: 22px 12px 28px; }
+    .lux-title { font-size: 36px; }
+    .lux-card-img { height: 110px; padding: 12px; }
+  }
+  
+
+  .lux-card-more {
+    flex: 0 0 320px;
+    background: linear-gradient(180deg,#5a1f7d,#3c0c55);
+    color: #fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border: 2px solid rgba(255,255,255,0.06);
+  }
+  .lux-more-inner {
+    text-align:center;
+    padding: 18px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    align-items:center;
+  }
+  .lux-more-text {
+    font-weight:800;
+    font-size:18px;
+    letter-spacing:0.2px;
+  }
+  .lux-explore-btn {
+    background: #e15367;
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-weight:700;
+    cursor:pointer;
+  }

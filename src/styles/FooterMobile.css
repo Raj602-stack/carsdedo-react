@@ -1,0 +1,141 @@
+:root{
+    --fm-bg: #b42838b1;;
+    --fm-accent: #e15367;
+    --fm-text: #fff;
+    --fm-muted: rgba(255,255,255,0.78);
+    --fm-gap: 12px;
+    --fm-radius: 10px;
+  }
+  
+  /* shell */
+  .fm-root {
+    width: 100%;
+    background: var(--fm-bg);
+    color: var(--fm-text);
+    box-sizing: border-box;
+    border-radius: 14px;
+    padding: 18px 14px;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .fm-inner {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  
+  /* top row */
+  .fm-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .fm-logo { height: 28px; object-fit: contain; display: block; }
+  
+  /* phone CTA */
+  .fm-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--fm-accent);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 800;
+    box-shadow: 0 6px 18px rgba(225,81,103,0.18);
+  }
+  .fm-phone-icon { width: 18px; height: 18px; }
+  .fm-phone-text { font-size: 14px; }
+  
+  /* description */
+  .fm-desc {
+    color: var(--fm-text);
+    opacity: 0.95;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 12px 0 6px;
+  }
+  .fm-legal { color: rgba(255,255,255,0.7); font-size: 13px; margin: 0 0 12px; }
+  
+  /* socials */
+  .fm-socials { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; }
+  .fm-socials img { width: 22px; height: 22px; object-fit: contain; opacity: 0.95; }
+  
+  /* columns */
+  .fm-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+  .fm-col-title { color: rgba(255,255,255,0.92); font-weight: 800; margin: 0 0 10px; font-size: 15px; }
+  .fm-list { list-style: none; margin: 0; padding: 0; display:grid; gap: 8px; }
+  .fm-link { color: var(--fm-text); opacity: 0.95; text-decoration: none; font-size: 14px; display: inline-block; }
+  .fm-link:focus, .fm-link:hover { text-decoration: underline; }
+  
+  /* cities */
+  .fm-section { margin-bottom: 16px; }
+  .fm-section-title { color: rgba(255,255,255,0.95); font-weight: 800; font-size: 14px; margin: 0 0 10px; }
+  .fm-cities { display:flex; flex-wrap:wrap; gap:8px 10px; }
+  .fm-city { font-size: 13px; color: var(--fm-text); opacity: 0.9; text-decoration: none; padding: 4px 6px; }
+  
+  /* Sell CTA */
+  .fm-sell-row { margin: 16px 0; }
+  .fm-sell {
+    display: block;
+    text-decoration: none;
+    background: transparent;
+    color: #fff;
+    border: 0;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-weight: 800;
+    text-align: left;
+  }
+  
+  /* services list */
+  .fm-services-list {
+    color: rgba(255,255,255,0.92);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-top: 6px;
+  }
+  
+  /* decorative skyline at bottom (absolute) */
+  .fm-skyline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 96px;
+    bottom: 80px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='120' viewBox='0 0 1200 120'><g fill='none' stroke='%23ffffff' stroke-opacity='0.04' stroke-width='2'><path d='M0 100 L1200 100' /></g></svg>");
+    background-repeat: repeat-x;
+    background-position: bottom center;
+    pointer-events: none;
+    opacity: 0.95;
+  }
+  
+  /* copyright / CIN */
+  .fm-copy {
+    color: rgba(255,255,255,0.9);
+    font-size: 13px;
+    margin-top: 18px;
+    line-height: 1.6;
+  }
+  .fm-cin { margin-top: 6px; opacity: 0.85; font-size: 12px; }
+  
+  /* final spacer to ensure no nav overlap */
+  .fm-bottom-space { height: 28px; }
+  
+  /* responsive */
+  @media (max-width: 520px) {
+    .fm-columns { grid-template-columns: 1fr; }
+    .fm-phone-text { font-size: 13px; }
+    .fm-desc { font-size: 13px; }
+    .fm-skyline { bottom: 70px; height: 80px; background-size: cover; }
+  }
+  

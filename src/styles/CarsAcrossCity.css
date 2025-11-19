@@ -1,0 +1,156 @@
+/* CarsAcrossCity.css - hero with bottom swipeable cards */
+
+:root{
+    --hero-height: 320px;
+    --accent-purple: #2d063b;
+    --card-w: 280px;
+    --card-gap: 14px;
+    --cta-red: #e15367;
+  }
+  
+  /* overall section */
+  .cac-section {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 18px;
+    box-sizing: border-box;
+  }
+  
+  /* hero - background image covers full hero area.
+     We keep it as a block so the image doesn't move while cards scroll horizontally */
+  .cac-hero {
+    position: relative;
+    height: var(--hero-height);
+    border-radius: 12px;
+    overflow: visible; /* allow card container to overflow visually */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.16);
+  }
+  
+  /* hero inner content (title) */
+  .cac-hero-inner {
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    padding: 18px;
+    box-sizing: border-box;
+  }
+  .cac-title {
+    color: #2a0b3a;
+    font-size: 28px;
+    font-weight: 800;
+    margin: 8px 0 0;
+    background: rgba(255,255,255,0.0);
+  }
+  
+  /* cards row sits visually on top of bottom part of hero */
+  .cac-cards-row {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -22px; /* lifts cards slightly out of hero */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 18px;
+    box-sizing: border-box;
+    pointer-events: auto;
+  }
+  
+  /* arrows */
+  .cac-arrow {
+   display: none;
+  }
+  
+  /* viewport: horizontal native scroll */
+  .cac-cards-viewport {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    gap: var(--card-gap);
+    scroll-snap-type: x mandatory;
+    padding-inline: 6px;
+    scrollbar-width: none; /* firefox */
+    -ms-overflow-style: none;
+  }
+  
+  /* hide scrollbar (webkit) */
+  .cac-cards-viewport::-webkit-scrollbar { display: none; }
+  
+  /* track padding so first/last cards center nicely */
+  .cac-cards-viewport {
+    padding-inline-start: calc((100% - var(--card-w)) / 2);
+    padding-inline-end: calc((100% - var(--card-w)) / 2);
+    box-sizing: border-box;
+  }
+  
+  /* single card */
+  .cac-card {
+    flex: 0 0 var(--card-w);
+    width: var(--card-w);
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 26px rgba(0,0,0,0.12);
+    scroll-snap-align: center;
+    display:flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+  
+  /* thumbnail image inside card */
+  .cac-card-thumb {
+    /* width: 140px; */
+    /* min-width: 140px; */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  
+  /* card content */
+  .cac-card-body {
+    padding: 12px;
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    gap: 6px;
+    flex: 1 1 auto;
+  }
+  .cac-card-head { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .cac-card-title { font-weight:800; color:#2a0b3a; font-size:14px; }
+  .cac-card-badge {
+    background: var(--accent-purple);
+    color: white;
+    font-weight:700;
+    padding:6px 8px;
+    border-radius:8px;
+    font-size:12px;
+    white-space:nowrap;
+  }
+  .cac-card-meta { display:flex; gap:10px; font-size:13px; color:#6b6b6b; align-items:center; }
+  .cac-rating { color:#2a0b3a; font-weight:700; }
+  .cac-cars { color:#7b6b8f; font-weight:700; }
+  .cac-card-addr { color:#8a8a8a; font-size:12px; }
+  
+  /* CTA row under hero */
+  .cac-cta-row { display:flex; justify-content:center; margin-top: 60px; }
+  .cac-view-all {
+    background: transparent;
+    border: 2px solid var(--accent-purple);
+    color: var(--accent-purple);
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  /* responsive */
+  @media (max-width: 420px) {
+    :root { --card-w: 260px; --hero-height: 300px; }
+    /* .cac-card-thumb { width: 120px; min-width: 120px; } */
+    .cac-cards-row { bottom: -42px; }
+  }
+  

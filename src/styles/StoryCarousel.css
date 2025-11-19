@@ -1,0 +1,181 @@
+/* StoryCarousel.css - mobile story card with autoplay progress */
+
+.sc-root {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+  
+  /* progress row at top: multiple small segments */
+  .sc-progress {
+    display: flex;
+    gap: 8px;
+    padding: 8px 6px;
+    box-sizing: border-box;
+    margin-bottom: 6px;
+  }
+  
+  /* each segment is a round-corner pill, with an inner fill that animates */
+  .sc-progress-seg {
+    flex: 1 1 0;
+    height: 6px;
+    background: rgba(255,255,255,0.18);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .sc-progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0%;
+    background: #fff;
+    opacity: 0.95;
+    transform-origin: left center;
+  }
+  
+  /* when active, animate from 0 -> 100% (duration set inline) */
+  @keyframes scFill {
+    from { width: 0%; }
+    to { width: 100%; }
+  }
+  
+  .sc-progress-fill.active {
+    animation-name: scFill;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+  
+  /* Slide area */
+  .sc-slide {
+    position: relative;
+    height: 420px;              /* adjust height for your design */
+    border-radius: 14px;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    box-shadow: 0 12px 36px rgba(10, 8, 20, 0.18);
+  }
+  
+  /* soft dark overlay to increase contrast for text */
+  .sc-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.42) 70%);
+    pointer-events: none;
+  }
+  
+  /* top-left small badge */
+  .sc-top-left {
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    z-index: 20;
+  }
+  
+  .sc-badge {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    border-radius: 6px;
+  }
+  
+  .sc-badge-text {
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+  
+  /* bottom caption area */
+  .sc-bottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 22;
+    padding: 18px;
+    box-sizing: border-box;
+  }
+  
+  .sc-meta {
+    background: rgba(0,0,0,0.48);
+    padding: 12px 14px;
+    border-radius: 10px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  /* name and place */
+  .sc-meta-left {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  .sc-meta-icon {
+    width: 18px;
+    height: 18px;
+    background: rgba(255,255,255,0.22);
+    border-radius: 4px;
+  }
+  
+  /* name and place text */
+  .sc-name {
+    font-weight: 800;
+    font-size: 15px;
+    color: #fff;
+  }
+  
+  .sc-place {
+    font-weight: 600;
+    color: rgba(255,255,255,0.92);
+    margin-left: 6px;
+    font-size: 13px;
+    opacity: 0.95;
+  }
+  
+  /* caption under the name */
+  .sc-caption {
+    font-size: 14px;
+    color: rgba(255,255,255,0.92);
+    line-height: 1.4;
+  }
+  
+  /* dots */
+  .sc-dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 12px;
+  }
+  
+  .sc-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.12);
+    border: 0;
+    padding: 0;
+  }
+  .sc-dot.active {
+    background: #2d063b;
+    transform: scale(1.15);
+  }
+  
+  /* small responsive tweak */
+  @media (max-width: 420px) {
+    .sc-slide { height: 380px; }
+    .sc-caption { font-size: 13px; }
+    .sc-progress { gap: 6px; }
+  }
+  

@@ -236,3 +236,40 @@
   /* make sure cards are clickable on mobile and the whole card is visible */
   .fc-card:active { transform: translateY(0); }
   
+
+  .fc-pill-wrapp {
+    display: flex;
+    justify-content: center;
+    background: var(--fc-pill-bg);
+    padding: 8px;
+    border-radius: 14px;
+    gap: 8px;
+    margin: 0 auto 20px;
+  }
+  
+  /* Three equal-width toggle buttons */
+  .fc-pilll {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  /* Icon inside pill */
+  .fc-pill-iconn {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    display: block;
+  }
+  
+  .fc-pill.activee {
+    background: var(--fc-pill-active);
+    color: white;
+  }
+  

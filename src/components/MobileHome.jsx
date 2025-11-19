@@ -5,6 +5,17 @@ import MobileBuySellPanel from "./MobileBuySellPanel";
 import MobileCards from "./MobileCards";
 import HowItWorksMob from "./HowItWorksMob";
 import FeaturedCars from "./FeaturedCars";
+import BodyTypeCarousel from "./BodyTypeCarousel";
+import BrandsGridMob from "./BrandsGridMob";
+import LuxurySlider from "./LuxurySlider";
+import CarsAcrossCity from "./CarsAcrossCity";
+import ExploreMoreCards from "./ExploreMoreCards";
+import SpinnyBuzzCarousel from "./SpinnyBuzzCarousel";
+import SwipableInsights from "./SwipableInsights";
+import StoryCarousel from "./StoryCarousel";
+import FaqMob from "./FaqMob";
+import MobileMoreAbout from "./MobileMoreAbout";
+import FooterMobile from "./FooterMobile";
 
 /**
  * MobileHome - mobile-specific homepage (cards list + hero + filters)
@@ -21,6 +32,17 @@ export default function MobileHome({ cars = [] }) {
   <MobileCards/>
   <HowItWorksMob/>
   <FeaturedCars/>
+  <BodyTypeCarousel/>
+  <BrandsGridMob/>
+  <LuxurySlider/>
+  <CarsAcrossCity/>
+  <ExploreMoreCards/>
+  <SpinnyBuzzCarousel/>
+  <SwipableInsights/>
+  <StoryCarousel/>
+  <FaqMob/>
+  <MobileMoreAbout/>
+  <FooterMobile/>
   
   </>
   );
