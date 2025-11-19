@@ -113,12 +113,11 @@
     width: 100%;
     padding-bottom: 6px;
   
-    /* touch / swipe behavior */
-    touch-action: pan-x;                 /* allow horizontal swipe */
-    -webkit-overflow-scrolling: touch;   /* smooth scrolling on iOS */
-    overscroll-behavior-x: contain;      /* avoid page stealing the swipe */
+    /* allow normal browser handling (both axes) */
+    touch-action: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
   
-    /* small UX niceties */
     -webkit-user-select: none;
     user-select: none;
     scroll-snap-type: x mandatory;
