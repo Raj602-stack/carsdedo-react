@@ -23,7 +23,7 @@ const DEFAULT_ITEMS = [
     id: "i2",
     value: "35%",
     label: "Referrals",
-    description: "The number of Spinny customers that are referrals",
+    description: "The number of carsdedo customers that are referrals",
     iconSrc: process.env.PUBLIC_URL + "/thirty.png",
   },
   {

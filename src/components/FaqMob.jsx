@@ -11,14 +11,14 @@ export default function FaqMob() {
     },
     {
       q: "What’s the process for booking my car?",
-      a: "Once you select your desired car, you can reserve it online or book a test drive. After confirmation, your Spinny Relationship Manager will guide you through the full process until delivery.",
+      a: "Once you select your desired car, you can reserve it online or book a test drive. After confirmation, your carsdedo Relationship Manager will guide you through the full process until delivery.",
     },
     {
-      q: "Will Spinny help me with car finance?",
-      a: "Yes! Spinny provides multiple finance options with low interest rates and minimal documentation.",
+      q: "Will carsdedo help me with car finance?",
+      a: "Yes! carsdedo provides multiple finance options with low interest rates and minimal documentation.",
     },
     {
-      q: "How does Spinny’s money back guarantee work?",
+      q: "How does carsdedo’s money back guarantee work?",
       a: "If you are not satisfied with your purchase, you can return the car within the trial period for a full refund.",
     },
   ];

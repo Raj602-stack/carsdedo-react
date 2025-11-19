@@ -67,24 +67,24 @@ export default function MobileMoreAbout() {
         aria-hidden={!open}
       >
         <div className="ma-inner">
-          <h3 className="ma-heading">Why buy a used car from Spinny?</h3>
+          <h3 className="ma-heading">Why buy a used car from carsdedo?</h3>
 
           <p className="ma-paragraph">
-            Spinny takes the uncertainty and risk out of buying a used car,
+            carsdedo takes the uncertainty and risk out of buying a used car,
             offering peace of mind at every step with zero compromises. Our
             selection process ensures that only the highest quality certified
-            second hand cars in your city make it to Spinny. A Spinny car is
+            second hand cars in your city make it to carsdedo. A carsdedo car is
             certified only once it passes a thorough 200-point evaluation that
             checks the condition of every part of the car. Any used car can get
-            certified, but it takes perfection to be Spinny Assured.
+            certified, but it takes perfection to be carsdedo Assured.
           </p>
 
           <p className="ma-paragraph">
             Experience a simple & fully transparent way of buying used cars with
-            Spinny. Find your perfect match from our wide range of fully
-            inspected & certified used cars at the best prices. All Spinny cars
+            carsdedo. Find your perfect match from our wide range of fully
+            inspected & certified used cars at the best prices. All carsdedo cars
             come with hassle-free paperwork, free RC transfer, and used car
-            finance options at competitive rates. With Spinny, pre-owned is
+            finance options at competitive rates. With carsdedo, pre-owned is
             often better than new — get the savings of a pre-owned car with the
             confidence of a certified inspection.
           </p>
