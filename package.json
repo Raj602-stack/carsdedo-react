@@ -32,7 +32,14 @@
   "main": "index.js",
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "eslint-plugin-react-hooks": "^7.0.1"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "plugin:react-hooks/recommended"
+    ],
+    "plugins": [
+      "react-hooks"
+    ],
+    "rules": {}
   }
 }
