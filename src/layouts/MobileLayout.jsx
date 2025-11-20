@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
 
 import "../styles/MobileLayout.css";
 import Sidebar from "../components/Sidebar";
+import CitySelectorModal from "../components/CitySelectorModal";
 
 export default function MobileLayout({ children }) {
   const [open, setOpen] = useState(false);
+  const [selectedCity, setSelectedCity] = useState("Delhi");
+
+  const [cityOpen, setCityOpen] = useState(false);
+  const handleSelect = (city) => {
+    setSelectedCity(city); 
+    console.log("selected city:", city);
+    // update app state / close modal
+    setCityOpen(false);
+  };  
 
   // lock body scroll when sidebar open
   useEffect(() => {
@@ -30,7 +41,7 @@ export default function MobileLayout({ children }) {
         </div>
 
         <div className="ml-topbar-row2">
-          <div className="ml-location">Delhi ▾</div>
+          <div onClick={() => setCityOpen(true)} className="ml-location"> {selectedCity} ▾</div>
 
           <div className="ml-search-wrap" role="search">
             <input
@@ -45,7 +56,21 @@ export default function MobileLayout({ children }) {
 
       <main className="ml-main">{children}</main>
 
+      <main className="ml-main">
+        {/* Prefer nested routes when using <Route element={<MobileLayout/>}> */}
+        {children ?? <Outlet />}
+      </main>
+
       <Sidebar open={open} onClose={() => setOpen(false)} />
+      <CitySelectorModal
+        open={cityOpen}
+        onClose={() => setCityOpen(false)}
+        onSelect={handleSelect}
+        selectedCity={selectedCity} 
+        
+        // headerImage optional - uses uploaded image by default
+        // headerImage={"/mnt/data/2b9a208d-8d89-4111-9ca0-bdd4df2506e8.png"}
+      />
     </div>
   );
 }

@@ -24,17 +24,37 @@ import MobileCarousel from "./components/MobileCarousel";
 export default function App() {
   const isMobile = useIsMobile(900); // change breakpoint as needed
 
-  if (isMobile) {
-    // Mobile: render the mobile shell and mobile homepage directly.
-    // If you want mobile routing later you can replace this with <Routes> inside MobileLayout.
-    return (
-      <MobileLayout>
-        <MobileHome />
-        {/* <MobileCarousel/> */}
-      </MobileLayout>
+  // if (isMobile) {
+  //   return (
+  //     <MobileLayout>
+  //       <MobileHome />
+  //       {/* <MobileCarousel/> */}
+  //     </MobileLayout>
       
+  //   );
+  // }
+
+  //----------------------------------------------------------------------------------------------
+
+  if (isMobile) {
+    return (
+      <Routes>
+        <Route path="/" element={<MobileLayout />}>
+          <Route index element={<MobileHome />} />
+          {/* Add other mobile routes later */}
+          <Route path="*" element={<MobileHome />} />
+        </Route>
+      </Routes>
     );
   }
+
+
+
+
+  //----------------------------------------------------------------------------------------------
+
+
+
 
   // Desktop: Keep existing routes/layout.
   return (
