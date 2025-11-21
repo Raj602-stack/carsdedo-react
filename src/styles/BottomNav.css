@@ -1,0 +1,68 @@
+.bn-root {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2000;
+    /* padding: 0 env(safe-area-inset-bottom) 8px; */
+    display: flex;
+    justify-content: center;
+  }
+  
+  .bn-inner {
+    width: 100%;
+    max-width: 600px;
+    background: #ffffff;
+    border-radius: 18px 18px 0 0;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-around;
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* Each item */
+  .bn-item {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    color: #7a7a7a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 0;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+  
+  /* Icon */
+  .bn-img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    opacity: 0.7;
+  }
+  
+  /* Label */
+  .bn-label {
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  
+  /* Active style */
+  .bn-item.active {
+    color: #e93b68;
+  }
+  
+  .bn-item.active .bn-img {
+    opacity: 1;
+    filter: brightness(0) saturate(100%) invert(29%) sepia(78%) saturate(3562%) hue-rotate(340deg) brightness(93%) contrast(92%);
+  }
+  
+  /* Hide on desktop */
+  @media (min-width: 900px) {
+    .bn-root {
+      display: none;
+    }
+  }
+  

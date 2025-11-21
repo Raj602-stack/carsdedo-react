@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import "../styles/MobileLayout.css";
 import Sidebar from "../components/Sidebar";
 import CitySelectorModal from "../components/CitySelectorModal";
+import BottomNav from "../components/BottomNav";
 
 export default function MobileLayout({ children }) {
   const [open, setOpen] = useState(false);
@@ -71,6 +72,8 @@ export default function MobileLayout({ children }) {
         // headerImage optional - uses uploaded image by default
         // headerImage={"/mnt/data/2b9a208d-8d89-4111-9ca0-bdd4df2506e8.png"}
       />
+
+      <BottomNav/>
     </div>
   );
 }
