@@ -1,0 +1,112 @@
+.mr-root {
+    padding: 16px;
+    background: #ffffff;
+    color: #1a0a2a;
+    margin-bottom: 30px;
+    font-family: system-ui, sans-serif;
+  }
+  
+  /* Title */
+  .mr-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 18px;
+    color: #240b36;
+  }
+  
+  /* Rating Box */
+  .mr-rating-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8f4ff;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  .mr-stars {
+    color: #ffcc00;
+    font-size: 20px;
+  }
+  
+  /* Review item */
+  .mr-item {
+    padding: 12px 0;
+  }
+  
+  /* Top row */
+  .mr-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  /* Avatar */
+  .mr-avatar {
+    min-width: 46px;
+    height: 46px;
+    background: #f4efff;
+    color: #5e3ecf;
+    font-weight: 800;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+  }
+  
+  /* Name + meta */
+  .mr-info {
+    flex: 1;
+  }
+  
+  .mr-name {
+    font-size: 17px;
+    font-weight: 800;
+  }
+  
+  .mr-meta {
+    font-size: 13px;
+    color: #7c6b8a;
+    margin-top: 2px;
+  }
+  
+  /* Stars right */
+  .mr-stars-right {
+    color: #ffcc00;
+    font-size: 18px;
+    white-space: nowrap;
+  }
+  
+  /* Review text */
+  .mr-text {
+    margin-top: 10px;
+    font-size: 15px;
+    line-height: 1.45;
+    color: #3b2f44;
+  }
+  
+  /* Read more */
+  .mr-readmore {
+    margin-top: 8px;
+    background: transparent;
+    border: 0;
+    color: #673de6;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  /* Divider */
+  .mr-divider {
+    height: 1px;
+    background: #eee5f9;
+    margin-top: 14px;
+  }
+  

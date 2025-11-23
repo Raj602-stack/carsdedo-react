@@ -1,0 +1,380 @@
+/* Page base */
+.ms-page {
+    background: #f8d4d4;
+    min-height: 100vh;
+    color: #2b1b3a;
+    border-radius: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding-bottom: 50px;
+  }
+  
+  /* HERO: left text, right image */
+  .ms-hero {
+    background: linear-gradient(180deg, #2f0b45 0%, #2a0536 100%);
+    border-radius: 14px;
+    color: #fff;
+    padding: 18px 16px;
+    box-sizing: border-box;
+  }
+  
+  /* container keeps content centered and gives the left/right layout */
+  .ms-hero-inner {
+    max-width: 980px;
+    margin: 0 auto;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
+  
+  /* text column */
+  .ms-hero-text {
+    flex: 1 1 56%;
+    min-width: 0;
+    padding-right: 8px;
+  }
+  
+  /* small brand badge */
+  .ms-badge {
+    display: inline-block;
+    background: linear-gradient(90deg, #ff6b8a, #5b1de6);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 13px;
+    margin-bottom: 10px;
+    box-shadow: 0 8px 20px rgba(91, 29, 230, 0.12);
+  }
+  
+  /* headline */
+  .ms-hero-title {
+    margin: 0;
+    font-size: 28px;
+    line-height: 1.03;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: #fff;
+  }
+  
+  /* accent text inside headline */
+  .ms-hero-accent {
+    display: inline-block;
+    background: linear-gradient(90deg, #3af6c6 0%, #89f0a6 40%, #77e0ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 900;
+  }
+  
+  /* subtext */
+  .ms-hero-sub {
+    margin: 10px 0 0;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 14px;
+  }
+  
+  /* visual column (image) — fixed size so it stays on the right */
+  .ms-hero-visual {
+    flex: 0 0 36%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    min-width: 120px;
+    box-sizing: border-box;
+  }
+  
+  /* image styling — constrained width so it doesn't push layout */
+  .ms-hero-img {
+    width: 50%;
+    /* max-width: 360px; */
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 8px;
+    transform: translateY(6px); /* subtle lift */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+  .ms-car-thumb {
+    flex: 0 0 56px;
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    overflow: hidden;        /* 🔥 forces image to stay inside */
+    background: #f7f3f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Make image take FULL space */
+  .ms-car-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;       /* 🔥 fills the square */
+    object-position: center; /* keep car centered */
+    display: block;
+  }
+  
+  
+  /* CARD SECTION */
+  .ms-card-wrap {
+    padding: 16px;
+    max-width: 720px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+  .ms-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(15, 15, 15, 0.12);
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .ms-card-top {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  /* .ms-car-thumb {
+    flex: 0 0 56px;
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    background: #f7f3f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  } */
+  .ms-car-meta {
+    flex: 1;
+    min-width: 0;
+  }
+  .ms-car-title {
+    font-weight: 800;
+    font-size: 16px;
+    color: #1b1630;
+  }
+  .ms-car-sub {
+    color: #8c7f8f;
+    font-size: 13px;
+    margin-top: 6px;
+  }
+  .ms-edit {
+    background: transparent;
+    border: 0;
+    color: #6b2bd6;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  /* CTA */
+  .ms-cta-row {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ms-primary {
+    background: #e93b68;
+    color: #fff;
+    padding: 14px;
+    border-radius: 10px;
+    border: 0;
+    font-weight: 800;
+    width: 100%;
+    cursor: pointer;
+  }
+  .ms-progress {
+    text-align: center;
+    color: #8c7f8f;
+    font-size: 13px;
+    margin-top: 6px;
+  }
+  
+  /* alternative section */
+  .ms-or {
+    text-align: center;
+    margin: 18px 0;
+    color: #9f8fa0;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  .ms-alt {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 4px 16px rgba(15, 15, 15, 0.04);
+  }
+  .ms-alt-title {
+    color: #4a2b57;
+    margin: 0 0 8px;
+    font-size: 16px;
+  }
+  .ms-alt-sub {
+    color: #8c7f8f;
+    margin: 0 0 12px;
+    font-size: 13px;
+  }
+  .ms-reg-input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+  .ms-secondary {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 0;
+    background: #f2f2f2;
+    color: #3a0b5b;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .ms-or-line {
+    text-align: center;
+    margin: 12px 0;
+    color: #b6a7bb;
+    font-weight: 700;
+  }
+  .ms-outline {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 0;
+    background: #f2f2f2;
+    color: #3a0b5b;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  /* Responsive: keep image on right for medium screens, stack on very small screens */
+  @media (max-width: 640px) {
+    .ms-hero {
+      padding: 14px 12px;
+    }
+  
+    /* On very small screens we keep side-by-side but shrink image so it remains visually right-aligned */
+    .ms-hero-inner {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+  
+    .ms-hero-text {
+      flex: 1 1 60%;
+    }
+  
+    .ms-hero-title {
+      font-size: 20px;
+    }
+  
+    .ms-hero-visual {
+      flex: 0 0 34%;
+      align-items: flex-start;
+      justify-content: flex-end;
+    }
+  
+    .ms-hero-img {
+      max-width: 160px;
+      transform: none;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    }
+  }
+  
+  /* Larger screens */
+  @media (min-width: 900px) {
+    .ms-hero {
+      padding: 28px 24px;
+    }
+    .ms-hero-title {
+      font-size: 36px;
+    }
+    .ms-hero-visual {
+      flex: 0 0 36%;
+    }
+    .ms-hero-img {
+      max-width: 420px;
+    }
+  }
+  
+  /* Desktop spacing */
+  @media (min-width: 1200px) {
+    .ms-hero-inner { max-width: 1100px; }
+    .ms-hero-img { max-width: 480px; }
+  }
+  
+
+  /* ---------------------------------*/
+  /* Section wrapper */
+.wc-section {
+    background: #260947; /* deep purple similar to Spinny */
+    padding: 40px 20px;
+    margin-bottom: 50px;
+    text-align: center;
+    border-radius: 0px;
+    color: white;
+    border-radius: 14px;
+  }
+  
+  /* Title */
+  .wc-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 28px;
+  }
+  
+  /* 3-column layout */
+  .wc-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+  }
+  
+  /* Each item */
+  .wc-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Icon */
+  .wc-icon {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    margin-bottom: 12px;
+  }
+  
+  /* Text under icon */
+  .wc-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.3;
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 600px) {
+    .wc-grid {
+      gap: 18px;
+    }
+  
+    .wc-icon {
+      width: 38px;
+      height: 38px;
+    }
+  
+    .wc-title {
+      font-size: 18px;
+    }
+  }
+   

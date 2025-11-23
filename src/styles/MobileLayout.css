@@ -175,7 +175,7 @@
   /* Main content below topbar */
   .ml-main {
     flex: 1 1 auto;
-    padding: 14px;
+    padding: 7px;
     background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.02) 100%);
   }
   

@@ -30,7 +30,7 @@ export default function BottomNav() {
     <nav className="bn-root" role="navigation" aria-label="Bottom Navigation">
       <div className="bn-inner">
         <Item to="/" label="Home" icon={faHouse} />
-        <Item to="/cars" label="Buy Car" icon={faCar} />
+        <Item to="/buy" label="Buy Car" icon={faCar} />
         <Item to="/shortlists" label="Shortlists" icon={faHeart} />
         <Item to="/sell" label="Sell Car" icon={faKey} />
         <Item to="/account" label="Account" icon={faUser} />

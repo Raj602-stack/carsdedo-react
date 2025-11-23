@@ -1,0 +1,26 @@
+.ms-header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 10px 14px;
+    background: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+  }
+  
+  .ms-left { display:flex; align-items:center; gap:10px; }
+  .ms-back { font-size:18px; background:transparent; border:0; padding:6px; cursor:pointer; }
+  .ms-logo { height:28px; }
+  
+  .ms-help {
+    background: transparent;
+    border: 2px solid #6b2bd6;
+    color: #5b1de6;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  

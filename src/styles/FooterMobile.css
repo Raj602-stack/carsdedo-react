@@ -15,6 +15,7 @@
     box-sizing: border-box;
     border-radius: 14px;
     padding: 18px 14px;
+    margin-bottom: 30px;
     -webkit-font-smoothing: antialiased;
     position: relative;
     overflow: hidden;

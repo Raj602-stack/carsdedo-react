@@ -1,0 +1,175 @@
+/* SellSteps.css - responsive zig-zag with mobile two-column rows */
+
+/* Base */
+.ss-root {
+    background: #fff;
+    color: #231f2f;
+    padding: 24px 14px;
+    box-sizing: border-box;
+  }
+  .ss-container {
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  
+  /* Heading */
+  .ss-heading {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 800;
+    color: #2b1140;
+    margin-bottom: 22px;
+  }
+  
+  /* Row (desktop default: two-column, but we only reverse on desktop) */
+  .ss-row {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin: 22px 0;
+    box-sizing: border-box;
+    /* keep natural flow (image left, text right) by default */
+  }
+  .reverse-desktop {
+    flex-direction: row-reverse;
+    margin-left: 20px;
+  }
+  
+  /* On wide screens allow alternation by adding class reverse-desktop */
+  @media (min-width: 881px) {
+    .reverse-desktop {
+      flex-direction: row-reverse;
+    }
+  }
+  
+  /* Visual (image) column */
+  .ss-visual {
+    flex: 0 0 36%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    box-sizing: border-box;
+  }
+  .ss-art {
+    width: 100%;
+    max-width: 260px;     /* important: caps image width so it doesn't dominate */
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+  
+  /* Copy column */
+  .ss-copy {
+    flex: 1 1 60%;
+    min-width: 0;
+    padding: 6px 8px;
+  }
+  .ss-icon-wrap {
+    width: 46px;
+    height: 46px;
+    margin-bottom: 8px;
+  }
+  .ss-small-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  
+  /* Titles & text */
+  .ss-title {
+    font-size: 18px;
+    color: #2b1140;
+    margin: 0 0 8px;
+    font-weight: 800;
+  }
+  .ss-text {
+    color: #6f6570;
+    margin: 0 0 12px;
+    line-height: 1.45;
+    font-size: 15px;
+  }
+  .ss-link {
+    background: transparent;
+    border: 0;
+    color: #5b1de6;
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    padding: 6px 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  /* Final block */
+  .ss-final {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-top: 26px;
+    padding: 18px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(20, 20, 30, 0.04);
+  }
+  .ss-final-left { flex: 1 1 56%; }
+  .ss-final-title { font-size: 20px; color: #2b1140; margin: 0 0 10px; font-weight: 800; }
+  .ss-final-text { color: #6f6570; margin: 0 0 14px; line-height: 1.45; }
+  .ss-final-visual { flex: 0 0 36%; display:flex; align-items:center; justify-content:center; }
+  .ss-final-img { width: 100%; max-width: 260px; object-fit: contain; border-radius: 12px; box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
+  
+  /* CTA row */
+  .ss-cta-row { display:flex; flex-direction:column; align-items:center; gap:14px; margin-top:20px; }
+  .ss-watch { background:#f1f0f4; border:0; padding:12px 20px; border-radius:12px; font-weight:800; color:#2b1140; cursor:pointer; width:100%; max-width:420px; display:inline-flex; align-items:center; justify-content:center; gap:10px; }
+  .ss-play { background:#2b1140; color:white; padding:6px 10px; border-radius:999px; font-size:12px; }
+  .ss-learn { color:#5b1de6; font-weight:800; text-decoration:none; }
+  
+  /* ===========================
+     MOBILE (<= 880px)
+     Keep each step compact: small image left, copy right.
+     Do NOT stack with a full-bleed illustration.
+     =========================== */
+  @media (max-width: 880px) {
+    .ss-row {
+     
+      align-items: flex-start;
+      gap: 12px;
+      margin: 25px 0;
+    }
+  
+    .ss-visual {
+      flex: 0 0 88px;           /* small thumbnail area (left) */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+  
+    .ss-art {
+      max-width: 82px;          /* small illustration size */
+      max-height: 82px;
+    }
+  
+    .ss-copy {
+      flex: 1 1 calc(100% - 88px);
+      padding: 0;
+    }
+
+    .reverse-desktop .ss-copy{
+        margin-left: 12px;
+    }
+  
+    .ss-title { font-size: 16px; margin-top: 2px; }
+    .ss-text { font-size: 14px; color: #6f6570; margin: 6px 0 8px; }
+   .reverse-desktop .ss-text { font-size: 14px; color: #6f6570; margin: 6px 0 8px; }
+    .ss-icon-wrap { width: 36px; height: 36px; margin-bottom: 6px; }
+    .ss-small-icon { width: 100%; height: 100%; }
+  
+    /* Final block stacks on mobile */
+    .ss-final { flex-direction: column; text-align: left; }
+    .ss-final-visual { margin-top: 12px; }
+    .ss-final-img { max-width: 220px; }
+  }
+  

@@ -11,6 +11,8 @@ import useIsMobile from "./hooks/useIsMobile";
 import MobileLayout from "./layouts/MobileLayout";
 import MobileHome from "./components/MobileHome";
 import MobileCarousel from "./components/MobileCarousel";
+import MobileSellPage from "./pages/MobileSellPage";
+import BuyPage from "./pages/BuyPage";
 
 /**
  * App - chooses between mobile shell and desktop routes.
@@ -41,9 +43,18 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MobileLayout />}>
           <Route index element={<MobileHome />} />
+          <Route path="sell" element={<MobileSellPage/>} /> 
+          {/* <Route path="buy" element={<BuyPage/>}/>  */}
+
           {/* Add other mobile routes later */}
           <Route path="*" element={<MobileHome />} />
         </Route>
+
+
+        <Route path="/buy" element={<BuyPage />}>
+        {/* nested routes inside special layout if needed */}
+       
+      </Route>
       </Routes>
     );
   }
