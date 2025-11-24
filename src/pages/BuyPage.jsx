@@ -9,7 +9,7 @@ import "../styles/BuyPage.css";
 const HERO_BANNER = "/mnt/data/53e3c8d8-bc90-46c5-846f-ee263aec5ece.png";
 
 /**
- * FilterDropdown (portal-based) - copy-pasteable
+ * FilterDropdown (portal-based) - with global "closeAllDropdowns" event
  * Props:
  *  - label: string
  *  - options: [{ value, label }]
@@ -32,6 +32,15 @@ function FilterDropdown({ label, options = [], selected = null, onChange }) {
     return () => window.removeEventListener("click", onDoc);
   }, []);
 
+  // listen for global close-all signal
+  useEffect(() => {
+    function onCloseAll() {
+      setOpen(false);
+    }
+    window.addEventListener("closeAllDropdowns", onCloseAll);
+    return () => window.removeEventListener("closeAllDropdowns", onCloseAll);
+  }, []);
+
   // position the menu near the button using fixed positioning
   useLayoutEffect(() => {
     if (!open) return;
@@ -41,13 +50,11 @@ function FilterDropdown({ label, options = [], selected = null, onChange }) {
       if (!btn) return;
       const rect = btn.getBoundingClientRect();
 
-      // compute left to keep menu inside viewport if possible
       const minWidth = rect.width;
       let left = rect.left;
       let top = rect.bottom + 8;
 
       const maxWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-      // adjust if overflowing right
       const estimatedMenuWidth = Math.max(minWidth, 200);
       if (left + estimatedMenuWidth > maxWidth - 12) {
         left = Math.max(12, maxWidth - estimatedMenuWidth - 12);
@@ -130,7 +137,14 @@ function FilterDropdown({ label, options = [], selected = null, onChange }) {
         aria-expanded={open}
         onClick={(e) => {
           e.stopPropagation();
-          setOpen((v) => !v);
+          // If we're opening, first tell others to close
+          if (!open) {
+            // dispatch a simple DOM event other dropdowns listen for
+            window.dispatchEvent(new Event("closeAllDropdowns"));
+            setOpen(true);
+          } else {
+            setOpen(false);
+          }
         }}
         onKeyDown={handleKey}
       >
