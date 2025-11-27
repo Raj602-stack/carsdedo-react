@@ -71,7 +71,7 @@ html, body, #root { height: 100%; }
 .swipe-insert { padding:8px 14px; }
 
 /* bottom controls */
-.bottom-controls { position:fixed; left:12px; right:12px; bottom:18px; z-index:9999; display:flex; gap:12px; justify-content:space-between; pointer-events:auto; }
+.bottom-controls { position:fixed; left:12px; right:12px; bottom:18px; z-index:9999; display:flex; gap:12px;margin-bottom: 45px; justify-content:space-between; pointer-events:auto; }
 .bottom-btn { flex:1; padding:12px 14px; border-radius:12px; border:1px solid rgba(43,17,64,0.12); background:#fff; font-weight:800; color:#3c2a4a; box-shadow:0 8px 26px rgba(15,15,15,0.06); cursor:pointer; }
 .bottom-btn.primary { background:#5b1de6; color:#fff; border:0; }
 

@@ -1,6 +1,8 @@
 // BuyPage.jsx
 import React, { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
+
 import BottomNav from "../components/BottomNav";
 import "../styles/BuyPage.css";
 
@@ -783,6 +785,8 @@ function SwipableInfo({ slides = [] }) {
 
 /* Main BuyPage component */
 export default function BuyPage() {
+  const navigate = useNavigate();
+
   const yearOptionsTop = [
     { value: "2024", label: "2024" },
     { value: "2023", label: "2023" },
@@ -951,7 +955,8 @@ export default function BuyPage() {
         <div className="list">
           {filtered.length > 0 ? filtered.map((car, i) => (
             <React.Fragment key={car.id}>
-              <article className="car-card" tabIndex={0}>
+              <article key={car.id} className="car-card" tabIndex={0} onClick={() => navigate(`/car/${car.id}`, { state: { car } })}
+  role="button">
                 <div className="car-thumb"><img src={car.thumb} alt={car.title} loading="lazy" /></div>
                 <div className="car-content">
                   <div className="car-row">
