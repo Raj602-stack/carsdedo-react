@@ -1,0 +1,153 @@
+/* LoginPage.css — Mobile-first Spinny style login screen */
+
+:root {
+    --brand-purple: #5b1de6;
+    --muted-text: #7e6d8f;
+    --border-light: #ece7f2;
+    --header-h: 56px;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  body,
+  html,
+  #root {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #fff;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue";
+  }
+  
+  /* --- ROOT CONTAINER --- */
+  .login-root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #fff;
+  }
+  
+  /* --- HEADER --- */
+  .login-header {
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  
+  .login-back {
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    color: #2c1441;
+    cursor: pointer;
+  }
+  
+  .login-logo-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+  }
+  
+  .login-logo {
+    height: 26px;
+    object-fit: contain;
+  }
+  
+  .login-header-actions {
+    width: 28px; /* placeholder to balance back arrow spacing */
+  }
+  
+  /* --- MAIN --- */
+  .login-main {
+    padding: 28px 20px;
+    flex: 1;
+  }
+  
+  .login-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 800;
+    color: #2c1441;
+    margin-bottom: 32px;
+  }
+  
+  /* --- FORM --- */
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  .input-wrap {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    padding: 14px 18px;
+  }
+  
+  .mobile-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  
+  .mobile-input.has-error {
+    color: #c62828;
+  }
+  
+  /* --- ERROR --- */
+  .field-error {
+    color: #c62828;
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: -4px;
+  }
+  
+  /* --- TERMS TEXT --- */
+  .tos {
+    text-align: center;
+    font-size: 14px;
+    color: var(--muted-text);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+  
+  .tos a {
+    color: var(--brand-purple);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  
+  /* --- BUTTON --- */
+  .verify-btn {
+    margin-top: 10px;
+    width: 100%;
+    background: var(--brand-purple);
+    color: white;
+    font-size: 17px;
+    font-weight: 800;
+    border: none;
+    padding: 15px 0;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(91, 29, 230, 0.15);
+  }
+  
+  .verify-btn:active {
+    transform: scale(0.98);
+  }
+  
+  /* --- ACCESSIBILITY HELPERS --- */
+  .visually-hidden {
+    position: absolute;
+    left: -9999px;
+  }
+  

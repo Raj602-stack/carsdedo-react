@@ -1,0 +1,406 @@
+/* TopbarWithCitySelector.css
+   Full CSS: fixed topbar + compact city modal + 2x7 grid tiles
+*/
+
+/* -------------------------
+   BASE / TOKENS
+   ------------------------- */
+   :root {
+    --bg: #ffffff;
+    --overlay: rgba(12, 12, 12, 0.30);
+    --muted: #8f9093;
+    --border: #eeeef0;
+    --accent: #4b2aa8;        /* purple accent */
+    --accent-soft: #f4ecff;   /* soft purple background */
+    --pill-bg: #fbf9fc;
+    --pill-new: #e24b6b;
+    --shadow-lg: 0 12px 30px rgba(18,18,20,0.12);
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --radius-pill: 999px;
+    --text: #222;
+    --topbar-height: 72px;    /* adjust if your topbar height differs */
+  }
+  
+  /* -------------------------
+     PAGE WRAPPER (prevent content behind fixed topbar)
+     ------------------------- */
+  .page {
+    /* padding-top: var(--topbar-height); */
+    /* if you also have a subnav directly under topbar, add extra padding */
+    /* padding-top: calc(var(--topbar-height) + 50px); */
+    box-sizing: border-box;
+  }
+  
+  /* -------------------------
+     TOPBAR (fixed)
+     ------------------------- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 18px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--topbar-height);
+    z-index: 1100;
+    box-sizing: border-box;
+  }
+  
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .logo-img {
+    width: 140px;
+    height: auto;
+    object-fit: contain;
+  }
+  
+  /* location button (click opens modal) */
+  .location-btn,
+  .location {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 8px 14px;
+    border: 1px solid #ececec;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    font-size: 14px;
+    color: var(--text);
+  }
+  
+  .location-btn:hover {
+    background: #fafafa;
+  }
+  
+  .caret {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+  
+  /* center search */
+  .topbar-center {
+    flex: 1;
+    padding: 0 18px;
+  }
+  
+  .top-search {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 14px;
+  }
+  
+  /* right actions */
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  
+  .call {
+    font-size: 14px;
+  }
+  
+  /* -------------------------
+     MODAL OVERLAY (centered)
+     ------------------------- */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--overlay);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2200;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* -------------------------
+     SLEEK & COMPACT MODAL BOX
+     ------------------------- */
+  .modal {
+    width: min(980px, 94%);
+    max-width: 980px;
+    max-height: 84vh;
+    background: var(--bg);
+    border-radius: var(--radius-lg);
+    padding: 26px 26px 22px;
+    box-shadow: var(--shadow-lg);
+    overflow: auto;
+    border: 1px solid var(--border);
+    box-sizing: border-box;
+    animation: modalIn 170ms ease-out;
+  }
+  
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(-6px) scale(.995); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  
+  /* -------------------------
+     MODAL HEADER & SEARCH
+     ------------------------- */
+  .modal-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  
+  .modal-title {
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--accent);
+    margin: 0;
+  }
+  
+  .modal-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  
+  /* close button */
+  .modal-close {
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    color: #3b2a4b;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+  }
+  .modal-close:hover { background: rgba(0,0,0,0.03); }
+  
+  /* search box */
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 14px;
+    background: #fbfafb;
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+  }
+  .search-icon { width: 18px; height: 18px; opacity: 0.6; }
+  .search-input {
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: var(--text);
+    width: 100%;
+    background: transparent;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  
+  /* -------------------------
+     SECTION TITLE
+     ------------------------- */
+  .section-title {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9b9ea2;
+    margin: 8px 0 12px;
+    font-weight: 700;
+  }
+  
+  /* -------------------------
+     POPULAR GRID (2 rows x 7 cols)
+     ------------------------- */
+  .popular-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);  /* 7 columns */
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  
+  /* small square city tiles */
+  .city-card {
+    aspect-ratio: 1 / 1;       /* perfect square */
+    width: 100%;
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px;             /* smaller padding */
+    cursor: pointer;
+    transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  
+  .city-card:hover {
+    transform: translateY(-4px);
+    background: #fbf7ff;
+    border-color: rgba(75,42,168,0.08);
+  }
+  
+  .city-card.selected {
+    background: var(--accent-soft);
+    border-color: rgba(75,42,168,0.26);
+    box-shadow: 0 6px 18px rgba(75,42,168,0.06);
+  }
+  
+  /* icon circle */
+  .city-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #efedf2;
+    font-size: 18px;
+    color: #6a6a6a;
+    background: linear-gradient(180deg, #fff 0%, #fafafa 100%);
+  }
+  
+  /* label */
+  .city-name {
+    font-size: 12px;
+    color: #2e1f35;
+    font-weight: 700;
+    margin-top: 2px;
+    line-height: 1;
+  }
+  
+  /* subtle separators (optional) */
+  /* if you want inner row separators you can add box-shadows on city-card nth-child ranges */
+  
+  /* -------------------------
+     MORE CITIES (pills)
+     ------------------------- */
+  .more-section { margin-top: 6px; }
+  
+  /* MORE CITIES — 5 columns × 2 rows sleek pills */
+.pills {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);   /* ⭐ 5 columns */
+    gap: 14px 18px;                          /* vertical / horizontal spacing */
+    margin-top: 16px;
+  }
+  
+  .pillv {
+    padding: 12px 16px;
+    font-size: 14px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    backdrop-filter: blur(6px);
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    transition: 0.2s ease;
+  }
+  
+  .pill:hover {
+    background: #fff;
+    transform: translateY(-2px);
+  }
+  
+  .pill-selected {
+    border-color: #c9a8ff;
+    background: #f4ecff;
+    box-shadow: 0 3px 12px rgba(75,42,168,0.12);
+  }
+  
+  .pill .new {
+    display: block;
+    font-size: 11px;
+    color: #e24b6b;
+    margin-top: 4px;
+    font-weight: 700;
+  }
+  
+  
+  /* -------------------------
+     SEARCH RESULTS (if user types)
+     ------------------------- */
+  .search-results { margin-top: 18px; }
+  .results-list { display:flex; flex-direction:column; gap:10px; }
+  .result-item {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fff;
+    cursor:pointer;
+  }
+  .result-item:hover { background:#fbf7ff; }
+  
+  /* -------------------------
+     Accessibility & scrollbars
+     ------------------------- */
+  .city-card:focus, .pill:focus, .result-item:focus, .location-btn:focus {
+    outline: 3px solid rgba(75,42,168,0.12);
+    outline-offset: 2px;
+    border-radius: 12px;
+  }
+  
+  .modal::-webkit-scrollbar { width: 9px; height: 9px; }
+  .modal::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.06));
+    border-radius: 8px;
+    border: 2px solid rgba(255,255,255,0.7);
+  }
+  
+  /* -------------------------
+     RESPONSIVE BREAKPOINTS
+     (7 -> 5 -> 3 -> 2 columns)
+     ------------------------- */
+  @media (max-width: 1200px) {
+    .popular-grid { grid-template-columns: repeat(5, 1fr); }
+    .pills { grid-template-columns: repeat(3, 1fr); }
+    .modal { max-width: 820px; width: min(820px, 94%); }
+  }
+  
+  @media (max-width: 900px) {
+    .popular-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .pills { grid-template-columns: repeat(3, 1fr); }
+    .modal { width: min(760px, 94%); padding: 20px; }
+    .city-icon { width: 34px; height: 34px; font-size: 16px; }
+    .city-name { font-size: 11.5px; }
+  }
+  
+  @media (max-width: 700px) {
+    .popular-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .pills { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .modal { width: min(92%, 650px); padding: 16px; max-height: 88vh; }
+    .city-icon { width: 32px; height: 32px; font-size: 15px; }
+    .city-name { font-size: 11px; }
+  }
+  
+  /* mobile small screens - fallback 2 columns */
+  @media (max-width: 420px) {
+    .popular-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .pills { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .modal { width: 94%; padding: 14px; }
+    .cityname { font-size: 10.5px; }
+  }
+  
