@@ -12,6 +12,7 @@ import useIsMobile from "./hooks/useIsMobile";
 import MobileLayout from "./layouts/MobileLayout";
 import MobileHome from "./components/MobileHome";
 import MobileSellPage from "./pages/MobileSellPage";
+import BuyPageWeb from "./pages/BuyPageWeb";
 
 export default function App() {
   const isMobile = useIsMobile(900);
@@ -35,7 +36,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="buy" element={<BuyPage />} />
+            <Route path="buy" element={<BuyPageWeb />} />
             <Route path="car/:id" element={<CarDetails />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="account" element={<ProtectedRoute><AccountPage/></ProtectedRoute>} />

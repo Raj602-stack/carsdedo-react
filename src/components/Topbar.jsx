@@ -5,7 +5,7 @@ import "../styles/Topbar.css"; // make sure path is correct
 export default function Topbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState(
-    localStorage.getItem("selectedCity") || "Lucknow"
+    typeof window !== "undefined" ? localStorage.getItem("selectedCity") || "Lucknow" : "Lucknow"
   );
   const [query, setQuery] = useState("");
   const modalRef = useRef(null);
@@ -27,6 +27,32 @@ export default function Topbar() {
     "Chandigarh",
   ];
 
+
+  const cityImages = {
+    "Delhi NCR":process.env.PUBLIC_URL + "/delhincr.png",
+    Bangalore: process.env.PUBLIC_URL + "/banglore.png",
+    Hyderabad: process.env.PUBLIC_URL + "/hyderabad.png",
+    Mumbai: process.env.PUBLIC_URL + "/mumbai.png",
+    Pune:process.env.PUBLIC_URL + "/pune.png",
+    Delhi: process.env.PUBLIC_URL + "/delhincr.png",
+    Gurgaon: process.env.PUBLIC_URL + "/gurgaon.png",
+    Noida: process.env.PUBLIC_URL + "/noida.png",
+    Ahmedabad: process.env.PUBLIC_URL + "/ahmedabad.png",
+    Chennai: process.env.PUBLIC_URL + "/chennai.png",
+    Kolkata: process.env.PUBLIC_URL + "/kolkata.png",
+    Lucknow: process.env.PUBLIC_URL + "/lucknow.png",
+    Jaipur: process.env.PUBLIC_URL + "/jaipur.png",
+    Chandigarh: process.env.PUBLIC_URL + "/chandigarh.png",
+  
+    // More cities (optional images):
+    Ambala: "/images/cities/ambala.png",
+    Coimbatore: "/images/cities/coimbatore.png",
+    Faridabad: "/images/cities/faridabad.png",
+    Ghaziabad: "/images/cities/ghaziabad.png",
+    Agra: "/images/cities/agra.png",
+  };
+  
+
   const moreCities = [
     "Ambala",
     "Coimbatore",
@@ -41,6 +67,36 @@ export default function Topbar() {
   ];
 
   const allCities = Array.from(new Set([...popularCities, ...moreCities]));
+
+  // mapping city -> image path (public folder)
+  // const cityImages = {
+  //   "Delhi NCR": "/city-icons/delhi.png",
+  //   "Bangalore": "/city-icons/bangalore.png",
+  //   "Hyderabad": "/city-icons/hyderabad.png",
+  //   "Mumbai": "/city-icons/mumbai.png",
+  //   "Pune": "/city-icons/pune.png",
+  //   "Delhi": "/city-icons/delhi.png",
+  //   "Gurgaon": "/city-icons/gurgaon.png",
+  //   "Noida": "/city-icons/noida.png",
+  //   "Ahmedabad": "/city-icons/ahmedabad.png",
+  //   "Chennai": "/city-icons/chennai.png",
+  //   "Kolkata": "/city-icons/kolkata.png",
+  //   "Lucknow": "/city-icons/lucknow.png",
+  //   "Jaipur": "/city-icons/jaipur.png",
+  //   "Chandigarh": "/city-icons/chandigarh.png",
+  //   Ambala: "/city-icons/ambala.png",
+  //   Coimbatore: "/city-icons/coimbatore.png",
+  //   Faridabad: "/city-icons/faridabad.png",
+  //   Ghaziabad: "/city-icons/ghaziabad.png",
+  //   Kanpur: "/city-icons/kanpur.png",
+  //   Karnal: "/city-icons/karnal.png",
+  //   Kochi: "/city-icons/kochi.png",
+  //   Mysuru: "/city-icons/mysuru.png",
+  //   Sonipat: "/city-icons/sonipat.png",
+  //   Visakhapatnam: "/city-icons/visakhapatnam.png",
+  // };
+
+  const defaultCityIcon = "/city-icons/default.png";
 
   // close on Esc
   useEffect(() => {
@@ -65,7 +121,11 @@ export default function Topbar() {
 
   const handleSelectCity = (city) => {
     setSelectedCity(city);
-    localStorage.setItem("selectedCity", city);
+    try {
+      localStorage.setItem("selectedCity", city);
+    } catch (err) {
+      /* ignore storage errors in weird environments */
+    }
     setIsOpen(false);
     setQuery("");
   };
@@ -76,7 +136,7 @@ export default function Topbar() {
 
   return (
     <>
-      <header className="topbar">
+      <header className="topbar" role="banner">
         <div className="topbar-left">
           <div className="logo">
             <img className="logo-img" src="/carsdedo.jpeg" alt="Company Logo" />
@@ -108,7 +168,7 @@ export default function Topbar() {
         </div>
 
         <div className="topbar-right">
-          <nav className="top-actions">
+          <nav className="top-actions" aria-label="Top actions">
             {/* BUY CAR */}
             <div className="dropdown">
               <div className="action">Buy Car ▾</div>
@@ -154,20 +214,36 @@ export default function Topbar() {
       {/* City modal (covers screen for desktop) */}
       {isOpen && (
         <div className="modal-overlay" aria-hidden={!isOpen}>
-          <div className="modal" ref={modalRef} role="dialog" aria-label="Select a city">
+          <div
+            className="modal"
+            ref={modalRef}
+            role="dialog"
+            aria-label="Select a city"
+            aria-modal="true"
+          >
             <div className="modal-header">
               <div>
                 <h3 className="modal-title">Select a city</h3>
                 <div className="modal-subtitle">Popular cities & more</div>
               </div>
 
-              <button className="modal-close" onClick={() => setIsOpen(false)} aria-label="Close">
+              <button
+                className="modal-close"
+                onClick={() => setIsOpen(false)}
+                aria-label="Close"
+              >
                 ×
               </button>
             </div>
 
             <div className="search-box">
-              <svg className="search-icon" width="16" height="16" aria-hidden="true">
+              <svg
+                className="search-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+              >
                 <path d="M12.9 14.32a8 8 0 111.414-1.414l4.3 4.3a1 1 0 01-1.414 1.414l-4.3-4.3zM8 14a6 6 0 100-12 6 6 0 000 12z" />
               </svg>
               <input
@@ -190,8 +266,16 @@ export default function Topbar() {
                       className={`city-card ${isSelected ? "selected" : ""}`}
                       onClick={() => handleSelectCity(city)}
                       aria-pressed={isSelected}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleSelectCity(city);
+                      }}
                     >
-                      <div className="city-icon">🏙</div>
+                      <img
+                        src={cityImages[city] || defaultCityIcon}
+                        alt={`${city} icon`}
+                        className="city-icon-img"
+                        loading="lazy"
+                      />
                       <div className="city-name">{city}</div>
                     </button>
                   );
@@ -201,14 +285,16 @@ export default function Topbar() {
 
             <section className="more-section">
               <div className="section-title">MORE CITIES</div>
-              <div className="pills">
+              <div className="pills" role="list">
                 {moreCities.map((city) => (
                   <button
                     key={city}
                     className={`pillv ${city === selectedCity ? "pill-selected" : ""}`}
                     onClick={() => handleSelectCity(city)}
+                    role="listitem"
                   >
                     {city}
+                    {/* if you want a "New" badge per city, insert a <span className="new">New</span> */}
                   </button>
                 ))}
               </div>
@@ -228,6 +314,9 @@ export default function Topbar() {
                         onClick={() => handleSelectCity(city)}
                         role="button"
                         tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleSelectCity(city);
+                        }}
                       >
                         {city}
                       </div>
