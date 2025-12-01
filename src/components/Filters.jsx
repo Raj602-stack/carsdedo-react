@@ -162,28 +162,44 @@ export default function Filters({ filters, setFilters, metadata = {} }) {
             />
           </div>
 
-          <div className="range-wrap" aria-hidden="false">
-            <input
-              type="range"
-              min="0"
-              max="5000000"
-              step="10000"
-              value={filters.priceMin}
-              onChange={(e) => setPriceMin(Number(e.target.value))}
-              className="range-min"
-              aria-label="Price minimum slider"
-            />
-            <input
-              type="range"
-              min="0"
-              max="5000000"
-              step="10000"
-              value={filters.priceMax}
-              onChange={(e) => setPriceMax(Number(e.target.value))}
-              className="range-max"
-              aria-label="Price maximum slider"
-            />
-          </div>
+         {/* ---- improved range wrap: shows filled track and aligned thumbs ---- */}
+{/*
+  We'll compute percent positions for the selected min/max from the maximum value,
+  then apply a background gradient to the container showing the filled area.
+*/}
+<div
+  className="range-wrap"
+  // compute inline CSS variables for CSS to use
+  style={{
+    // ensure the max value used here matches your input max
+    // if you change the max on the inputs change MAX_PRICE too
+    ["--fill-start"]: `${(filters.priceMin / 5000000) * 100}%`,
+    ["--fill-end"]: `${(filters.priceMax / 5000000) * 100}%`,
+  }}
+  aria-hidden="false"
+>
+  <input
+    type="range"
+    min="0"
+    max="5000000"
+    step="10000"
+    value={filters.priceMin}
+    onChange={(e) => setPriceMin(Number(e.target.value))}
+    className="range-min"
+    aria-label="Price minimum slider"
+  />
+  <input
+    type="range"
+    min="0"
+    max="5000000"
+    step="10000"
+    value={filters.priceMax}
+    onChange={(e) => setPriceMax(Number(e.target.value))}
+    className="range-max"
+    aria-label="Price maximum slider"
+  />
+</div>
+
 
           <div className="price-values small">
             <small>Min: {fmt(filters.priceMin)} &nbsp; Max: {fmt(filters.priceMax)}</small>

@@ -5,13 +5,16 @@ import Filters from "../components/Filters";
 import CarCard from "../components/CarCard";
 import "../styles/BuyPageweb.css";
 
-export default function BuyPageWeb() {
-  // build metadata for filter UIs
+export default function BuyPage() {
+  // metadata for UI controls
   const brands = Array.from(new Set(carsData.map((c) => c.brand))).sort();
-  const years = [2023, 2021, 2019, 2017, 2015]; // or derive from data
+  // derive years from data (unique sorted descending)
+  const yearsSet = Array.from(new Set(carsData.map((c) => c.year)));
+  const years = [...yearsSet].sort((a, b) => b - a).filter(Boolean);
   const fuels = Array.from(new Set(carsData.map((c) => c.fuel))).sort();
   const bodies = Array.from(new Set(carsData.map((c) => c.body))).sort();
 
+  // initial filters: include all keys used by Filters.jsx
   const [filters, setFilters] = useState({
     q: "",
     priceMin: 0,
@@ -21,68 +24,178 @@ export default function BuyPageWeb() {
     kms: [],
     fuel: [],
     body: [],
+    colors: [],
+
+    // newly added sets
+    transmission: [],
+    category: [],
+    features: [],
+    seats: [],
+    rto: [],
+    owner: [],
+    hubs: [],
+
     sortBy: "relevance",
   });
 
-  // filtering logic
+  // helper: check if array filter intersects / contains
+  const anyMatch = (selected = [], value) => {
+    if (!selected || selected.length === 0) return true;
+    return selected.includes(value);
+  };
+
+  // helper: when selected is array of options (like colors), return true if car matches any
+  const matchesAny = (selected = [], value) => {
+    if (!selected || selected.length === 0) return true;
+    return selected.includes(value);
+  };
+
+  // helper: require all selected features to be present in car.features
+  const featuresMatchAll = (selected = [], carFeatures = []) => {
+    if (!selected || selected.length === 0) return true;
+    if (!Array.isArray(carFeatures)) return false;
+    return selected.every((s) => carFeatures.includes(s));
+  };
+
+  // compute filtered results (memoized)
   const filtered = useMemo(() => {
-    return carsData
+    const result = carsData
       .filter((c) => {
         // text search
-        if (filters.q) {
+        if (filters.q && filters.q.trim() !== "") {
           const q = filters.q.toLowerCase();
-          if (!`${c.title} ${c.brand} ${c.model}`.toLowerCase().includes(q)) return false;
+          const hay = `${c.title || ""} ${c.brand || ""} ${c.model || ""}`.toLowerCase();
+          if (!hay.includes(q)) return false;
         }
-        // price
-                // price: match if car.price between priceMin and priceMax
-        if (c.price < filters.priceMin || c.price > filters.priceMax) return false;
 
+        // price range
+        if (typeof c.price === "number") {
+          if (c.price < filters.priceMin || c.price > filters.priceMax) return false;
+        } else {
+          // if car has no price, exclude when price filter active
+          if (filters.priceMin > 0 || filters.priceMax < 5000000) return false;
+        }
+
+        // colors
+        if (filters.colors && filters.colors.length > 0) {
+          // car.colorKey should match one of selected color keys
+          if (!c.colorKey) return false;
+          if (!matchesAny(filters.colors, c.colorKey)) return false;
+        }
 
         // brands
-        if (filters.brands.length > 0 && !filters.brands.includes(c.brand)) return false;
+        if (filters.brands && filters.brands.length > 0) {
+          if (!matchesAny(filters.brands, c.brand)) return false;
+        }
 
-        // year
-        if (filters.year && c.year < Number(filters.year)) return false;
+        // year (year filter means "selectedYear & above")
+        if (filters.year) {
+          const num = Number(filters.year);
+          if (!Number.isNaN(num) && c.year < num) return false;
+        }
 
-        // kms: any selected means include if less/equal any selected threshold
-        if (filters.kms.length > 0) {
+        // kms: if any kms thresholds selected, car must be <= any of them
+        if (filters.kms && filters.kms.length > 0) {
           const ok = filters.kms.some((k) => c.km <= k);
           if (!ok) return false;
         }
 
         // fuel
-        if (filters.fuel.length > 0 && !filters.fuel.includes(c.fuel)) return false;
+        if (filters.fuel && filters.fuel.length > 0) {
+          if (!matchesAny(filters.fuel, c.fuel)) return false;
+        }
 
         // body
-        if (filters.body.length > 0 && !filters.body.includes(c.body)) return false;
+        if (filters.body && filters.body.length > 0) {
+          if (!matchesAny(filters.body, c.body)) return false;
+        }
+
+        // transmission
+        if (filters.transmission && filters.transmission.length > 0) {
+          if (!c.transmission) return false;
+          if (!matchesAny(filters.transmission, c.transmission)) return false;
+        }
+
+        // category (car.category field may exist)
+        if (filters.category && filters.category.length > 0) {
+          // car may have body/category mapping; we'll check both
+          const catMatch =
+            (c.category && matchesAny(filters.category, c.category)) ||
+            matchesAny(filters.category, c.body);
+          if (!catMatch) return false;
+        }
+
+        // features (require all selected features to be present)
+        if (filters.features && filters.features.length > 0) {
+          if (!featuresMatchAll(filters.features, c.features || [])) return false;
+        }
+
+        // seats
+        if (filters.seats && filters.seats.length > 0) {
+          // car.seats may be a number or string
+          const carSeats = c.seats ? String(c.seats) : "";
+          // allow "8+" selection: treat as >=8
+          const seatOk = filters.seats.some((s) => {
+            if (s.endsWith("+")) {
+              const min = Number(s.replace("+", ""));
+              return Number(c.seats || 0) >= min;
+            }
+            return carSeats === String(s);
+          });
+          if (!seatOk) return false;
+        }
+
+        // rto: match if car.rto (prefix) matches any selected RTOs
+        if (filters.rto && filters.rto.length > 0) {
+          if (!c.rto) return false;
+          const ok = filters.rto.some((r) => (c.rto || "").startsWith(r));
+          if (!ok) return false;
+        }
+
+        // owner
+        if (filters.owner && filters.owner.length > 0) {
+          // car.owner may be "First owner" etc.
+          if (!c.owner) return false;
+          if (!matchesAny(filters.owner, c.owner)) return false;
+        }
+
+        // hubs
+        if (filters.hubs && filters.hubs.length > 0) {
+          if (!c.hub) return false;
+          if (!matchesAny(filters.hubs, c.hub)) return false;
+        }
 
         return true;
       })
       .sort((a, b) => {
-        // simple sort options
-        if (filters.sortBy === "price-asc") return a.price - b.price;
-        if (filters.sortBy === "price-desc") return b.price - a.price;
-        if (filters.sortBy === "km-asc") return a.km - b.km;
-        return a.id - b.id; // relevance/default
+        if (filters.sortBy === "price-asc") return (a.price || 0) - (b.price || 0);
+        if (filters.sortBy === "price-desc") return (b.price || 0) - (a.price || 0);
+        if (filters.sortBy === "km-asc") return (a.km || 0) - (b.km || 0);
+        // default: keep original order
+        return a.id - b.id;
       });
+
+    return result;
   }, [filters]);
+
+  // readable header text for selected city
+  const selectedCity = localStorage.getItem("selectedCity") || "City";
 
   return (
     <div className="buy-page">
-      <Filters
-        filters={filters}
-        setFilters={setFilters}
-        metadata={{ brands, years, fuels, bodies }}
-      />
+      <Filters filters={filters} setFilters={setFilters} metadata={{ brands, years, fuels, bodies }} />
 
-      <main className="results">
+      <main className="results" role="main">
         <div className="results-header">
-          <div className="breadcrumbs">Home › Used Cars › Used Cars in {localStorage.getItem("selectedCity") || "City"}</div>
+          <div className="breadcrumbs">Home › Used Cars › Used Cars in {selectedCity}</div>
+
           <div className="results-controls">
             <div className="results-count">{filtered.length} results</div>
+
             <select
               value={filters.sortBy}
               onChange={(e) => setFilters((s) => ({ ...s, sortBy: e.target.value }))}
+              aria-label="Sort results"
             >
               <option value="relevance">Sort by: Relevance</option>
               <option value="price-asc">Price: Low to High</option>
@@ -92,17 +205,13 @@ export default function BuyPageWeb() {
           </div>
         </div>
 
-        {/* grid */}
-        <div className="cars-grid">
+        <div className="cars-grid" aria-live="polite">
           {filtered.map((car) => (
-            <CarCard car={car} key={car.id} />
+            <CarCard key={car.id} car={car} />
           ))}
         </div>
 
-        {/* empty state */}
-        {filtered.length === 0 && (
-          <div className="no-results">No cars match your filters. Try resetting filters.</div>
-        )}
+        {filtered.length === 0 && <div className="no-results">No cars match your filters. Try resetting filters.</div>}
       </main>
     </div>
   );
