@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import carsData from "../data/cars";
-import "../styles/CarDetailsWeb.css";
+import styles from "../styles/CarDetailsWeb.module.css";
 
 /**
  * CarDetails page
@@ -70,7 +70,9 @@ export default function CarDetails() {
     };
 
     const obs = new IntersectionObserver((entries) => {
-      const intersecting = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+      const intersecting = entries
+        .filter((e) => e.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
       if (intersecting.length > 0) {
         const sec = intersecting[0].target.dataset.section;
         if (sec) setActiveTab(sec);
@@ -151,9 +153,13 @@ export default function CarDetails() {
 
   if (!car) {
     return (
-      <div className="car-details-empty">
-        <p>Car not found</p>
-        <button onClick={() => navigate(-1)}>Back</button>
+      <div className={styles.carDetailsPageWrapper}>
+        <div className={styles.cdCard}>
+          <p>Car not found</p>
+          <button className={styles.btn} onClick={() => navigate(-1)}>
+            Back
+          </button>
+        </div>
       </div>
     );
   }
@@ -162,53 +168,65 @@ export default function CarDetails() {
   const thumbs = car.images && car.images.length ? car.images : [car.image];
 
   return (
-    <div className="car-details-page-wrapper">
+    <div className={styles.carDetailsPageWrapper}>
       {/* sticky tabs (positioned left only) */}
       <div
-        className={`cd-sticky-tabs ${showStickyTabs ? "visible" : ""}`}
+        className={`${styles.cdStickyTabs} ${showStickyTabs ? styles.visible : ""}`}
         style={{
           top: `${TOPBAR_HEIGHT + 8}px`,
           left: `${stickyStyle.left}px`,
           width: `${stickyStyle.width}px`,
         }}
       >
-        <div className="cd-sticky-inner">
-          <button className={`cd-tab ${activeTab === "overview" ? "active" : ""}`} onClick={() => scrollToRef(overviewRef)}>
+        <div className={styles.cdStickyInner}>
+          <button
+            className={`${styles.cdTab} ${activeTab === "overview" ? styles.cdTabActive : ""}`}
+            onClick={() => scrollToRef(overviewRef)}
+          >
             Overview
           </button>
-          <button className={`cd-tab ${activeTab === "report" ? "active" : ""}`} onClick={() => scrollToRef(reportRef)}>
+          <button
+            className={`${styles.cdTab} ${activeTab === "report" ? styles.cdTabActive : ""}`}
+            onClick={() => scrollToRef(reportRef)}
+          >
             Report
           </button>
-          <button className={`cd-tab ${activeTab === "specs" ? "active" : ""}`} onClick={() => scrollToRef(specsRef)}>
+          <button
+            className={`${styles.cdTab} ${activeTab === "specs" ? styles.cdTabActive : ""}`}
+            onClick={() => scrollToRef(specsRef)}
+          >
             Feature & Specs
           </button>
-          <button className={`cd-tab ${activeTab === "finance" ? "active" : ""}`} onClick={() => scrollToRef(financeRef)}>
+          <button
+            className={`${styles.cdTab} ${activeTab === "finance" ? styles.cdTabActive : ""}`}
+            onClick={() => scrollToRef(financeRef)}
+          >
             Finance
           </button>
         </div>
       </div>
 
       {/* main centered container */}
-      <div className="car-details-container" ref={containerRef}>
+      <div className={styles.carDetailsContainer} ref={containerRef}>
         {/* LEFT column */}
-        <main className="cd-left" ref={leftRef}>
+        <main className={styles.cdLeft} ref={leftRef}>
           {/* HERO */}
-          <div className="cd-hero" ref={heroRef}>
-            <div className="cd-hero-inner">
-              <div className="cd-hero-image">
+          <div className={styles.cdHero} ref={heroRef}>
+            <div className={styles.cdHeroInner}>
+              <div className={styles.cdHeroImage}>
                 <img src={heroImage} alt={car.title} />
-                <div className="cd-hero-controls">
-                  <button className="cd-back" onClick={() => navigate(-1)}>
+                <div className={styles.cdHeroControls}>
+                  <button className={styles.cdBack} onClick={() => navigate(-1)}>
                     ← Back
                   </button>
                 </div>
               </div>
 
-              <div className="cd-thumbs">
+              <div className={styles.cdThumbs}>
                 {thumbs.map((t, i) => (
                   <button
                     key={i}
-                    className={`cd-thumb ${t === heroImage ? "selected" : ""}`}
+                    className={`${styles.cdThumb} ${t === heroImage ? styles.cdThumbSelected : ""}`}
                     onClick={() => setHeroImage(t)}
                     aria-label={`Show image ${i + 1}`}
                   >
@@ -220,114 +238,127 @@ export default function CarDetails() {
           </div>
 
           {/* hero inline tabs (visible normally under hero) */}
-          <nav className="cd-hero-tabs" aria-label="Car sections">
-            <button className={`hero-tab ${activeTab === "overview" ? "active" : ""}`} onClick={() => scrollToRef(overviewRef)}>
+          <nav className={styles.cdHeroTabs} aria-label="Car sections">
+            <button
+              className={`${styles.heroTab} ${activeTab === "overview" ? styles.heroTabActive : ""}`}
+              onClick={() => scrollToRef(overviewRef)}
+            >
               Overview
             </button>
-            <button className={`hero-tab ${activeTab === "report" ? "active" : ""}`} onClick={() => scrollToRef(reportRef)}>
+            <button
+              className={`${styles.heroTab} ${activeTab === "report" ? styles.heroTabActive : ""}`}
+              onClick={() => scrollToRef(reportRef)}
+            >
               Report
             </button>
-            <button className={`hero-tab ${activeTab === "specs" ? "active" : ""}`} onClick={() => scrollToRef(specsRef)}>
+            <button
+              className={`${styles.heroTab} ${activeTab === "specs" ? styles.heroTabActive : ""}`}
+              onClick={() => scrollToRef(specsRef)}
+            >
               Feature & Specs
             </button>
-            <button className={`hero-tab ${activeTab === "finance" ? "active" : ""}`} onClick={() => scrollToRef(financeRef)}>
+            <button
+              className={`${styles.heroTab} ${activeTab === "finance" ? styles.heroTabActive : ""}`}
+              onClick={() => scrollToRef(financeRef)}
+            >
               Finance
             </button>
           </nav>
 
           {/* Overview section */}
-          <section id="overview" ref={overviewRef} data-section="overview" className="cd-section overview">
-            <h2 className="cd-section-title">Car Overview</h2>
+          <section id="overview" ref={overviewRef} data-section="overview" className={styles.cdSection}>
+            <h2 className={styles.cdSectionTitle}>Car Overview</h2>
 
-            <div className="cd-card overview-card">
-              <div className="row">
-                <div className="field">
-                  <div className="label">Make Year</div>
-                  <div className="value">May 2024</div>
+            <div className={styles.cdCard}>
+              <div className={styles.overviewCardRow}>
+                <div className={styles.overviewCardField}>
+                  <div className={styles.label}>Make Year</div>
+                  <div className={styles.value}>May 2024</div>
                 </div>
-                <div className="field">
-                  <div className="label">Registration Year</div>
-                  <div className="value">Jun 2024</div>
+                <div className={styles.overviewCardField}>
+                  <div className={styles.label}>Registration Year</div>
+                  <div className={styles.value}>Jun 2024</div>
                 </div>
-                <div className="field">
-                  <div className="label">Fuel Type</div>
-                  <div className="value">{car.fuel}</div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="field">
-                  <div className="label">Km driven</div>
-                  <div className="value">{car.km.toLocaleString()} km</div>
-                </div>
-                <div className="field">
-                  <div className="label">Transmission</div>
-                  <div className="value">{car.transmission}</div>
-                </div>
-                <div className="field">
-                  <div className="label">No. of Owner</div>
-                  <div className="value">{car.owner || "1st Owner"}</div>
+                <div className={styles.overviewCardField}>
+                  <div className={styles.label}>Fuel Type</div>
+                  <div className={styles.value}>{car.fuel}</div>
                 </div>
               </div>
 
-              <div className="row last">
-                <div className="field full">
-                  <div className="label">Car Location</div>
-                  <div className="value">{car.city}</div>
+              <div className={styles.overviewCardRow}>
+                <div className={styles.overviewCardField}>
+                  <div className={styles.label}>Km driven</div>
+                  <div className={styles.value}>{car.km.toLocaleString()} km</div>
+                </div>
+                <div className={styles.overviewCardField}>
+                  <div className={styles.label}>Transmission</div>
+                  <div className={styles.value}>{car.transmission}</div>
+                </div>
+                <div className={styles.overviewCardField}>
+                  <div className={styles.label}>No. of Owner</div>
+                  <div className={styles.value}>{car.owner || "1st Owner"}</div>
+                </div>
+              </div>
+
+              <div className={styles.overviewCardRow}>
+                <div className={styles.overviewCardFieldFull}>
+                  <div className={styles.label}>Car Location</div>
+                  <div className={styles.value}>{car.city}</div>
                 </div>
               </div>
             </div>
           </section>
 
           {/* Report */}
-          <section id="report" ref={reportRef} data-section="report" className="cd-section report">
-            <h2 className="cd-section-title">Quality report</h2>
-            <p className="muted">1571 parts evaluated by 5 automotive experts</p>
+          <section id="report" ref={reportRef} data-section="report" className={styles.cdSection}>
+            <h2 className={styles.cdSectionTitle}>Quality report</h2>
+            <p className={styles.meta}>1571 parts evaluated by 5 automotive experts</p>
 
-            <div className="cd-card report-card">
-              <div className="report-grid">
-                <div className="report-item">
-                  <div className="report-title">Core systems</div>
-                  <div className="report-score">9.8</div>
+            <div className={styles.cdCard}>
+              <div className={styles.reportCardGrid}>
+                <div className={styles.reportItem}>
+                  <div className={styles.reportTitle}>Core systems</div>
+                  <div className={styles.reportScore}>9.8</div>
                 </div>
-                <div className="report-item">
-                  <div className="report-title">Supporting systems</div>
-                  <div className="report-score">9.7</div>
+                <div className={styles.reportItem}>
+                  <div className={styles.reportTitle}>Supporting systems</div>
+                  <div className={styles.reportScore}>9.7</div>
                 </div>
-                <div className="report-item">
-                  <div className="report-title">Interiors & AC</div>
-                  <div className="report-score">9.6</div>
+                <div className={styles.reportItem}>
+                  <div className={styles.reportTitle}>Interiors & AC</div>
+                  <div className={styles.reportScore}>9.6</div>
                 </div>
-                <div className="report-item">
-                  <div className="report-title">Exteriors & lights</div>
-                  <div className="report-score">9.3</div>
+                <div className={styles.reportItem}>
+                  <div className={styles.reportTitle}>Exteriors & lights</div>
+                  <div className={styles.reportScore}>9.3</div>
                 </div>
               </div>
             </div>
           </section>
 
           {/* Feature & Specs */}
-          <section id="specs" ref={specsRef} data-section="specs" className="cd-section specs">
-            <h2 className="cd-section-title">Feature & Specs</h2>
+          <section id="specs" ref={specsRef} data-section="specs" className={styles.cdSection}>
+            <h2 className={styles.cdSectionTitle}>Feature & Specs</h2>
 
-            <div className="cd-card specs-card">
-              <div className="specs-grid">
-                <div className="spec">
-                  <div className="spec-ttl">Mileage (ARAI)</div>
-                  <div className="spec-val">22.35 kmpl</div>
+            <div className={styles.cdCard}>
+              <div className={styles.specsCardGrid}>
+                <div className={styles.spec}>
+                  <div className={styles.specTtl}>Mileage (ARAI)</div>
+                  <div className={styles.specVal}>22.35 kmpl</div>
                 </div>
-                <div className="spec">
-                  <div className="spec-ttl">Boot space</div>
-                  <div className="spec-val">318 litres</div>
+                <div className={styles.spec}>
+                  <div className={styles.specTtl}>Boot space</div>
+                  <div className={styles.specVal}>318 litres</div>
                 </div>
-                <div className="spec">
-                  <div className="spec-ttl">Displacement</div>
-                  <div className="spec-val">1197 cc</div>
+                <div className={styles.spec}>
+                  <div className={styles.specTtl}>Displacement</div>
+                  <div className={styles.specVal}>1197 cc</div>
                 </div>
               </div>
 
-              <div className="features">
+              <div className={styles.features}>
                 <h4>Top Features of this car</h4>
-                <div className="features-grid">
+                <div className={styles.featuresGrid}>
                   <ul>
                     <li>Airbags</li>
                     <li>Hill hold control</li>
@@ -348,25 +379,25 @@ export default function CarDetails() {
           </section>
 
           {/* Finance */}
-          <section id="finance" ref={financeRef} data-section="finance" className="cd-section finance">
-            <h2 className="cd-section-title">Finance</h2>
+          <section id="finance" ref={financeRef} data-section="finance" className={styles.cdSection}>
+            <h2 className={styles.cdSectionTitle}>Finance</h2>
 
-            <div className="cd-card finance-card">
-              <div className="emi">
-                <div className="emi-left">
-                  <div className="emi-number">₹9,400</div>
-                  <div className="muted">per month (approx)</div>
+            <div className={styles.cdCard}>
+              <div className={styles.financeCardEmi}>
+                <div className={styles.emiLeft}>
+                  <div className={styles.emiNumber}>₹9,400</div>
+                  <div className={styles.meta}>per month (approx)</div>
                 </div>
-                <div className="emi-right">
-                  <div className="muted">Loan Amount</div>
-                  <div className="value">₹{(car.price - 110400).toLocaleString()}</div>
-                  <div className="muted">Duration</div>
-                  <div className="value">66 Months</div>
+                <div className={styles.emiRight}>
+                  <div className={styles.meta}>Loan Amount</div>
+                  <div className={styles.value}>₹{(car.price - 110400).toLocaleString()}</div>
+                  <div className={styles.meta}>Duration</div>
+                  <div className={styles.value}>66 Months</div>
                 </div>
               </div>
 
-              <div className="finance-cta">
-                <button className="btn primary">Check eligibility</button>
+              <div className={styles.financeCta}>
+                <button className={`${styles.btn} ${styles.btnPrimary}`}>Check eligibility</button>
               </div>
             </div>
           </section>
@@ -375,9 +406,9 @@ export default function CarDetails() {
         </main>
 
         {/* RIGHT column wrapper (relative). This wrapper is used to switch fixed->absolute */}
-        <aside className={`cd-right ${isStopped ? "stop" : ""}`} ref={rightRef}>
+        <aside className={styles.cdRight} ref={rightRef}>
           <div
-            className={`cd-right-card`}
+            className={`${styles.cdRightCard} ${isStopped ? styles.cdRightStopCard : ""}`}
             ref={rightCardRef}
             style={
               isStopped
@@ -385,31 +416,35 @@ export default function CarDetails() {
                 : { position: "fixed", top: `${TOPBAR_HEIGHT + 12}px` }
             }
           >
-            <div className="right-inner">
-              <div className="title-row">
-                <h3 className="car-title">{car.title}</h3>
-                <button className="like" aria-label="save">♡</button>
+            <div className={styles.rightInner}>
+              <div className={styles.titleRow}>
+                <h3 className={styles.carTitle}>{car.title}</h3>
+                <button className={styles.like} aria-label="save">
+                  ♡
+                </button>
               </div>
 
-              <div className="meta">
-                <div>{car.km.toLocaleString()} km • {car.fuel} • {car.transmission}</div>
-                <div className="hub">Spinny Car Hub, {car.city}</div>
+              <div className={styles.meta}>
+                <div>
+                  {car.km.toLocaleString()} km • {car.fuel} • {car.transmission}
+                </div>
+                <div className={styles.hub}>Spinny Car Hub, {car.city}</div>
               </div>
 
-              <div className="price-block">
-                <div className="label muted">Fixed on road price</div>
-                <div className="price">₹{(car.price / 100000).toFixed(2)} L</div>
-                <div className="muted small">Includes RC transfer, insurance & more</div>
+              <div className={styles.priceBlock}>
+                <div className={styles.priceBlockLabel}>Fixed on road price</div>
+                <div className={styles.priceBlockPrice}>₹{(car.price / 100000).toFixed(2)} L</div>
+                <div className={styles.priceBlockSmall}>Includes RC transfer, insurance & more</div>
               </div>
 
-              <div className="cta">
-                <button className="btn book">BOOK NOW</button>
-                <button className="btn test">FREE TEST DRIVE</button>
+              <div className={styles.cta}>
+                <button className={styles.btnBook}>BOOK NOW</button>
+                <button className={styles.btnTest}>FREE TEST DRIVE</button>
               </div>
 
-              <div className="share">
+              <div className={styles.share}>
                 <p>Share with a friend :</p>
-                <div className="icons">📷 • f • ✕ • ✉️</div>
+                <div className={styles.icons}>📷 • f • ✕ • ✉️</div>
               </div>
             </div>
           </div>
