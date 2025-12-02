@@ -13,6 +13,7 @@ import MobileLayout from "./layouts/MobileLayout";
 import MobileHome from "./components/MobileHome";
 import MobileSellPage from "./pages/MobileSellPage";
 import BuyPageWeb from "./pages/BuyPageWeb";
+import CarDetailsWeb from "./pages/CarDetailsWeb";
 
 export default function App() {
   const isMobile = useIsMobile(900);
@@ -36,8 +37,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="buy" element={<BuyPageWeb />} />
-            <Route path="car/:id" element={<CarDetails />} />
+            <Route path="buy" element={<BuyPageWeb/>} />
+            <Route path="/car/:id" element={<CarDetailsWeb />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="account" element={<ProtectedRoute><AccountPage/></ProtectedRoute>} />
           </Route>
