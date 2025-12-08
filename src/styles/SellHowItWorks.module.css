@@ -1,0 +1,171 @@
+:root{
+    --purple: #3a0f57;
+    --muted: #7c6a88;
+    --accent: #6f1e9c;
+    --card-bg: #fff;
+  }
+  
+  /* Section wrapper */
+  .section {
+    background: #fff;
+    padding: 56px 20px;
+    color: var(--purple);
+  }
+  
+  /* center container */
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  /* heading */
+  .heading {
+    font-size: 26px;
+    color: var(--purple);
+    margin: 0 auto 36px;
+    font-weight: 900;
+    letter-spacing: -0.2px;
+    position: relative;
+    padding: 0 12px;
+  }
+  
+  /* grid layout */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+    align-items: start;
+    margin-bottom: 36px;
+  }
+  
+  /* each card */
+  .card {
+    background: transparent;
+    padding: 4px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  /* illustration wrap */
+  .imgWrap {
+    width: 136px;
+    height: 112px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  .illustration {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    object-fit: contain;
+  }
+  
+  /* title */
+  .cardTitle {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--purple);
+    margin: 6px 0 8px;
+  }
+  
+  /* description */
+  .cardDesc {
+    color: #2d0738;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 8px 12px;
+    min-height: 60px; /* keeps cards visually equal height */
+  }
+  
+  /* link / small CTA */
+  .cardLink {
+    color: var(--accent);
+    font-weight: 800;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+  }
+  
+  /* caret symbol small style */
+  .caret {
+    margin-left: 6px;
+    font-weight: 900;
+  }
+  
+  /* CTA row (centered) */
+  .ctaRow {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 4px;
+  }
+  
+  /* watch button */
+  .watchBtn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 14px 36px;
+    border-radius: 12px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 12px 36px rgba(111,30,156,0.12);
+    font-size: 16px;
+  }
+  
+  /* learn more link */
+  .learnMore {
+    color: var(--accent);
+    font-weight: 900;
+    margin-top: 12px;
+    display: inline-block;
+    text-decoration: none;
+  }
+  
+  /* Responsive: stack to 2 columns on medium screens */
+  @media (max-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  
+    .imgWrap {
+      width: 120px;
+      height: 96px;
+    }
+  
+    .ctaRow {
+      margin-top: 18px;
+    }
+  }
+  
+  /* Responsive: single column on small screens */
+  @media (max-width: 640px) {
+    .grid {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+  
+    .imgWrap {
+      width: 160px;
+      height: 120px;
+    }
+  
+    .heading {
+      font-size: 22px;
+    }
+  
+    .ctaRow {
+      gap: 12px;
+    }
+  }
+  

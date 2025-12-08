@@ -9,20 +9,30 @@ export default function Layout() {
   const location = useLocation();
   const pathname = location.pathname || "";
 
-  // Add route patterns where you DON'T want Subnav shown.
-  // Update these as needed if your routes differ.
+  // Routes where Subnav should be hidden
   const hideSubnavFor = [
-    /^\/car(\/|$)/,   // any /car/:id route
-    /^\/buy(\/|$)/,   // /buy route (or buy page)
-    /^\/car-details(\/|$)/, // any other detail-like route (optional)
+    /^\/buy(\/|$)/, 
+    /^\/car(\/|$)/,  // any /car/:id route
+    // /^\/buy(\/|$)/, // <-- removed: don't hide subnav for /buy
+    /^\/car-details(\/|$)/,
+    /^\/sell(\/|$)/,
+    // keep other patterns as needed
+  ];
+
+  // Routes where Topbar should be hidden (only sell for now)
+  const hideTopbarFor = [
+    /^\/sell(\/|$)/,
   ];
 
   const shouldHideSubnav = hideSubnavFor.some((rx) => rx.test(pathname));
+  const shouldHideTopbar = hideTopbarFor.some((rx) => rx.test(pathname));
 
   return (
     <div className="page">
-      <Topbar />
-      {/* Conditionally render Subnav */}
+      {/* Topbar shown except on routes matched by hideTopbarFor */}
+      {!shouldHideTopbar && <Topbar />}
+
+      {/* Conditionally render Subnav (hidden on matched routes) */}
       {!shouldHideSubnav && <Subnav />}
 
       {/* page-specific content will render here */}
@@ -30,9 +40,7 @@ export default function Layout() {
         <Outlet />
       </main>
 
-
-<Footer />
-
+      <Footer />
     </div>
   );
 }

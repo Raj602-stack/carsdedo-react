@@ -749,13 +749,9 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
         {/* RIGHT sticky card (keeps original styling) */}
         <aside className={styles.cdRight} ref={rightRef}>
           <div
-            className={`${styles.cdRightCard} ${isStopped ? styles.cdRightStopCard : ""}`}
+            className={`${styles.cdRightCard}`}
             ref={rightCardRef}
-            style={
-              isStopped
-                ? { position: "absolute", bottom: 0, top: "auto", right: 0 }
-                : { position: "fixed", top: `${TOPBAR_HEIGHT + 12}px` }
-            }
+           
           >
             <div className={styles.rightInner}>
               <div className={styles.titleRow}>
