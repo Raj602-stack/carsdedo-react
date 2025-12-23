@@ -1,0 +1,107 @@
+.page {
+    min-height: 90vh;
+    background: #f7f7fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    font-family: Inter, sans-serif;
+  }
+  
+  /* Card */
+  .card {
+    background: #ffffff;
+    padding: 40px 36px;
+    width: 420px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    z-index: 2;
+  }
+  
+  .title {
+    color: #3b0a57;
+    font-size: 20px;
+    margin-bottom: 24px;
+    font-weight: 600;
+  }
+  
+  /* Input */
+  .input {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1.5px solid #b87be3;
+    outline: none;
+  }
+  
+  .input:focus {
+    border-color: #6a0dad;
+  }
+  
+  /* Terms */
+  .terms {
+    font-size: 13px;
+    color: #777;
+    margin: 18px 0 28px;
+  }
+  
+  .terms a {
+    color: #6a0dad;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  /* Button */
+  .button {
+    width: 100%;
+    padding: 14px;
+    background: #f74f7c;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .button:hover {
+    background: #f34473;
+  }
+  
+  /* Background Icons */
+  .bgIcon {
+    position: absolute;
+    background: #f2cbd5;
+    opacity: 0.45;
+  }
+  
+  /* Decorative shapes */
+  .heart {
+    width: 140px;
+    height: 140px;
+    border-radius: 30% 30% 50% 50%;
+    left: 80px;
+    top: 35%;
+    transform: rotate(-15deg);
+  }
+  
+  .thumbs {
+    width: 120px;
+    height: 120px;
+    right: 80px;
+    top: 15%;
+    border-radius: 20px;
+    transform: rotate(20deg);
+  }
+  
+  .bell {
+    width: 110px;
+    height: 110px;
+    right: 120px;
+    bottom: 18%;
+    border-radius: 50% 50% 40% 40%;
+  }
+  

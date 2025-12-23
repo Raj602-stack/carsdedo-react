@@ -1,8 +1,15 @@
 // src/components/Topbar.jsx
 import React, { useEffect, useRef, useState } from "react";
 import "../styles/Topbar.css"; // make sure path is correct
+import { Link, useNavigate } from "react-router-dom";
+import { FiHeart } from "react-icons/fi";
+import { FiUser } from "react-icons/fi";
+
+
 
 export default function Topbar() {
+  const navigate = useNavigate();
+
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState(
     typeof window !== "undefined" ? localStorage.getItem("selectedCity") || "Lucknow" : "Lucknow"
@@ -139,7 +146,9 @@ export default function Topbar() {
       <header className="topbar" role="banner">
         <div className="topbar-left">
           <div className="logo">
+          <Link to="/">
             <img className="logo-img" src="/carsdedo.jpeg" alt="Company Logo" />
+            </Link>
           </div>
 
           {/* clickable location that opens modal */}
@@ -168,47 +177,60 @@ export default function Topbar() {
         </div>
 
         <div className="topbar-right">
-          <nav className="top-actions" aria-label="Top actions">
-            {/* BUY CAR */}
-            <div className="dropdown">
-              <div className="action">Buy Car ▾</div>
-              <div className="dropdown-menu">
-                <div className="dropdown-item">Used Cars</div>
-                <div className="dropdown-item">Certified Cars</div>
-                <div className="dropdown-item">Cars Under ₹5 Lakh</div>
-                <div className="dropdown-item">New Arrivals</div>
-                <div className="dropdown-item">View All</div>
-              </div>
-            </div>
+  {/* LEFT PART: menus */}
+  <nav className="top-actions" aria-label="Top actions">
+    <div className="dropdown">
+      <div className="action">Buy Car ▾</div>
+      <div className="dropdown-menu">
+        <div onClick={() => navigate("/buy")}  className="dropdown-item">Used Cars</div>
+        <div className="dropdown-item">Certified Cars</div>
+      </div>
+    </div>
 
-            {/* SELL CAR */}
-            <div className="dropdown">
-              <div className="action">Sell Car ▾</div>
-              <div className="dropdown-menu">
-                <div className="dropdown-item">Instant Online Quote</div>
-                <div className="dropdown-item">Car Inspection Booking</div>
-                <div className="dropdown-item">Exchange My Car</div>
-                <div className="dropdown-item">Get Best Price</div>
-              </div>
-            </div>
+    <div className="dropdown">
+      <div className="action">Sell Car ▾</div>
+      <div className="dropdown-menu">
+        <div onClick={() => navigate("/sell")}  className="dropdown-item">sell Used Cars</div>
+        <div className="dropdown-item">Certified Cars</div>
+      </div>
+    </div>
 
-            {/* SERVICE */}
-            <div className="dropdown">
-              <div className="action">Service ▾</div>
-              <div className="dropdown-menu">
-                <div className="dropdown-item">Periodic Maintenance</div>
-                <div className="dropdown-item">Car Wash & Detailing</div>
-                <div className="dropdown-item">Tyre Replacement</div>
-                <div className="dropdown-item">Insurance Renewal</div>
-                <div className="dropdown-item">Roadside Assistance</div>
-              </div>
-            </div>
-          </nav>
+    <div className="dropdown">
+      <div className="action">Service ▾</div>
+      <div className="dropdown-menu">
+        <div className="dropdown-item">Used Cars</div>
+        <div className="dropdown-item">Certified Cars</div>
+      </div>
+    </div>
+  </nav>
 
-          <div className="call">
-            Call us: <strong>9664573074</strong>
-          </div>
-        </div>
+  {/* RIGHT PART: shortlist + account */}
+  <div className="topbar-user">
+    <div onClick={() => navigate("/wishlist")} className="shortlist">
+    <FiHeart className="shortlist-icon" />
+       <span className="badge">1</span>
+      <div className="label">Shortlisted</div>
+    </div>
+
+    <div className="account dropdown">
+  <div className="account-trigger">
+    <FiUser className="account-icon" />
+    <div className="action">Account ▾</div>
+  </div>
+
+  <div className="dropdown-menu">
+    <div onClick={() => navigate("/account")} className="dropdown-item">Your Account</div>
+    <div onClick={() => navigate("/login")} className="dropdown-item">Login</div>
+  </div>
+</div>
+
+
+    <div className="call">
+      Call us: <strong>9664573074</strong>
+    </div>
+  </div>
+</div>
+
       </header>
 
       {/* City modal (covers screen for desktop) */}

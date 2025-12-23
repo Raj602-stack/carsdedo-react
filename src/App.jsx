@@ -15,6 +15,9 @@ import MobileSellPage from "./pages/MobileSellPage";
 import BuyPageWeb from "./pages/BuyPageWeb";
 import CarDetailsWeb from "./pages/CarDetailsWeb";
 import SellPageWeb from "./pages/SellPageWeb";
+import LoginWeb from "./pages/LoginWeb";
+import Wishlist from "./pages/Wishlist";
+import AccountWeb from "./pages/AccountWeb";
 
 export default function App() {
   const isMobile = useIsMobile(900);
@@ -41,8 +44,11 @@ export default function App() {
             <Route path="buy" element={<BuyPageWeb/>} />
             <Route path="sell" element={<SellPageWeb/>} />
             <Route path="/car/:id" element={<CarDetailsWeb />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="account" element={<ProtectedRoute><AccountPage/></ProtectedRoute>} />
+            <Route path="login" element={<LoginWeb/>} />
+            <Route path="account" element={<AccountWeb/>} />
+            <Route path="/wishlist" element={<Wishlist/>} />
+            
+
           </Route>
         </Routes>
       )}

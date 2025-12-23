@@ -1,0 +1,154 @@
+.page {
+    background: #faf6f8;
+    min-height: 100vh;
+    padding: 24px;
+    font-family: Inter, sans-serif;
+  }
+  
+  /* Top Card */
+  .topCard {
+    background: #fff;
+    padding: 20px 24px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+  
+  .phone {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .settings {
+    background: none;
+    border: none;
+    color: #dc143c;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 2px dotted #dc143c;
+  }
+  
+  /* Tabs */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    background: #fff;
+    padding: 6px;
+    border-radius: 999px;
+    width: fit-content;
+    margin: 0 auto 28px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  }
+  
+  .tab {
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    font-weight: 600;
+    color: #dc143c;
+    cursor: pointer;
+  }
+  
+  .activeTab {
+    background: #dc143c;
+    color: #fff;
+  }
+  
+  /* Orders */
+  .sectionTitle {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  
+  .orderCard {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    margin-bottom: 36px;
+  }
+  
+  .noOrders {
+    font-size: 15px;
+    margin-bottom: 18px;
+  }
+  
+  .carIcon {
+    position: absolute;
+    right: 20px;
+    top: 24px;
+    font-size: 42px;
+    opacity: 0.4;
+  }
+  
+  .buyButton {
+    width: 100%;
+    padding: 14px;
+    background: #dc143c;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .buyButton span {
+    margin-left: 6px;
+  }
+  
+  /* Loan Banner */
+  .loanBanner {
+    background: linear-gradient(135deg, #7a0019, #dc143c);
+    border-radius: 16px;
+    padding: 28px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+  
+  .loanBanner h3 {
+    margin-bottom: 6px;
+  }
+  
+  .loanBanner p {
+    font-size: 14px;
+    opacity: 0.9;
+  }
+  
+  .eligibilityBtn {
+    margin-top: 16px;
+    padding: 10px 16px;
+    background: #fff;
+    color: #dc143c;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  .coin {
+    font-size: 48px;
+    opacity: 0.8;
+  }
+  
+  /* Links */
+  .linkCard {
+    background: #fff;
+    padding: 18px 20px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    margin-bottom: 14px;
+    cursor: pointer;
+  }
+  

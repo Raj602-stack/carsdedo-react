@@ -16,6 +16,14 @@ export default function Layout() {
     // /^\/buy(\/|$)/, // <-- removed: don't hide subnav for /buy
     /^\/car-details(\/|$)/,
     /^\/sell(\/|$)/,
+    /^\/login(\/|$)/,
+    /^\/account(\/|$)/,
+    // keep other patterns as needed
+  ];
+
+  const hideFooterFor = [
+    
+    /^\/login(\/|$)/,
     // keep other patterns as needed
   ];
 
@@ -26,7 +34,7 @@ export default function Layout() {
 
   const shouldHideSubnav = hideSubnavFor.some((rx) => rx.test(pathname));
   const shouldHideTopbar = hideTopbarFor.some((rx) => rx.test(pathname));
-
+  const shouldHideFooter = hideFooterFor.some((rx) => rx.test(pathname));
   return (
     <div className="page">
       {/* Topbar shown except on routes matched by hideTopbarFor */}
@@ -40,7 +48,7 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <Footer />
+     {!shouldHideFooter && <Footer />} 
     </div>
   );
 }
