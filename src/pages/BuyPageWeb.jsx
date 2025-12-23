@@ -1,11 +1,18 @@
 // src/pages/BuyPage.jsx
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState , useEffect} from "react";
 import carsData from "../data/cars";
+import { useLocation } from "react-router-dom";
 import Filters from "../components/Filters";
 import CarCard from "../components/CarCard";
-import "../styles/BuyPageweb.css";
+import styles from  "../styles/BuyPageweb.module.css";
+function capitalize(str = "") {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 
 export default function BuyPage() {
+  const location = useLocation();
+
   // metadata for UI controls
   const brands = Array.from(new Set(carsData.map((c) => c.brand))).sort();
   // derive years from data (unique sorted descending)
@@ -13,6 +20,76 @@ export default function BuyPage() {
   const years = [...yearsSet].sort((a, b) => b - a).filter(Boolean);
   const fuels = Array.from(new Set(carsData.map((c) => c.fuel))).sort();
   const bodies = Array.from(new Set(carsData.map((c) => c.body))).sort();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    console.log(params.get("body"));
+  
+    setFilters((prev) => {
+      const next = { ...prev };
+  
+      // PRICE
+      const price = params.get("price");
+      if (price === "under-5") {
+        next.priceMin = 0;
+        next.priceMax = 500000;
+      }
+      if (price === "5-10") {
+        next.priceMin = 500000;
+        next.priceMax = 1000000;
+      }
+      if (price === "10-20") {
+        next.priceMin = 1000000;
+        next.priceMax = 2000000;
+      }
+      if (price === "20+") {
+        next.priceMin = 2000000;
+        next.priceMax = 5000000;
+      }
+  
+      // FUEL
+      const fuel = params.get("fuel");
+      if (fuel) {
+        next.fuel = [capitalize(fuel)];
+      }
+  
+      // BODY
+      const body = params.get("body");
+      if (body) {
+        next.body = [body];
+        console.log(params.get("body")+" added");
+        console.log(filters);
+      }
+  
+      // TRANSMISSION
+      const transmission = params.get("transmission");
+      if (transmission) {
+        next.transmission = [capitalize(transmission)];
+      }
+  
+      // MAKE / BRAND
+      const make = params.get("make");
+      if (make) {
+        next.brands = [capitalize(make)];
+      }
+  
+      // YEAR
+      const year = params.get("year");
+      if (year) {
+        next.year = year.split("-")[0]; // "2020-2023" → 2020
+      }
+  
+      // KM
+      const km = params.get("km");
+      if (km === "under-25") next.kms = [25000];
+      if (km === "25-50") next.kms = [50000];
+      if (km === "50-100") next.kms = [100000];
+      if (km === "100+") next.kms = [999999];
+  
+      return next;
+    });
+  }, [location.search]);
+  
 
   // initial filters: include all keys used by Filters.jsx
   const [filters, setFilters] = useState({
@@ -107,8 +184,12 @@ export default function BuyPage() {
 
         // body
         if (filters.body && filters.body.length > 0) {
-          if (!matchesAny(filters.body, c.body)) return false;
+          const carBody = (c.body || "").toLowerCase();
+          const selectedBodies = filters.body.map(b => b.toLowerCase());
+        
+          if (!selectedBodies.includes(carBody)) return false;
         }
+        
 
         // transmission
         if (filters.transmission && filters.transmission.length > 0) {
@@ -182,19 +263,30 @@ export default function BuyPage() {
   const selectedCity = localStorage.getItem("selectedCity") || "City";
 
   return (
-    <div className="buy-page">
-      <Filters filters={filters} setFilters={setFilters} metadata={{ brands, years, fuels, bodies }} />
-
-      <main className="results" role="main">
-        <div className="results-header">
-          <div className="breadcrumbs">Home › Used Cars › Used Cars in {selectedCity}</div>
-
-          <div className="results-controls">
-            <div className="results-count">{filtered.length} results</div>
-
+    <div className={styles["buy-page"]}>
+      <Filters
+        filters={filters}
+        setFilters={setFilters}
+        metadata={{ brands, years, fuels, bodies }}
+      />
+    
+      <main className={styles["results"]} role="main">
+        <div className={styles["results-header"]}>
+          <div className={styles["breadcrumbs"]}>
+            Home › Used Cars › Used Cars in {selectedCity}
+          </div>
+    
+          <div className={styles["results-controls"]}>
+            <div className={styles["results-count"]}>
+              {filtered.length} results
+            </div>
+    
             <select
+              className={styles["sort-select"]}
               value={filters.sortBy}
-              onChange={(e) => setFilters((s) => ({ ...s, sortBy: e.target.value }))}
+              onChange={(e) =>
+                setFilters((s) => ({ ...s, sortBy: e.target.value }))
+              }
               aria-label="Sort results"
             >
               <option value="relevance">Sort by: Relevance</option>
@@ -204,15 +296,20 @@ export default function BuyPage() {
             </select>
           </div>
         </div>
-
-        <div className="cars-grid" aria-live="polite">
+    
+        <div className={styles["cars-grid"]} aria-live="polite">
           {filtered.map((car) => (
             <CarCard key={car.id} car={car} />
           ))}
         </div>
-
-        {filtered.length === 0 && <div className="no-results">No cars match your filters. Try resetting filters.</div>}
+    
+        {filtered.length === 0 && (
+          <div className={styles["no-results"]}>
+            No cars match your filters. Try resetting filters.
+          </div>
+        )}
       </main>
     </div>
+    
   );
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import CarCard from "../components/CarCard";
-import "../styles/BuyPage.css";
+
+import styles from  "../styles/BuyPageweb.module.css";
 import wishlist from "../data/wishlist";
 
 export default function Wishlist() {
@@ -9,7 +10,8 @@ export default function Wishlist() {
   }
 
   return (
-    <div className="cars-grid">
+    <div style={{ margin: "20px 20px" }}
+    className={styles["cars-grid"]}>
       {wishlist.map((car) => (
         <CarCard key={car.id} car={car} />
       ))}

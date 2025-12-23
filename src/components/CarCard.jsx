@@ -1,6 +1,7 @@
 // src/components/CarCard.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import styles from  "../styles/BuyPageweb.module.css";
 
 export default function CarCard({ car }) {
     const navigate = useNavigate();
@@ -9,31 +10,74 @@ export default function CarCard({ car }) {
 
   return (
 
-    
-    <article className="car-card"  onClick={() => navigate(`/car/${car.id}`)} aria-labelledby={`car-${car.id}`}>
-      <div className="car-image-wrap">
-        <img
-          src={car.image}
-          alt={car.title}
-          className="car-image"
-          onError={(e) => (e.target.src = "/cars/default-car.png")}
-        />
-      </div>
+    <article
+    className={styles["car-card"]}
+    onClick={() => navigate(`/car/${car.id}`)}
+    aria-labelledby={`car-${car.id}`}
+  >
+    <div className={styles["car-image-wrap"]}>
+      <img
+        src={car.image}
+        alt={car.title}
+        className={styles["car-image"]}
+        onError={(e) => (e.target.src = "/cars/default-car.png")}
+      />
+    </div>
+  
+    <div className={styles["car-body"]}>
 
-      <div className="car-body">
-        <h4 id={`car-${car.id}`} className="car-title">{car.title}</h4>
-        <div className="car-meta">
-          <span className="price">{formatPrice(car.price)}</span>
-          <span className="km">{Math.round(car.km / 1000)}k km</span>
-          <span className="badge">{car.transmission}</span>
-          <span className="badge">{car.fuel}</span>
+
+    <div
+  style={{
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: "12px",
+    flexWrap: "wrap",
+  }}
+>
+
+      <h4
+        id={`car-${car.id}`}
+        className={styles["car-title"]}
+      >
+        {car.title}
+      </h4>
+      <span className={styles["price"]}>
+          {formatPrice(car.price)}
+        </span>
+
         </div>
 
-        <div className="car-bottom">
-          <div className="car-city">{car.city}</div>
-          <button className="btn-small">View</button>
-        </div>
+      <div className={styles["car-meta"]}>
+        
+        <span className={styles["km"]}>
+          {Math.round(car.km / 1000)}k km
+        </span>
+        <span className={styles["badge"]}>
+          {car.transmission}
+        </span>
+        <span className={styles["badge"]}>
+          {car.fuel}
+        </span>
+
+        <span className={styles["badge"]}>
+          {car.colorKey}
+        </span>
+        
       </div>
-    </article>
+  
+      <div className={styles["car-bottom"]}>
+        <div className={styles["car-city"]}>
+          {car.city}
+        </div>
+        <button className={styles["btn-small"]}>
+          Vieww
+        </button>
+      </div>
+    </div>
+  </article>
+  
   );
 }

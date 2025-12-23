@@ -24,6 +24,7 @@ export default function Layout() {
   const hideFooterFor = [
     
     /^\/login(\/|$)/,
+    /^\/wishlist(\/|$)/,
     // keep other patterns as needed
   ];
 

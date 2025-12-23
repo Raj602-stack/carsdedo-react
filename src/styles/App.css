@@ -102,6 +102,8 @@ body {
   cursor: pointer;
   opacity: 0.95;
   color: black;
+  font-size: medium;
+  
   font-weight: 500;
 }
 .call {
@@ -426,7 +428,7 @@ body {
   cursor: pointer;
   opacity: 0.95;
   color: var(--purple);
-  font-weight: 500;
+  
   padding: 8px 12px;
   border-radius: 6px;
   transition: background 0.3s ease;

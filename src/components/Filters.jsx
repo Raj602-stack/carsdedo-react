@@ -1,6 +1,6 @@
 // src/components/Filters.jsx
 import React, { useMemo, useState } from "react";
-
+import styles from  "../styles/BuyPageweb.module.css";
 /**
  * Filters.jsx
  *
@@ -112,106 +112,104 @@ export default function Filters({ filters, setFilters, metadata = {} }) {
   const hubOptions = ["Gaur City Mall, Noida", "Trillium Avenue, Gurgaon", "Indirapuram, Ghaziabad"];
 
   return (
-    <aside className="filters" aria-label="Filters">
-      <div className="filter-card">
+    <aside className={styles["filters"]} aria-label="Filters">
+      <div className={styles["filter-card"]}>
+  
         {/* SEARCH */}
-        <div className="filter-block">
-          <label className="filter-label">Search</label>
+        <div className={styles["filter-block"]}>
+          <label className={styles["filter-label"]}>Search</label>
           <input
-            className="filter-search"
+            className={styles["filter-search"]}
             placeholder="Search title, model..."
             value={filters.q}
             onChange={(e) => setFilters((s) => ({ ...s, q: e.target.value }))}
           />
         </div>
-
+  
         {/* PRICE */}
-        <div className="filter-block">
-          <label className="filter-label">Price (₹)</label>
-
-          <div className="price-presets">
+        <div className={styles["filter-block"]}>
+          <label className={styles["filter-label"]}>Price (₹)</label>
+  
+          <div className={styles["price-presets"]}>
             {presets.map((p) => (
               <button
                 key={p.label}
                 type="button"
-                className={`pill preset ${filters.priceMin === p.min && filters.priceMax === p.max ? "active" : ""}`}
-                onClick={() => setFilters((s) => ({ ...s, priceMin: p.min, priceMax: p.max }))}
+                className={[
+                  styles["pill"],
+                  styles["preset"],
+                  filters.priceMin === p.min && filters.priceMax === p.max
+                    ? styles["active"]
+                    : "",
+                ].join(" ")}
+                onClick={() =>
+                  setFilters((s) => ({ ...s, priceMin: p.min, priceMax: p.max }))
+                }
               >
                 {p.label}
               </button>
             ))}
           </div>
-
-          <div className="price-range-row">
+  
+          <div className={styles["price-range-row"]}>
             <input
               type="text"
-              className="price-input readonly"
+              className={`${styles["price-input"]} ${styles["readonly"]}`}
               value={fmt(filters.priceMin)}
               readOnly
-              aria-label="Minimum price (read only)"
-              title="Minimum price (use sliders or presets)"
             />
-            <span className="price-sep">—</span>
+            <span className={styles["price-sep"]}>—</span>
             <input
               type="text"
-              className="price-input readonly"
+              className={`${styles["price-input"]} ${styles["readonly"]}`}
               value={fmt(filters.priceMax)}
               readOnly
-              aria-label="Maximum price (read only)"
-              title="Maximum price (use sliders or presets)"
             />
           </div>
-
-         {/* ---- improved range wrap: shows filled track and aligned thumbs ---- */}
-{/*
-  We'll compute percent positions for the selected min/max from the maximum value,
-  then apply a background gradient to the container showing the filled area.
-*/}
-<div
-  className="range-wrap"
-  // compute inline CSS variables for CSS to use
-  style={{
-    // ensure the max value used here matches your input max
-    // if you change the max on the inputs change MAX_PRICE too
-    ["--fill-start"]: `${(filters.priceMin / 5000000) * 100}%`,
-    ["--fill-end"]: `${(filters.priceMax / 5000000) * 100}%`,
-  }}
-  aria-hidden="false"
->
-  <input
-    type="range"
-    min="0"
-    max="5000000"
-    step="10000"
-    value={filters.priceMin}
-    onChange={(e) => setPriceMin(Number(e.target.value))}
-    className="range-min"
-    aria-label="Price minimum slider"
-  />
-  <input
-    type="range"
-    min="0"
-    max="5000000"
-    step="10000"
-    value={filters.priceMax}
-    onChange={(e) => setPriceMax(Number(e.target.value))}
-    className="range-max"
-    aria-label="Price maximum slider"
-  />
-</div>
-
-
-          <div className="price-values small">
-            <small>Min: {fmt(filters.priceMin)} &nbsp; Max: {fmt(filters.priceMax)}</small>
+  
+          <div
+            className={styles["range-wrap"]}
+            style={{
+              ["--fill-start"]: `${(filters.priceMin / 5000000) * 100}%`,
+              ["--fill-end"]: `${(filters.priceMax / 5000000) * 100}%`,
+            }}
+          >
+            <input
+              type="range"
+              min="0"
+              max="5000000"
+              step="10000"
+              value={filters.priceMin}
+              onChange={(e) => setPriceMin(Number(e.target.value))}
+              className={styles["range-min"]}
+            />
+            <input
+              type="range"
+              min="0"
+              max="5000000"
+              step="10000"
+              value={filters.priceMax}
+              onChange={(e) => setPriceMax(Number(e.target.value))}
+              className={styles["range-max"]}
+            />
+          </div>
+  
+          <div className={`${styles["price-values"]} ${styles["small"]}`}>
+            <small>
+              Min: {fmt(filters.priceMin)} &nbsp; Max: {fmt(filters.priceMax)}
+            </small>
           </div>
         </div>
-
+  
         {/* BRANDS */}
-        <div className="filter-block">
-          <label className="filter-label">Brands</label>
-          <div className="brand-list">
+        <div className={styles["filter-block"]}>
+          <label className={styles["filter-label"]}>Brands</label>
+          <div className={styles["brand-list"]}>
             {brands.map((b) => (
-              <label key={b} className="checkbox brand-row">
+              <label
+                key={b}
+                className={`${styles["checkbox"]} ${styles["brand-row"]}`}
+              >
                 <input
                   type="checkbox"
                   checked={(filters.brands || []).includes(b)}
@@ -222,13 +220,13 @@ export default function Filters({ filters, setFilters, metadata = {} }) {
             ))}
           </div>
         </div>
-
+  
         {/* YEAR */}
-        <div className="filter-block">
-          <label className="filter-label">Year</label>
-          <div className="year-list">
+        <div className={styles["filter-block"]}>
+          <label className={styles["filter-label"]}>Year</label>
+          <div className={styles["year-list"]}>
             {years.map((y) => (
-              <label key={y} className="radio">
+              <label key={y} className={styles["radio"]}>
                 <input
                   type="radio"
                   name="year"
@@ -239,102 +237,25 @@ export default function Filters({ filters, setFilters, metadata = {} }) {
                 <span>{y} & above</span>
               </label>
             ))}
-            <label className="radio">
-              <input
-                type="radio"
-                name="year"
-                value=""
-                checked={filters.year === ""}
-                onChange={() => setFilters((s) => ({ ...s, year: "" }))}
-              />
-              <span>Any</span>
-            </label>
           </div>
         </div>
-
-        {/* KM DRIVEN */}
-        <div className="filter-block">
-          <label className="filter-label">Km Driven</label>
-          <div>
-            {[10000, 30000, 50000, 75000, 100000].map((k) => (
-              <label key={k} className="checkbox">
-                <input
-                  type="checkbox"
-                  checked={(filters.kms || []).includes(k)}
-                  onChange={() =>
-                    setFilters((s) => {
-                      const set = new Set(s.kms || []);
-                      if (set.has(k)) set.delete(k);
-                      else set.add(k);
-                      return { ...s, kms: Array.from(set) };
-                    })
-                  }
-                />
-                <span>{k.toLocaleString()} km or less</span>
-              </label>
-            ))}
+  
+        {/* COLLAPSIBLE SECTIONS (same pattern everywhere) */}
+        <div className={styles["filter-block"]}>
+          <div className={styles["section-head"]}>
+            <label className={styles["filter-label"]}>Transmission</label>
+            <button
+              className={styles["collapse-toggle"]}
+              onClick={() => toggleSection("transmission")}
+            >
+              {open.transmission ? "▾" : "▸"}
+            </button>
           </div>
-        </div>
-
-        {/* FUEL */}
-        <div className="filter-block">
-          <label className="filter-label">Fuel Type</label>
-          <div className="fuel-list">
-            {fuels.map((f) => (
-              <label key={f} className="checkbox">
-                <input
-                  type="checkbox"
-                  checked={(filters.fuel || []).includes(f)}
-                  onChange={() => toggleArray("fuel", f)}
-                />
-                <span>{f}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* BODY */}
-        <div className="filter-block">
-          <label className="filter-label">Body Type</label>
-          <div className="body-list">
-            {bodies.map((b) => (
-              <label key={b} className="checkbox">
-                <input
-                  type="checkbox"
-                  checked={(filters.body || []).includes(b)}
-                  onChange={() => toggleArray("body", b)}
-                />
-                <span>{b}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* TRANSMISSION (collapsible) */}
-        <div className="filter-block">
-          <div className="section-head">
-            <div>
-              <label className="filter-label">Transmission</label>
-            </div>
-            <div className="guide-and-toggle">
-              <a className="guide-link" href="#guide" onClick={(e) => e.preventDefault()}>
-                Guide <span className="guide-i">i</span>
-              </a>
-              <button
-                className="collapse-toggle"
-                onClick={() => toggleSection("transmission")}
-                aria-expanded={open.transmission}
-                aria-controls="transmission-panel"
-              >
-                {open.transmission ? "▾" : "▸"}
-              </button>
-            </div>
-          </div>
-
+  
           {open.transmission && (
-            <div id="transmission-panel" className="transmission-list">
+            <div className={styles["transmission-list"]}>
               {["Automatic", "Manual"].map((t) => (
-                <label key={t} className="checkbox">
+                <label key={t} className={styles["checkbox"]}>
                   <input
                     type="checkbox"
                     checked={(filters.transmission || []).includes(t)}
@@ -346,224 +267,11 @@ export default function Filters({ filters, setFilters, metadata = {} }) {
             </div>
           )}
         </div>
-
-        {/* CAR CATEGORY (collapsible) */}
-        <div className="filter-block">
-          <div className="section-head">
-            <label className="filter-label">Car Category</label>
-            <button
-              className="collapse-toggle"
-              onClick={() => toggleSection("category")}
-              aria-expanded={open.category}
-              aria-controls="category-panel"
-            >
-              {open.category ? "▾" : "▸"}
-            </button>
-          </div>
-          {open.category && (
-            <div id="category-panel" className="category-list">
-              {["Hatchback", "Sedan", "SUV", "MUV", "Convertible", "Coupe"].map((cat) => (
-                <label key={cat} className="checkbox">
-                  <input
-                    type="checkbox"
-                    checked={(filters.category || []).includes(cat)}
-                    onChange={() => toggleArray("category", cat)}
-                  />
-                  <span>{cat}</span>
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* COLOR (collapsible + swatches) */}
-        <div className="filter-block">
-          <div className="section-head">
-            <label className="filter-label">Color</label>
-            <button
-              className="collapse-toggle"
-              onClick={() => toggleSection("color")}
-              aria-expanded={open.color}
-              aria-controls="color-panel"
-            >
-              {open.color ? "▾" : "▸"}
-            </button>
-          </div>
-
-          {open.color && (
-            <div id="color-panel" className="color-swatches">
-              {palette.map((c) => {
-                const selected = (filters.colors || []).includes(c.key);
-                return (
-                  <button
-                    key={c.key}
-                    type="button"
-                    className={`swatch ${selected ? "swatch-selected" : ""} ${c.hex === "#FFFFFF" ? "swatch-white" : ""}`}
-                    style={{ background: c.hex }}
-                    onClick={() => toggleArray("colors", c.key)}
-                    aria-pressed={selected}
-                    title={c.key}
-                  />
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        {/* FEATURES */}
-        <div className="filter-block">
-          <div className="section-head">
-            <label className="filter-label">Features</label>
-            <button
-              className="collapse-toggle"
-              onClick={() => toggleSection("features")}
-              aria-expanded={open.features}
-              aria-controls="features-panel"
-            >
-              {open.features ? "▾" : "▸"}
-            </button>
-          </div>
-
-          {open.features && (
-            <div id="features-panel" className="feature-list">
-              {featureOptions.map((f) => (
-                <label key={f} className="checkbox">
-                  <input
-                    type="checkbox"
-                    checked={(filters.features || []).includes(f)}
-                    onChange={() => toggleArray("features", f)}
-                  />
-                  <span>{f}</span>
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* SEATS */}
-        <div className="filter-block">
-          <div className="section-head">
-            <label className="filter-label">Seats</label>
-            <button
-              className="collapse-toggle"
-              onClick={() => toggleSection("seats")}
-              aria-expanded={open.seats}
-              aria-controls="seats-panel"
-            >
-              {open.seats ? "▾" : "▸"}
-            </button>
-          </div>
-
-          {open.seats && (
-            <div id="seats-panel" className="seats-list">
-              {seatOptions.map((s) => (
-                <label key={s} className="checkbox">
-                  <input
-                    type="checkbox"
-                    checked={(filters.seats || []).includes(s)}
-                    onChange={() => toggleArray("seats", s)}
-                  />
-                  <span>{s}</span>
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* RTO */}
-        <div className="filter-block">
-          <div className="section-head">
-            <label className="filter-label">RTO</label>
-            <button
-              className="collapse-toggle"
-              onClick={() => toggleSection("rto")}
-              aria-expanded={open.rto}
-              aria-controls="rto-panel"
-            >
-              {open.rto ? "▾" : "▸"}
-            </button>
-          </div>
-
-          {open.rto && (
-            <div id="rto-panel" className="rto-list">
-              {rtoOptions.map((r) => (
-                <label key={r} className="checkbox">
-                  <input
-                    type="checkbox"
-                    checked={(filters.rto || []).includes(r)}
-                    onChange={() => toggleArray("rto", r)}
-                  />
-                  <span>{r}</span>
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* OWNER */}
-        <div className="filter-block">
-          <div className="section-head">
-            <label className="filter-label">Owner</label>
-            <button
-              className="collapse-toggle"
-              onClick={() => toggleSection("owner")}
-              aria-expanded={open.owner}
-              aria-controls="owner-panel"
-            >
-              {open.owner ? "▾" : "▸"}
-            </button>
-          </div>
-
-          {open.owner && (
-            <div id="owner-panel" className="owner-list">
-              {ownerOptions.map((o) => (
-                <label key={o} className="checkbox">
-                  <input
-                    type="checkbox"
-                    checked={(filters.owner || []).includes(o)}
-                    onChange={() => toggleArray("owner", o)}
-                  />
-                  <span>{o}</span>
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* SPINNY HUBS */}
-        <div className="filter-block">
-          <div className="section-head">
-            <label className="filter-label">Spinny Hubs</label>
-            <button
-              className="collapse-toggle"
-              onClick={() => toggleSection("hubs")}
-              aria-expanded={open.hubs}
-              aria-controls="hubs-panel"
-            >
-              {open.hubs ? "▾" : "▸"}
-            </button>
-          </div>
-
-          {open.hubs && (
-            <div id="hubs-panel" className="hubs-list">
-              {hubOptions.map((h) => (
-                <label key={h} className="checkbox">
-                  <input
-                    type="checkbox"
-                    checked={(filters.hubs || []).includes(h)}
-                    onChange={() => toggleArray("hubs", h)}
-                  />
-                  <span>{h}</span>
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
-
+  
         {/* RESET */}
-        <div className="filter-actions">
+        <div className={styles["filter-actions"]}>
           <button
-            className="btn reset-btn"
+            className={`${styles["btn"]} ${styles["reset-btn"]}`}
             onClick={() =>
               setFilters({
                 q: "",
@@ -592,4 +300,5 @@ export default function Filters({ filters, setFilters, metadata = {} }) {
       </div>
     </aside>
   );
+  
 }
