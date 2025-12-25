@@ -4,20 +4,55 @@ import "../styles/Topbar.css"; // make sure path is correct
 import { Link, useNavigate } from "react-router-dom";
 import { FiHeart } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
-
+import carsData from "../data/cars";
+import { useLocation } from "react-router-dom";
 
 
 export default function Topbar() {
   const navigate = useNavigate();
+  const [searchValue, setSearchValue] = useState("");
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState(
     typeof window !== "undefined" ? localStorage.getItem("selectedCity") || "Lucknow" : "Lucknow"
   );
-  const [query, setQuery] = useState("");
+ 
   const modalRef = useRef(null);
 
+
+  // -------------------------
+
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  
+  
+  const handleSearch = (value) => {
+    setQuery(value);
+  
+    if (!value.trim()) {
+      setSuggestions([]);
+      return;
+    }
+  
+    const q = value.toLowerCase();
+  
+    const matches = carsData
+      .filter((c) =>
+        `${c.title} ${c.brand} ${c.model} ${c.fuel} ${c.body} ${c.city}`
+          .toLowerCase()
+          .includes(q)
+      )
+      .slice(0, 6); // limit suggestions
+  
+    setSuggestions(matches);
+  };
+  
+
+
+  // ===========================
+
   const popularCities = [
+    "Lucknow",
     "Delhi NCR",
     "Bangalore",
     "Hyderabad",
@@ -29,7 +64,7 @@ export default function Topbar() {
     "Ahmedabad",
     "Chennai",
     "Kolkata",
-    "Lucknow",
+   
     "Jaipur",
     "Chandigarh",
   ];
@@ -105,6 +140,16 @@ export default function Topbar() {
 
   const defaultCityIcon = "/city-icons/default.png";
 
+
+const location = useLocation();
+
+useEffect(() => {
+  // Clear search when route changes
+  setQuery("");
+  setSuggestions([]);
+  setSearchValue("");
+}, [location.pathname]);
+
   // close on Esc
   useEffect(() => {
     function onKey(e) {
@@ -169,11 +214,49 @@ export default function Topbar() {
         </div>
 
         <div className="topbar-center">
-          <input
+
+          {/* <input
             className="top-search"
             placeholder="Search by assured plus cars"
             aria-label="Search by assured plus cars"
-          />
+  
+            onChange={(e) => handleSearch(e.target.value)}
+          /> */}
+
+<input
+  className="top-search"
+  placeholder="Search cars, brands, models…"
+  value={searchValue}              // 🔑 controlled
+  onChange={(e) => {
+    const val = e.target.value;
+    setSearchValue(val);
+    handleSearch(val);
+  }}
+/>
+
+            {suggestions.length > 0 && (
+    <div className="search-suggestions">
+      {suggestions.map((car) => (
+        <div
+          key={car.id}
+          className="suggestion-item"
+          onClick={() => {
+            navigate(`/buy?q=${encodeURIComponent(car.brand)}`);
+            setSuggestions([]);
+            setQuery("");
+          }}
+        >
+          <strong>{car.brand}</strong> {car.model}
+          <span className="meta">
+            {car.body} · {car.fuel} · {car.city}
+          </span>
+        </div>
+      ))}
+    </div>
+  )}
+
+
+
         </div>
 
         <div className="topbar-right">
@@ -243,7 +326,7 @@ export default function Topbar() {
             aria-label="Select a city"
             aria-modal="true"
           >
-            <div className="modal-header">
+            <div style={{marginBottom:"20px"}} className="modal-header">
               <div>
                 <h3 className="modal-title">Select a city</h3>
                 <div className="modal-subtitle">Popular cities & more</div>
@@ -258,7 +341,7 @@ export default function Topbar() {
               </button>
             </div>
 
-            <div className="search-box">
+            {/* <div className="search-box">
               <svg
                 className="search-icon"
                 width="16"
@@ -275,37 +358,49 @@ export default function Topbar() {
                 onChange={(e) => setQuery(e.target.value)}
                 aria-label="Search cities"
               />
-            </div>
+            </div> */}
 
-            <section className="popular-section">
-              <div className="section-title">POPULAR CITIES</div>
-              <div className="popular-grid">
-                {popularCities.map((city) => {
-                  const isSelected = city === selectedCity;
-                  return (
-                    <button
-                      key={city}
-                      className={`city-card ${isSelected ? "selected" : ""}`}
-                      onClick={() => handleSelectCity(city)}
-                      aria-pressed={isSelected}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") handleSelectCity(city);
-                      }}
-                    >
-                      <img
-                        src={cityImages[city] || defaultCityIcon}
-                        alt={`${city} icon`}
-                        className="city-icon-img"
-                        loading="lazy"
-                      />
-                      <div className="city-name">{city}</div>
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
+<section className="popular-section">
+  <div className="section-title">POPULAR CITIES</div>
 
-            <section className="more-section">
+  <div className="popular-grid">
+    {popularCities.map((city) => {
+      const isActiveCity = city === "Lucknow";
+      const isSelected = city === selectedCity && isActiveCity;
+
+      return (
+        <button
+          key={city}
+          className={`city-card 
+            ${isSelected ? "selected" : ""} 
+            ${!isActiveCity ? "disabled" : ""}`}
+          onClick={() => {
+            if (isActiveCity) handleSelectCity(city);
+          }}
+          disabled={!isActiveCity}
+          aria-pressed={isSelected}
+          aria-disabled={!isActiveCity}
+        >
+          <img
+            src={cityImages[city] || defaultCityIcon}
+            alt={`${city} icon`}
+            className="city-icon-img"
+            loading="lazy"
+          />
+
+          <div className="city-name">{city}</div>
+
+          {!isActiveCity && (
+            <div className="coming-soon">Coming Soon</div>
+          )}
+        </button>
+      );
+    })}
+  </div>
+</section>
+
+
+            {/* <section className="more-section">
               <div className="section-title">MORE CITIES</div>
               <div className="pills" role="list">
                 {moreCities.map((city) => (
@@ -316,11 +411,10 @@ export default function Topbar() {
                     role="listitem"
                   >
                     {city}
-                    {/* if you want a "New" badge per city, insert a <span className="new">New</span> */}
                   </button>
                 ))}
               </div>
-            </section>
+            </section> */}
 
             {query.trim() !== "" && (
               <section className="search-results">

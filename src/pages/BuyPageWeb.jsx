@@ -21,6 +21,21 @@ export default function BuyPage() {
   const fuels = Array.from(new Set(carsData.map((c) => c.fuel))).sort();
   const bodies = Array.from(new Set(carsData.map((c) => c.body))).sort();
 
+  
+
+useEffect(() => {
+  const params = new URLSearchParams(location.search);
+  const q = params.get("q");
+
+  if (q) {
+    setFilters((prev) => ({
+      ...prev,
+      q: q,
+    }));
+  }
+}, [location.search]);
+
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     console.log(params.get("body"));

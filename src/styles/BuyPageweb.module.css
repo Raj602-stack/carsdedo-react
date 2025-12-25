@@ -10,6 +10,15 @@
     box-sizing: border-box;
     font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     color: #222;
+    background: linear-gradient(
+      to right,
+      #fae4cd,
+      #f7d2a8,
+      #f5c3a0
+    );
+    
+    
+    
   }
   
   /* ---------- FILTERS (sidebar) ---------- */
@@ -37,7 +46,7 @@
   
   .filter-label {
     font-weight: 800;
-    color: #4b2aa8;
+    color: #f45887;
     font-size: 16px;
     margin-bottom: 8px;
     display: block;
@@ -76,6 +85,7 @@
   .checkbox, .radio {
     display:flex;
     align-items:center;
+    margin-bottom: 10px;
     gap:12px;
     font-size: 15px;
     color: #222;
@@ -175,7 +185,7 @@
     background: linear-gradient(
       to right,
       #f0eff3 0% var(--fill-start, 0%),
-      rgba(122, 82, 255, 0.16) var(--fill-start, 0%) var(--fill-end, 100%),
+      rgba(244, 99, 137, 0.16) var(--fill-start, 0%) var(--fill-end, 100%),
       #f0eff3 var(--fill-end, 100%) 100%
     );
     border-radius: 10px;
@@ -201,7 +211,7 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #4b2aa8;
+    background: #f45887;
     border: 3px solid #fff;
     box-shadow: 0 6px 18px rgba(37, 20, 82, 0.18);
     position: relative;
@@ -308,11 +318,11 @@
   .car-title {
     font-size: 15px;
     margin: 0;
-    color: #2b2350;
+    color: #041e36;
     font-weight: 700;
   }
   .car-meta { display:flex; gap:8px; flex-wrap:wrap; align-items:center; color:#6b6b6b; font-size:13px; }
-  .price { color:#3b1c6e; font-weight:800; margin-right:6px; }
+  .price { color:#041e36; font-weight:800; margin-right:6px; }
   .km { background:#f2f2f4; padding:4px 6px; border-radius:6px; font-weight:600; font-size:12px; }
   .badge { background:#f6f6f8; padding:4px 8px; border-radius:10px; font-size:12px; color:#5e5e5e; }
   
@@ -430,7 +440,7 @@
   .small { font-size: 13px; color: #666; }
   
   /* ensure brand rows are easy to click on mobile */
-  .brand-row { padding: 6px 4px; border-radius: 6px; }
+  .brand-row { border-radius: 6px; }
   
   /* keep filter-card spacing consistent at the bottom */
   .filter-actions { margin-top: 14px; }

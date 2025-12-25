@@ -342,3 +342,15 @@
     .modal { width: 94%; padding: 14px; }
   }
   
+  .city-card.disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  .coming-soon {
+    margin-top: 4px;
+    font-size: 11px;
+    color: #f27c7c;
+  }
+  

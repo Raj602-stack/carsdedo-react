@@ -111,194 +111,484 @@ export default function Filters({ filters, setFilters, metadata = {} }) {
   const ownerOptions = ["First owner", "Second owner", "Third owner+"];
   const hubOptions = ["Gaur City Mall, Noida", "Trillium Avenue, Gurgaon", "Indirapuram, Ghaziabad"];
 
-  return (
-    <aside className={styles["filters"]} aria-label="Filters">
-      <div className={styles["filter-card"]}>
-  
-        {/* SEARCH */}
-        <div className={styles["filter-block"]}>
-          <label className={styles["filter-label"]}>Search</label>
+ 
+
+return (
+  <aside className={styles["filters"]} aria-label="Filters">
+    <div className={styles["filter-card"]}>
+
+      {/* SEARCH */}
+      <div className={styles["filter-block"]}>
+        <label className={styles["filter-label"]}>Search</label>
+        <input
+          className={styles["filter-search"]}
+          placeholder="Search title, model..."
+          value={filters.q}
+          onChange={(e) => setFilters((s) => ({ ...s, q: e.target.value }))}
+        />
+      </div>
+
+      {/* PRICE */}
+      <div className={styles["filter-block"]}>
+        <label className={styles["filter-label"]}>Price (₹)</label>
+
+        <div className={styles["price-presets"]}>
+          {presets.map((p) => (
+            <button
+              key={p.label}
+              type="button"
+              className={`${styles["pill"]} ${styles["preset"]} ${
+                filters.priceMin === p.min && filters.priceMax === p.max
+                  ? styles["active"]
+                  : ""
+              }`}
+              onClick={() =>
+                setFilters((s) => ({ ...s, priceMin: p.min, priceMax: p.max }))
+              }
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+
+        <div className={styles["price-range-row"]}>
           <input
-            className={styles["filter-search"]}
-            placeholder="Search title, model..."
-            value={filters.q}
-            onChange={(e) => setFilters((s) => ({ ...s, q: e.target.value }))}
+            type="text"
+            className={`${styles["price-input"]} ${styles["readonly"]}`}
+            value={fmt(filters.priceMin)}
+            readOnly
+          />
+          <span className={styles["price-sep"]}>—</span>
+          <input
+            type="text"
+            className={`${styles["price-input"]} ${styles["readonly"]}`}
+            value={fmt(filters.priceMax)}
+            readOnly
           />
         </div>
-  
-        {/* PRICE */}
-        <div className={styles["filter-block"]}>
-          <label className={styles["filter-label"]}>Price (₹)</label>
-  
-          <div className={styles["price-presets"]}>
-            {presets.map((p) => (
-              <button
-                key={p.label}
-                type="button"
-                className={[
-                  styles["pill"],
-                  styles["preset"],
-                  filters.priceMin === p.min && filters.priceMax === p.max
-                    ? styles["active"]
-                    : "",
-                ].join(" ")}
-                onClick={() =>
-                  setFilters((s) => ({ ...s, priceMin: p.min, priceMax: p.max }))
-                }
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
-  
-          <div className={styles["price-range-row"]}>
-            <input
-              type="text"
-              className={`${styles["price-input"]} ${styles["readonly"]}`}
-              value={fmt(filters.priceMin)}
-              readOnly
-            />
-            <span className={styles["price-sep"]}>—</span>
-            <input
-              type="text"
-              className={`${styles["price-input"]} ${styles["readonly"]}`}
-              value={fmt(filters.priceMax)}
-              readOnly
-            />
-          </div>
-  
-          <div
-            className={styles["range-wrap"]}
-            style={{
-              ["--fill-start"]: `${(filters.priceMin / 5000000) * 100}%`,
-              ["--fill-end"]: `${(filters.priceMax / 5000000) * 100}%`,
-            }}
-          >
-            <input
-              type="range"
-              min="0"
-              max="5000000"
-              step="10000"
-              value={filters.priceMin}
-              onChange={(e) => setPriceMin(Number(e.target.value))}
-              className={styles["range-min"]}
-            />
-            <input
-              type="range"
-              min="0"
-              max="5000000"
-              step="10000"
-              value={filters.priceMax}
-              onChange={(e) => setPriceMax(Number(e.target.value))}
-              className={styles["range-max"]}
-            />
-          </div>
-  
-          <div className={`${styles["price-values"]} ${styles["small"]}`}>
-            <small>
-              Min: {fmt(filters.priceMin)} &nbsp; Max: {fmt(filters.priceMax)}
-            </small>
-          </div>
-        </div>
-  
-        {/* BRANDS */}
-        <div className={styles["filter-block"]}>
-          <label className={styles["filter-label"]}>Brands</label>
-          <div className={styles["brand-list"]}>
-            {brands.map((b) => (
-              <label
-                key={b}
-                className={`${styles["checkbox"]} ${styles["brand-row"]}`}
-              >
-                <input
-                  type="checkbox"
-                  checked={(filters.brands || []).includes(b)}
-                  onChange={() => toggleArray("brands", b)}
-                />
-                <span>{b}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-  
-        {/* YEAR */}
-        <div className={styles["filter-block"]}>
-          <label className={styles["filter-label"]}>Year</label>
-          <div className={styles["year-list"]}>
-            {years.map((y) => (
-              <label key={y} className={styles["radio"]}>
-                <input
-                  type="radio"
-                  name="year"
-                  value={y}
-                  checked={String(filters.year) === String(y)}
-                  onChange={() => setFilters((s) => ({ ...s, year: y }))}
-                />
-                <span>{y} & above</span>
-              </label>
-            ))}
-          </div>
-        </div>
-  
-        {/* COLLAPSIBLE SECTIONS (same pattern everywhere) */}
-        <div className={styles["filter-block"]}>
-          <div className={styles["section-head"]}>
-            <label className={styles["filter-label"]}>Transmission</label>
-            <button
-              className={styles["collapse-toggle"]}
-              onClick={() => toggleSection("transmission")}
-            >
-              {open.transmission ? "▾" : "▸"}
-            </button>
-          </div>
-  
-          {open.transmission && (
-            <div className={styles["transmission-list"]}>
-              {["Automatic", "Manual"].map((t) => (
-                <label key={t} className={styles["checkbox"]}>
-                  <input
-                    type="checkbox"
-                    checked={(filters.transmission || []).includes(t)}
-                    onChange={() => toggleArray("transmission", t)}
-                  />
-                  <span>{t}</span>
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
-  
-        {/* RESET */}
-        <div className={styles["filter-actions"]}>
-          <button
-            className={`${styles["btn"]} ${styles["reset-btn"]}`}
-            onClick={() =>
-              setFilters({
-                q: "",
-                priceMin: 0,
-                priceMax: 5000000,
-                brands: [],
-                year: "",
-                kms: [],
-                fuel: [],
-                body: [],
-                transmission: [],
-                category: [],
-                colors: [],
-                features: [],
-                seats: [],
-                rto: [],
-                owner: [],
-                hubs: [],
-                sortBy: "relevance",
-              })
-            }
-          >
-            Reset
-          </button>
+
+        <div
+          className={styles["range-wrap"]}
+          style={{
+            ["--fill-start"]: `${(filters.priceMin / 5000000) * 100}%`,
+            ["--fill-end"]: `${(filters.priceMax / 5000000) * 100}%`,
+          }}
+        >
+          <input
+            type="range"
+            min="0"
+            max="5000000"
+            step="10000"
+            value={filters.priceMin}
+            onChange={(e) => setPriceMin(Number(e.target.value))}
+            className={styles["range-min"]}
+          />
+          <input
+            type="range"
+            min="0"
+            max="5000000"
+            step="10000"
+            value={filters.priceMax}
+            onChange={(e) => setPriceMax(Number(e.target.value))}
+            className={styles["range-max"]}
+          />
         </div>
       </div>
-    </aside>
-  );
+
+      {/* BRANDS */}
+      <div className={styles["filter-block"]}>
+        <label className={styles["filter-label"]}>Brands</label>
+        <div className={styles["brand-list"]}>
+          {brands.map((b) => (
+            <label key={b} className={`${styles["checkbox"]} ${styles["brand-row"]}`}>
+              <input
+                type="checkbox"
+                checked={(filters.brands || []).includes(b)}
+                onChange={() => toggleArray("brands", b)}
+              />
+              <span>{b}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* YEAR */}
+      <div className={styles["filter-block"]}>
+        <label className={styles["filter-label"]}>Year</label>
+        <div className={styles["year-list"]}>
+          {years.map((y) => (
+            <label key={y} className={styles["radio"]}>
+              <input
+                type="radio"
+                name="year"
+                value={y}
+                checked={String(filters.year) === String(y)}
+                onChange={() => setFilters((s) => ({ ...s, year: y }))}
+              />
+              <span>{y} & above</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* KM DRIVEN */}
+<div className={styles["filter-block"]}>
+  <label className={styles["filter-label"]}>Km Driven</label>
+
+  <div className={styles["km-list"]}>
+    {[10000, 30000, 50000, 75000, 100000].map((k) => (
+      <label key={k} className={styles.checkbox}>
+        <input
+          type="checkbox"
+          checked={(filters.kms || []).includes(k)}
+          onChange={() =>
+            setFilters((s) => {
+              const set = new Set(s.kms || []);
+              if (set.has(k)) set.delete(k);
+              else set.add(k);
+              return { ...s, kms: Array.from(set) };
+            })
+          }
+        />
+        <span>{k.toLocaleString()} km or less</span>
+      </label>
+    ))}
+  </div>
+</div>
+
+
+      {/* FUEL */}
+<div className={styles["filter-block"]}>
+  <label className={styles["filter-label"]}>Fuel Type</label>
+
+  <div className={styles["fuel-list"]}>
+    {fuels.map((f) => (
+      <label key={f} className={styles.checkbox}>
+        <input
+          type="checkbox"
+          checked={(filters.fuel || []).includes(f)}
+          onChange={() => toggleArray("fuel", f)}
+        />
+        <span>{f}</span>
+      </label>
+    ))}
+  </div>
+</div>
+
+
+{/* BODY */}
+<div className={styles["filter-block"]}>
+  <label className={styles["filter-label"]}>Body Type</label>
+
+  <div className={styles["body-list"]}>
+    {bodies.map((b) => (
+      <label key={b} className={styles.checkbox}>
+        <input
+          type="checkbox"
+          checked={(filters.body || []).includes(b)}
+          onChange={() => toggleArray("body", b)}
+        />
+        <span>{b}</span>
+      </label>
+    ))}
+  </div>
+</div>
+
+{/* TRANSMISSION (collapsible) */}
+<div className={styles["filter-block"]}>
+  <div className={styles["section-head"]}>
+    <div>
+      <label className={styles["filter-label"]}>Transmission</label>
+    </div>
+
+    <div className={styles["guide-and-toggle"]}>
+      <a
+        className={styles["guide-link"]}
+        href="#guide"
+        onClick={(e) => e.preventDefault()}
+      >
+        Guide <span className={styles["guide-i"]}>i</span>
+      </a>
+
+      <button
+        className={styles["collapse-toggle"]}
+        onClick={() => toggleSection("transmission")}
+        aria-expanded={open.transmission}
+        aria-controls="transmission-panel"
+      >
+        {open.transmission ? "▾" : "▸"}
+      </button>
+    </div>
+  </div>
+
+  {open.transmission && (
+    <div
+      id="transmission-panel"
+      className={styles["transmission-list"]}
+    >
+      {["Automatic", "Manual"].map((t) => (
+        <label key={t} className={styles.checkbox}>
+          <input
+            type="checkbox"
+            checked={(filters.transmission || []).includes(t)}
+            onChange={() => toggleArray("transmission", t)}
+          />
+          <span>{t}</span>
+        </label>
+      ))}
+    </div>
+  )}
+</div>
+
+{/* CAR CATEGORY (collapsible) */}
+<div className={styles["filter-block"]}>
+  <div className={styles["section-head"]}>
+    <label className={styles["filter-label"]}>Car Category</label>
+
+    <button
+      className={styles["collapse-toggle"]}
+      onClick={() => toggleSection("category")}
+      aria-expanded={open.category}
+      aria-controls="category-panel"
+    >
+      {open.category ? "▾" : "▸"}
+    </button>
+  </div>
+
+  {open.category && (
+    <div
+      id="category-panel"
+      className={styles["category-list"]}
+    >
+      {["Hatchback", "Sedan", "SUV", "MUV", "Convertible", "Coupe"].map((cat) => (
+        <label key={cat} className={styles.checkbox}>
+          <input
+            type="checkbox"
+            checked={(filters.category || []).includes(cat)}
+            onChange={() => toggleArray("category", cat)}
+          />
+          <span>{cat}</span>
+        </label>
+      ))}
+    </div>
+  )}
+</div>
+
+
+
+
+      {/* COLOR */}
+      <div className={styles["filter-block"]}>
+        <div className={styles["section-head"]}>
+          <label className={styles["filter-label"]}>Color</label>
+          <button
+            className={styles["collapse-toggle"]}
+            onClick={() => toggleSection("color")}
+          >
+            {open.color ? "▾" : "▸"}
+          </button>
+        </div>
+
+        {open.color && (
+          <div className={styles["color-swatches"]}>
+            {palette.map((c) => {
+              const selected = (filters.colors || []).includes(c.key);
+              return (
+                <button
+                  key={c.key}
+                  type="button"
+                  className={`${styles["swatch"]} ${
+                    selected ? styles["swatch-selected"] : ""
+                  } ${c.hex === "#FFFFFF" ? styles["swatch-white"] : ""}`}
+                  style={{ background: c.hex }}
+                  onClick={() => toggleArray("colors", c.key)}
+                />
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* FEATURES */}
+      <div className={styles["filter-block"]}>
+        <div className={styles["section-head"]}>
+          <label className={styles["filter-label"]}>Features</label>
+          <button
+            className={styles["collapse-toggle"]}
+            onClick={() => toggleSection("features")}
+          >
+            {open.features ? "▾" : "▸"}
+          </button>
+        </div>
+
+        {open.features && (
+          <div className={styles["feature-list"]}>
+            {featureOptions.map((f) => (
+              <label key={f} className={styles["checkbox"]}>
+                <input
+                  type="checkbox"
+                  checked={(filters.features || []).includes(f)}
+                  onChange={() => toggleArray("features", f)}
+                />
+                <span>{f}</span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* SEATS */}
+      <div className={styles["filter-block"]}>
+        <div className={styles["section-head"]}>
+          <label className={styles["filter-label"]}>Seats</label>
+          <button
+            className={styles["collapse-toggle"]}
+            onClick={() => toggleSection("seats")}
+          >
+            {open.seats ? "▾" : "▸"}
+          </button>
+        </div>
+
+        {open.seats && (
+          <div className={styles["seats-list"]}>
+            {seatOptions.map((s) => (
+              <label key={s} className={styles["checkbox"]}>
+                <input
+                  type="checkbox"
+                  checked={(filters.seats || []).includes(s)}
+                  onChange={() => toggleArray("seats", s)}
+                />
+                <span>{s}</span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* RTO */}
+<div className={styles["filter-block"]}>
+  <div className={styles["section-head"]}>
+    <label className={styles["filter-label"]}>RTO</label>
+
+    <button
+      className={styles["collapse-toggle"]}
+      onClick={() => toggleSection("rto")}
+      aria-expanded={open.rto}
+      aria-controls="rto-panel"
+    >
+      {open.rto ? "▾" : "▸"}
+    </button>
+  </div>
+
+  {open.rto && (
+    <div
+      id="rto-panel"
+      className={styles["rto-list"]}
+    >
+      {rtoOptions.map((r) => (
+        <label key={r} className={styles.checkbox}>
+          <input
+            type="checkbox"
+            checked={(filters.rto || []).includes(r)}
+            onChange={() => toggleArray("rto", r)}
+          />
+          <span>{r}</span>
+        </label>
+      ))}
+    </div>
+  )}
+</div>
+
+
+      {/* OWNER */}
+      <div className={styles["filter-block"]}>
+        <div className={styles["section-head"]}>
+          <label className={styles["filter-label"]}>Owner</label>
+          <button
+            className={styles["collapse-toggle"]}
+            onClick={() => toggleSection("owner")}
+          >
+            {open.owner ? "▾" : "▸"}
+          </button>
+        </div>
+
+        {open.owner && (
+          <div className={styles["owner-list"]}>
+            {ownerOptions.map((o) => (
+              <label key={o} className={styles["checkbox"]}>
+                <input
+                  type="checkbox"
+                  checked={(filters.owner || []).includes(o)}
+                  onChange={() => toggleArray("owner", o)}
+                />
+                <span>{o}</span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* HUBS */}
+      <div className={styles["filter-block"]}>
+        <div className={styles["section-head"]}>
+          <label className={styles["filter-label"]}>Carsdedo Hubs</label>
+          <button
+            className={styles["collapse-toggle"]}
+            onClick={() => toggleSection("hubs")}
+          >
+            {open.hubs ? "▾" : "▸"}
+          </button>
+        </div>
+
+        {open.hubs && (
+          <div className={styles["hubs-list"]}>
+            {hubOptions.map((h) => (
+              <label key={h} className={styles["checkbox"]}>
+                <input
+                  type="checkbox"
+                  checked={(filters.hubs || []).includes(h)}
+                  onChange={() => toggleArray("hubs", h)}
+                />
+                <span>{h}</span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* RESET */}
+      <div className={styles["filter-actions"]}>
+        <button
+          className={`${styles["btn"]} ${styles["reset-btn"]}`}
+          onClick={() =>
+            setFilters({
+              q: "",
+              priceMin: 0,
+              priceMax: 5000000,
+              brands: [],
+              year: "",
+              kms: [],
+              fuel: [],
+              body: [],
+              transmission: [],
+              category: [],
+              colors: [],
+              features: [],
+              seats: [],
+              rto: [],
+              owner: [],
+              hubs: [],
+              sortBy: "relevance",
+            })
+          }
+        >
+          Reset
+        </button>
+      </div>
+
+    </div>
+  </aside>
+);
+
   
 }

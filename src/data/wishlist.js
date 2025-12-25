@@ -49,7 +49,7 @@ const wishlist = [
       body: "Hatchback",
       city: "Noida",
       colorKey: "blue",
-      image: "/cars/hyundai-i20.jpg",
+      image: process.env.PUBLIC_URL + "/vento.avif",
       tags: ["Assured"],
       features: ["Reverse Camera"],
     },
