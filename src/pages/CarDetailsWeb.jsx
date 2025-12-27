@@ -18,7 +18,7 @@ import EMICalculator from "../components/EMICalculator";
  *
  * Keep TOPBAR_HEIGHT in sync with CSS :root --topbar-height
  */
-const TOPBAR_HEIGHT = 72;
+const TOPBAR_HEIGHT = 68;
 
 
 
@@ -48,6 +48,9 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
   const { id } = useParams();
   const navigate = useNavigate();
   const car = carsData.find((c) => Number(c.id) === Number(id));
+
+  const ignoreSpyRef = useRef(false);
+
 
   const containerRef = useRef(null);
   const leftRef = useRef(null);
@@ -124,65 +127,130 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
   }, []);
 
   // ---------- IntersectionObserver scrollspy (main page) ----------
+  // useEffect(() => {
+  //   if (observerRef.current) {
+  //     observerRef.current.disconnect();
+  //     observerRef.current = null;
+  //   }
+  //   const rootMargin = `-${TOPBAR_HEIGHT + 8}px 0px -40% 0px`;
+  //   const io = new IntersectionObserver(
+  //     (entries) => {
+  //       const visible = entries.filter((e) => e.isIntersecting);
+  //       if (!visible.length) return;
+  //       visible.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+  //       const id = visible[0].target.dataset.section;
+  //       if (id) setActiveTab((prev) => (prev === id ? prev : id));
+  //     },
+  //     { threshold: [0.0, 0.1, 0.25, 0.5, 0.75], rootMargin }
+  //   );
+
+  //   sections.forEach((s) => {
+  //     if (s.ref.current) io.observe(s.ref.current);
+  //   });
+
+  //   observerRef.current = io;
+  //   return () => {
+  //     io.disconnect();
+  //     observerRef.current = null;
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [overviewRef.current, reportRef.current, specsRef.current, financeRef.current]);
+
   useEffect(() => {
     if (observerRef.current) {
       observerRef.current.disconnect();
       observerRef.current = null;
     }
+    
+    // Wait for all refs to be available
+    const allRefsReady = sections.every(s => s.ref.current);
+    if (!allRefsReady) return;
+    
     const rootMargin = `-${TOPBAR_HEIGHT + 8}px 0px -40% 0px`;
     const io = new IntersectionObserver(
       (entries) => {
         const visible = entries.filter((e) => e.isIntersecting);
         if (!visible.length) return;
-        visible.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        const id = visible[0].target.dataset.section;
-        if (id) setActiveTab((prev) => (prev === id ? prev : id));
+        
+        // Find the section with the highest intersection ratio
+        let maxRatio = -1;
+        let maxEntry = null;
+        
+        visible.forEach(entry => {
+          if (entry.intersectionRatio > maxRatio) {
+            maxRatio = entry.intersectionRatio;
+            maxEntry = entry;
+          }
+        });
+        
+        if (maxEntry) {
+          const id = maxEntry.target.dataset.section;
+          if (id) {
+            // Use functional update to ensure we get the latest state
+            setActiveTab(prev => {
+              // Only update if different to avoid unnecessary re-renders
+              return prev === id ? prev : id;
+            });
+          }
+        }
       },
-      { threshold: [0.0, 0.1, 0.25, 0.5, 0.75], rootMargin }
+      { 
+        threshold: [0.0, 0.1, 0.25, 0.5, 0.75], 
+        rootMargin 
+      }
     );
-
+  
+    // Observe all sections
     sections.forEach((s) => {
-      if (s.ref.current) io.observe(s.ref.current);
+      if (s.ref.current) {
+        // Ensure each element has the data-section attribute
+        if (!s.ref.current.dataset.section) {
+          s.ref.current.dataset.section = s.id;
+        }
+        io.observe(s.ref.current);
+      }
     });
-
+  
     observerRef.current = io;
+    
     return () => {
-      io.disconnect();
-      observerRef.current = null;
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [overviewRef.current, reportRef.current, specsRef.current, financeRef.current]);
+  }, [sections]); // Use sections array instead of individual refs
 
   // ---------- rAF fallback scrollspy ----------
-  useEffect(() => {
-    const offset = TOPBAR_HEIGHT + 8;
-    function computeByScroll() {
-      const scrollPos = window.scrollY + offset + 6;
-      let current = sections[0].id;
-      for (let s of sections) {
-        const el = s.ref.current;
-        if (!el) continue;
-        const top = el.getBoundingClientRect().top + window.scrollY;
-        if (top <= scrollPos) current = s.id;
-      }
-      setActiveTab((prev) => (prev !== current ? current : prev));
-      rafRef.current = null;
-    }
-    function onScroll() {
-      if (rafRef.current !== null) return;
-      rafRef.current = requestAnimationFrame(computeByScroll);
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    onScroll();
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   const offset = TOPBAR_HEIGHT + 8;
+  //   function computeByScroll() {
+  //     const scrollPos = window.scrollY + offset + 6;
+  //     let current = sections[0].id;
+  //     for (let s of sections) {
+  //       const el = s.ref.current;
+  //       if (!el) continue;
+  //       const top = el.getBoundingClientRect().top + window.scrollY;
+  //       if (top <= scrollPos) current = s.id;
+  //     }
+  //     setActiveTab((prev) => (prev !== current ? current : prev));
+  //     rafRef.current = null;
+  //   }
+  //   function onScroll() {
+  //     if (rafRef.current !== null) return;
+  //     rafRef.current = requestAnimationFrame(computeByScroll);
+  //   }
+  //   window.addEventListener("scroll", onScroll, { passive: true });
+  //   window.addEventListener("resize", onScroll);
+  //   onScroll();
+  //   return () => {
+  //     window.removeEventListener("scroll", onScroll);
+  //     window.removeEventListener("resize", onScroll);
+  //     if (rafRef.current) cancelAnimationFrame(rafRef.current);
+  //     rafRef.current = null;
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   // ---------- sticky tab position updater ----------
   const updateStickyPosition = useCallback(() => {
@@ -232,15 +300,69 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
   }, []);
 
   // ---------- helper: scroll to page ref ----------
+  // function scrollToRef(ref) {
+  //   if (!ref?.current) return;
+  //   const offset = TOPBAR_HEIGHT + 8;
+  //   const top = ref.current.getBoundingClientRect().top + window.scrollY - offset;
+  //   window.scrollTo({ top, behavior: "smooth" });
+  //   const sec = ref.current.dataset?.section || null;
+  //   console.log(sec);
+  //   if (sec) setActiveTab(sec);
+  //   setTimeout(() => window.dispatchEvent(new Event("scroll")), 350);
+  // }
+
+
   function scrollToRef(ref) {
-    if (!ref?.current) return;
-    const offset = TOPBAR_HEIGHT + 8;
-    const top = ref.current.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top, behavior: "smooth" });
-    const sec = ref.current.dataset?.section || null;
-    if (sec) setActiveTab(sec);
-    setTimeout(() => window.dispatchEvent(new Event("scroll")), 350);
+    if (!ref || !ref.current) return;
+    
+    const element = ref.current;
+    // const offset = TOPBAR_HEIGHT + 8;
+    const offset = TOPBAR_HEIGHT + 80;
+    element.style.scrollMarginTop = `${offset}px`;
+
+    const sec = element.dataset.section || element.getAttribute("data-section");
+      console.log("Section found:", sec);
+      
+      if (sec && typeof setActiveTab === "function") {
+        setActiveTab(sec);
+      }
+
+    
+    
+    // Method 1: Using scrollIntoView (simpler)
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+      inline: "nearest"
+    });
+    
+    // Method 2: Your approach but with better error handling
+    try {
+      // const elementTop = element.getBoundingClientRect().top + window.scrollY;
+      // const offsetPosition = elementTop - offset;
+      
+      // window.scrollTo({
+      //   top: offsetPosition,
+      //   behavior: "smooth"
+      // });
+      
+      // const sec = element.dataset.section || element.getAttribute("data-section");
+      // console.log("Section found:", sec);
+      
+      // if (sec && typeof setActiveTab === "function") {
+      //   setActiveTab(sec);
+      // }
+      
+      // Wait for scroll to complete
+      setTimeout(() => {
+        window.dispatchEvent(new Event("scroll"));
+      }, 500); // Increased timeout for longer animations
+      
+    } catch (error) {
+      console.error("Scroll error:", error);
+    }
   }
+ 
 
   // ---------- DRAWER: open/close & keyboard close ----------
   useEffect(() => {
@@ -343,6 +465,8 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
   }
 
   const thumbs = car.images && car.images.length ? car.images : [car.image];
+  
+
 
   return (
     <div className={styles.carDetailsPageWrapper}>
@@ -580,6 +704,8 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
 
 {/*specs*/ }
   {/* Specs section (place above features on the page) */}
+
+  <section data-section="specs" ref={specsRef} >
   <section className={styles.specsSection}>
         <h2 className={styles.specsTitle}>Car Specifications</h2>
 
@@ -714,7 +840,7 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
     </div>
   </div>
 </section>
-
+</section>
 
           {/* FINANCE */}
           {/* <section id="finance" ref={financeRef} data-section="finance" className={styles.cdSection}>
@@ -741,7 +867,7 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
               </div>
             </div>
           </section> */}
-          <EMICalculator/>
+          <EMICalculator refi={financeRef}/>
 
           <div style={{ height: 48 }} />
         </main>

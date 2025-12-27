@@ -18,6 +18,7 @@ import SellPageWeb from "./pages/SellPageWeb";
 import LoginWeb from "./pages/LoginWeb";
 import Wishlist from "./pages/Wishlist";
 import AccountWeb from "./pages/AccountWeb";
+import ScrollSections from "./pages/ScrollSections";
 
 export default function App() {
   const isMobile = useIsMobile(900);
@@ -47,6 +48,7 @@ export default function App() {
             <Route path="login" element={<LoginWeb/>} />
             <Route path="account" element={<AccountWeb/>} />
             <Route path="/wishlist" element={<Wishlist/>} />
+            <Route path="/scroll" element={<ScrollSections/>} />
             
 
           </Route>
