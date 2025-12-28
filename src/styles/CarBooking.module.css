@@ -1,0 +1,981 @@
+/* ===============================
+   BASE STYLES
+================================ */
+.page {
+    padding: 40px 60px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+    position: relative;
+  }
+  
+  .loading {
+    padding: 80px;
+    text-align: center;
+    font-size: 18px;
+    color: #0c213a;
+  }
+  
+  /* ===============================
+     PROGRESS BAR
+  ================================ */
+  .progressBar {
+    margin-bottom: 40px;
+  }
+  
+  .progressSteps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: #94a3b8;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .step.active {
+    color: #0c213a;
+  }
+  
+  .stepNumber {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    transition: all 0.3s ease;
+  }
+  
+  .step.active .stepNumber {
+    background: #0c213a;
+    color: white;
+    box-shadow: 0 4px 12px rgba(12, 33, 58, 0.3);
+  }
+  
+  .stepLine {
+    width: 80px;
+    height: 2px;
+    background: #cbd5e1;
+    margin: 0 12px;
+  }
+  
+  /* ===============================
+     HEADER
+  ================================ */
+  .title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #0c213a;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  
+  .subtitle {
+    font-size: 16px;
+    color: #64748b;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  
+  /* ===============================
+     LAYOUT
+  ================================ */
+  .layout {
+    display: grid;
+    grid-template-columns: 1.25fr 0.9fr;
+    gap: 32px;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .left {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .right {
+    position: sticky;
+    top: 100px;
+  }
+  
+  /* ===============================
+     CARDS
+  ================================ */
+  .card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+  }
+  
+  .cardHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .cardIcon {
+    color: #0c213a;
+    font-size: 18px;
+  }
+  
+  .cardHeader h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0c213a;
+    margin: 0;
+  }
+  
+  .cardDescription {
+    color: #64748b;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  
+  /* ===============================
+     LOAN OPTIONS
+  ================================ */
+  .loanOption {
+    padding: 16px;
+    border-radius: 12px;
+    background: #f8fafc;
+  }
+  
+  .loanRow {
+    display: flex;
+    gap: 12px;
+    cursor: pointer;
+    align-items: flex-start;
+  }
+  
+  .customCheckbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 2px solid #cbd5e1;
+    appearance: none;
+    cursor: pointer;
+    position: relative;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  
+  .customCheckbox:checked {
+    background: #0c213a;
+    border-color: #0c213a;
+  }
+  
+  .customCheckbox:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .loanContent strong {
+    font-size: 15px;
+    color: #0c213a;
+    display: block;
+    margin-bottom: 4px;
+  }
+  
+  .loanContent p {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+  }
+  
+  /* ===============================
+     TEST DRIVE BUTTONS
+  ================================ */
+  .driveOptions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .driveBtn {
+    flex: 1;
+    padding: 16px;
+    border-radius: 14px;
+    border: 2px solid #e2e8f0;
+    background: white;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+  }
+  
+  .driveBtn:hover {
+    border-color: #0c213a;
+    transform: translateY(-1px);
+  }
+  
+  .driveBtn.active {
+    background: #f0f7ff;
+    border-color: #0c213a;
+    color: #0c213a;
+  }
+  
+  .driveIcon {
+    font-size: 20px;
+    opacity: 0.8;
+  }
+  
+  .driveContent {
+    flex: 1;
+  }
+  
+  .driveContent strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  
+  .driveContent p {
+    font-size: 12px;
+    opacity: 0.8;
+    margin: 0;
+  }
+  
+  /* ===============================
+     LOCATION INPUT
+  ================================ */
+  .locationInput {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .locationIcon {
+    color: #0c213a;
+    font-size: 16px;
+  }
+  
+  .locationField {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #0c213a;
+    outline: none;
+  }
+  
+  .locationField::placeholder {
+    color: #94a3b8;
+  }
+  
+  /* ===============================
+     INFORMATION GRID
+  ================================ */
+  .infoGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  .infoItem {
+    padding: 14px;
+    border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .infoLabel {
+    display: block;
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 4px;
+  }
+  
+  .infoValue {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0c213a;
+  }
+  
+  /* ===============================
+     RIGHT SUMMARY CARD
+  ================================ */
+  .summaryCard {
+    background: white;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 16px 40px rgba(12, 33, 58, 0.12);
+    border: 1px solid #e2e8f0;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .summaryCard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #0c213a;
+  }
+  
+  .carImageContainer {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  
+  .carImage {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+  }
+  
+  .carBadge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #0c213a;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  
+  .carInfo {
+    margin-bottom: 20px;
+  }
+  
+  .carTitle {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0c213a;
+    margin-bottom: 6px;
+  }
+  
+  .carMeta {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 12px;
+  }
+  
+  .priceSection {
+    margin-bottom: 20px;
+  }
+  
+  .price {
+    font-size: 28px;
+    font-weight: 900;
+    color: #0c213a;
+    margin-bottom: 2px;
+  }
+  
+  .priceNote {
+    font-size: 12px;
+    color: #64748b;
+  }
+  
+  /* ===============================
+     SUMMARY DETAILS
+  ================================ */
+  .summaryDetails {
+    margin-bottom: 20px;
+  }
+  
+  .summaryItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .summaryItem:last-child {
+    border-bottom: none;
+  }
+  
+  .summaryItem span {
+    color: #64748b;
+    font-size: 13px;
+  }
+  
+  .summaryItem strong {
+    color: #0c213a;
+    font-size: 14px;
+  }
+  
+  .driveStatus, .loanStatus {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  
+  .driveStatus {
+    background: #f0fdf4;
+    color: #166534;
+  }
+  
+  .loanStatus {
+    background: #f0f9ff;
+    color: #0369a1;
+  }
+  
+  .notSelected {
+    color: #94a3b8;
+    font-size: 12px;
+  }
+  
+  /* ===============================
+     DIVIDER
+  ================================ */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+    margin: 24px 0;
+  }
+  
+  /* ===============================
+     TOTAL SECTION
+  ================================ */
+  .totalSection {
+    margin-bottom: 24px;
+  }
+  
+  .totalItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 2px solid #f1f5f9;
+  }
+  
+  .totalItem span {
+    font-size: 16px;
+    color: #0c213a;
+    font-weight: 600;
+  }
+  
+  .totalItem strong {
+    font-size: 24px;
+    color: #0c213a;
+    font-weight: 800;
+  }
+  
+  .refundNote {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 10px;
+    background: #fef2f2;
+    color: #991b1b;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 16px;
+  }
+  
+  /* ===============================
+     INTEREST BUTTON
+  ================================ */
+  .interestBtn {
+    width: 100%;
+    padding: 16px;
+    background: #0c213a;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(12, 33, 58, 0.2);
+  }
+  
+  .interestBtn:hover:not(.disabled) {
+    background: #162e4d;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(12, 33, 58, 0.25);
+  }
+  
+  .interestBtn.disabled {
+    background: #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  
+  .assuranceNote {
+    font-size: 12px;
+    color: #64748b;
+    text-align: center;
+    margin-top: 12px;
+  }
+  
+  /* ===============================
+     SUPPORT CARD
+  ================================ */
+  .supportCard {
+    margin-top: 20px;
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .supportHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  
+  .supportIcon {
+    width: 28px;
+    height: 28px;
+    background: #0c213a;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  
+  .supportCard h4 {
+    margin: 0;
+    color: #0c213a;
+    font-size: 15px;
+  }
+  
+  .supportCard p {
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  
+  .contactInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .contactItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+  }
+  
+  .contactItem span {
+    color: #64748b;
+    font-size: 12px;
+  }
+  
+  .contactItem strong {
+    color: #0c213a;
+    font-size: 13px;
+  }
+  
+  /* ===============================
+     DRAWER STYLES
+  ================================ */
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: -380px;
+    width: 360px;
+    height: 100vh;
+    background: white;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    overflow-y: auto;
+  }
+  
+  .drawer.active {
+    right: 0;
+  }
+  
+  .drawerContent {
+    padding: 24px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .drawerHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .drawerHeader h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0c213a;
+    margin: 0;
+  }
+  
+  .closeBtn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #64748b;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .closeBtn:hover {
+    background: #f1f5f9;
+    color: #0c213a;
+  }
+  
+  /* Interest Form */
+  .interestForm {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    flex: 1;
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .formGroup label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0c213a;
+  }
+  
+  .formGroup label svg {
+    font-size: 12px;
+    color: #0c213a;
+  }
+  
+  .formGroup input {
+    padding: 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #0c213a;
+    transition: all 0.2s ease;
+  }
+  
+  .formGroup input:focus {
+    outline: none;
+    border-color: #0c213a;
+    box-shadow: 0 0 0 3px rgba(12, 33, 58, 0.1);
+  }
+  
+  .formGroup input::placeholder {
+    color: #94a3b8;
+  }
+  
+  /* Time Options */
+  .timeOptions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  
+  .timeOption {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 10px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+  
+  .timeOption:hover {
+    border-color: #0c213a;
+  }
+  
+  .timeOption input {
+    margin: 0;
+  }
+  
+  .timeOption input:checked + span {
+    color: #0c213a;
+    font-weight: 600;
+  }
+  
+  .timeOption span {
+    flex: 1;
+    font-size: 13px;
+    color: #64748b;
+  }
+  
+  /* Security Note */
+  .securityNote {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #991b1b;
+    background: #fef2f2;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 8px;
+  }
+  
+  .securityNote svg {
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+  
+  /* Submit Button */
+  .submitBtn {
+    padding: 14px;
+    background: #0c213a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: auto;
+  }
+  
+  .submitBtn:hover {
+    background: #162e4d;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(12, 33, 58, 0.25);
+  }
+  
+  /* Success Message */
+  .successMessage {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 0;
+    flex: 1;
+  }
+  
+  .successIcon {
+    font-size: 40px;
+    color: #10b981;
+  }
+  
+  .successMessage h4 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0c213a;
+    margin: 0;
+  }
+  
+  .successMessage p {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+  }
+  
+  .referenceInfo {
+    margin-top: 16px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 10px;
+    width: 100%;
+  }
+  
+  .referenceInfo p {
+    font-size: 11px;
+    color: #64748b;
+    margin: 0 0 6px 0;
+  }
+  
+  .referenceInfo strong {
+    font-size: 14px;
+    color: #0c213a;
+    display: block;
+  }
+  
+  .doneBtn {
+    padding: 12px 24px;
+    background: #0c213a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: auto;
+  }
+  
+  .doneBtn:hover {
+    background: #162e4d;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(12, 33, 58, 0.25);
+  }
+  
+  /* Overlay */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  /* ===============================
+     RESPONSIVE DESIGN
+  ================================ */
+  @media (max-width: 1024px) {
+    .page {
+      padding: 32px;
+    }
+    
+    .layout {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    
+    .right {
+      position: static;
+    }
+    
+    .progressSteps {
+      max-width: 400px;
+    }
+    
+    .stepLine {
+      width: 60px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .page {
+      padding: 24px 20px;
+    }
+    
+    .title {
+      font-size: 26px;
+    }
+    
+    .subtitle {
+      font-size: 14px;
+    }
+    
+    .progressSteps {
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .stepLine {
+      width: 2px;
+      height: 30px;
+      margin: 0;
+    }
+    
+    .driveOptions {
+      flex-direction: column;
+    }
+    
+    .infoGrid {
+      grid-template-columns: 1fr;
+    }
+    
+    .summaryCard {
+      padding: 24px;
+    }
+    
+    .price {
+      font-size: 24px;
+    }
+    
+    .drawer {
+      width: 100%;
+      max-width: 320px;
+    }
+    
+    .drawerContent {
+      padding: 20px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .page {
+      padding: 20px 16px;
+    }
+    
+    .title {
+      font-size: 22px;
+    }
+    
+    .card, .summaryCard {
+      padding: 20px;
+    }
+    
+    .stepNumber {
+      width: 28px;
+      height: 28px;
+      font-size: 12px;
+    }
+    
+    .carImage {
+      height: 140px;
+    }
+    
+    .carTitle {
+      font-size: 18px;
+    }
+    
+    .price {
+      font-size: 22px;
+    }
+  }

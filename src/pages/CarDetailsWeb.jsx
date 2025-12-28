@@ -901,7 +901,12 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
               </div>
 
               <div className={styles.cta}>
-                <button type="button" className={styles.btnBook}>
+                <button onClick={() =>
+  navigate(`/car/${car.id}/book`, {
+    state: { car }
+  })
+}
+ type="button" className={styles.btnBook}>
                   BOOK NOW
                 </button>
                 <button type="button" className={styles.btnTest}>
