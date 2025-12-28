@@ -57,12 +57,201 @@ body {
   display: block;
   cursor: pointer;
 }
-.location {
-  background: rgba(0, 0, 0, 0.06);
-  padding: 8px 12px;
-  border-radius: 18px;
-  color: #2d0738;
-  font-weight: 500;
+/* Location Button - Classy Redesign */
+.location-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 8px;
+  border: 1.5px solid #e8ecef;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #ffffff 0%, #fcfdfe 100%);
+  box-shadow: 
+    0 2px 8px rgba(12, 33, 58, 0.04),
+    0 1px 2px rgba(12, 33, 58, 0.06);
+  font-size: 14px;
+  color: #0c213a;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.2px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Hover effect */
+.location-btn:hover {
+  border-color: #3a506b;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 
+    0 4px 16px rgba(12, 33, 58, 0.08),
+    0 2px 4px rgba(12, 33, 58, 0.08);
+  transform: translateY(-1px);
+}
+
+/* Active/focus states */
+.location-btn:active,
+.location-btn:focus {
+  outline: none;
+  border-color: #0c213a;
+  box-shadow: 
+    0 0 0 3px rgba(12, 33, 58, 0.1),
+    0 4px 16px rgba(12, 33, 58, 0.1);
+}
+
+/* Pseudo-element for subtle shine effect */
+.location-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.location-btn:hover::before {
+  left: 100%;
+}
+
+/* Location icon */
+/* .location-btn::after {
+  content: '📍';
+  font-size: 16px;
+  filter: saturate(0.9) brightness(1.1);
+} */
+
+/* Alternative icon using CSS instead of emoji */
+.location-icon {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #0c213a 0%, #3a506b 100%);
+  border-radius: 50%;
+  position: relative;
+  display: inline-block;
+}
+
+.location-icon::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px white;
+}
+
+.location-icon::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(12, 33, 58, 0.1);
+  border-radius: 50%;
+}
+
+/* Caret/dropdown arrow */
+.caret {
+  font-size: 18px;
+  color: #ffffff;
+  opacity: 0.7;
+  transition: transform 0.3s ease;
+  /* margin-left: 4px; */
+  font-weight: normal;
+}
+
+.location-btn:hover .caret {
+  opacity: 1;
+}
+
+.location-btn[aria-expanded="true"] .caret {
+  transform: rotate(180deg);
+  color: #0c213a;
+}
+
+/* For when button is active/selected */
+.location-btn[aria-expanded="true"] {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f4f8 100%);
+  border-color: #0c213a;
+  color: #0c213a;
+}
+
+/* Location text styling */
+.location-text {
+  color: #0c213a;
+  font-weight: 600;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .location-btn {
+    background: linear-gradient(135deg, #ed8926 0%, #f4a454 100%);
+    border-color: #f8f9fa;
+    color: #ffffff;
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.2),
+      0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  .location-btn:hover {
+    border-color: #4a5568;
+    background: linear-gradient(135deg, #1e2a44 0%, #223150 100%);
+  }
+  
+  .location-btn[aria-expanded="true"] {
+    background: linear-gradient(135deg, #223150 0%, #1e2a44 100%);
+    border-color: #4299e1;
+  }
+  
+  .caret {
+    color: #e9ecf0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .location-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+  
+  .location-btn::after {
+    font-size: 14px;
+  }
+}
+
+/* Animation for when dropdown opens */
+@keyframes buttonPulse {
+  0% {
+    box-shadow: 
+      0 2px 8px rgba(12, 33, 58, 0.04),
+      0 1px 2px rgba(12, 33, 58, 0.06);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 3px rgba(12, 33, 58, 0.1),
+      0 4px 16px rgba(12, 33, 58, 0.1);
+  }
+  100% {
+    box-shadow: 
+      0 2px 8px rgba(12, 33, 58, 0.04),
+      0 1px 2px rgba(12, 33, 58, 0.06);
+  }
+}
+
+.location-btn[aria-expanded="true"] {
+  animation: buttonPulse 0.3s ease;
 }
 
 /* center search */
@@ -122,7 +311,7 @@ body {
   padding: 10px 0;
   
   /* translucent glass effect */
-  background: #b80233d5; /* same color but semi-transparent */
+  background: #0b2f53; /* same color but semi-transparent */
   backdrop-filter: blur(12px) saturate(160%);
   -webkit-backdrop-filter: blur(12px) saturate(160%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);

@@ -55,7 +55,7 @@
     object-fit: contain;
   }
   
-  .location-btn,
+  /* .location-btn,
   .location {
     display: inline-flex;
     align-items: center;
@@ -69,11 +69,11 @@
     box-shadow: 0 1px 2px rgba(0,0,0,0.04);
     font-size: 14px;
     color: var(--text);
-  }
+  } */
   
-  .location-btn:hover {
+  /* .location-btn:hover {
     background: #fafafa;
-  }
+  } */
   
   .caret {
     font-size: 12px;
