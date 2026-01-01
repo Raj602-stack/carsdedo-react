@@ -20,6 +20,9 @@ import Wishlist from "./pages/Wishlist";
 import AccountWeb from "./pages/AccountWeb";
 import ScrollSections from "./pages/ScrollSections";
 import CarBooking from "./pages/CarBooking";
+import SpecificationsPage from "./components/SpecificationsPage";
+import FeaturesPage from "./components/FeaturesPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 export default function App() {
   const isMobile = useIsMobile(900);
@@ -38,6 +41,11 @@ export default function App() {
             <Route path="car/:id" element={<CarDetails />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="account" element={<ProtectedRoute><AccountPage/></ProtectedRoute>} />
+            <Route path="/specifications" element={<SpecificationsPage/>} />
+            <Route path="/features" element={<FeaturesPage/>} />
+            <Route path="/checkout/:id" element={<CheckoutPage/>} />
+
+
         </Routes>
       ) : (
         <Routes>

@@ -1,0 +1,78 @@
+.container {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    /* Subtle border and soft shadow as seen in reference */
+    border: 1px solid #f0f0f5;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    font-family: 'Inter', -apple-system, sans-serif;
+    max-width: 100%;
+  }
+  
+  .mainHeading {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0c213a; /* Deep navy from brand colors */
+    margin: 0 0 24px 0;
+    letter-spacing: -0.02em;
+  }
+  
+  .reasonsList {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .reasonItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .iconWrapper {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Match the light gray/mint icon style */
+  }
+  
+  .icon {
+    font-size: 24px;
+  }
+  
+  .textContent {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .reasonTitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0c213a;
+    margin: 0;
+    line-height: 1.2;
+  }
+  
+  .reasonDescription {
+    font-size: 14px;
+    font-weight: 500;
+    color: #64748b; /* Muted slate gray */
+    margin: 0;
+    line-height: 1.4;
+  }
+  
+  /* Subtle responsive adjustment */
+  @media (max-width: 480px) {
+    .container {
+      padding: 20px;
+      border-radius: 12px;
+    }
+    
+    .mainHeading {
+      font-size: 18px;
+    }
+  }

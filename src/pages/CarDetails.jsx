@@ -1,6 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "../styles/CarDetails.css";
+import ReasonsToBuy from "../components/ReasonsToBuy";
+import BasicInfo from "../components/BasicInfo";
+import QualityReport from "../components/QualityReport";
+import Specifications from "../components/Specifications";
+import Features from "../components/Features";
+import SwipableInsights from "../components/SwipableInsights";
+import StoryCarousel from "../components/StoryCarousel";
+import FaqMob from "../components/FaqMob";
+import MobileMoreAbout from "../components/MobileMoreAbout";
+import FooterMobile from "../components/FooterMobile";
+
 
 export default function CarDetails() {
   const location = useLocation();
@@ -9,13 +20,36 @@ export default function CarDetails() {
   const passedCar = location.state && location.state.car ? location.state.car : null;
   const [car, setCar] = useState(passedCar);
 
+  // useEffect(() => {
+  //   const y = sessionStorage.getItem("cars_list_scroll");
+  //   console.log(y);
+  //   if (y) {
+  //     window.scrollTo(0, Number(y));
+  //     sessionStorage.removeItem("cars_list_scroll");
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    const el = document.querySelector("main.cd-main");
+    const y = sessionStorage.getItem("cd_main_scroll");
+  
+    if (el && y) {
+      el.scrollTo({
+        top: Number(y),
+        behavior: "auto",
+      });
+      sessionStorage.removeItem("cd_main_scroll");
+    }
+  }, []);
+  
+
   // deep-link fetch placeholder
   useEffect(() => {
     if (!car && params.id) {
       // fetch(`/api/cars/${params.id}`).then(r=>r.json()).then(setCar)
     }
   }, [car, params.id]);
-
+ console.log(car);
   // images & carousel state
   const images = (car && (car.images || [car.thumb])) || [];
   const [idx, setIdx] = useState(0);
@@ -80,7 +114,10 @@ export default function CarDetails() {
     { id: "overview", label: "Overview" },
     { id: "basic-info", label: "Basic info" },
     { id: "quality-report", label: "Quality report" },
-    { id: "benefits", label: "Benefits & add-ons" },
+    { id: "specifications", label: "specifications" },
+    { id: "features", label: "features" },
+    { id: "more", label: "more" },
+   
   ];
   const [active, setActive] = useState("overview");
   const sectionRefs = useRef({});
@@ -187,7 +224,7 @@ export default function CarDetails() {
   ];
 
   return (
-    <div className="car-details-root">
+    <div className="car-details-root" id="page-scroll">
       {/* header */}
       <header className={`cd-header ${compactHeader ? "compact" : ""}`}>
         <div className="left">
@@ -197,7 +234,7 @@ export default function CarDetails() {
         <div className="center">
           {!compactHeader ? (
             <div className="brand-row">
-              <div className="brand-name">Spinny</div>
+              <div className="brand-name">CarsDedo</div>
             </div>
           ) : (
             <div className="model-row">
@@ -278,8 +315,60 @@ export default function CarDetails() {
           ))}
         </div>
 
+        {/* basic car data */}
+        <div className="mobile-car-card">
+      {/* Main Header Section */}
+      <div className="car-header">
+        <h1 className="car-title">{car.title}</h1>
+        
+        <div className="car-specs">
+          <span className="spec-item">{car.km}</span>
+          <span className="spec-divider">·</span>
+          <span className="spec-item">{car.fuel}</span>
+          <span className="spec-divider">·</span>
+          <span className="spec-item">{car.trans}</span>
+        </div>
+        
+      
+      </div>
+
+      {/* Location & Validity */}
+     
+
+      {/* Price Section */}
+      <div className="price-section">
+        <div className="price-display">
+          <div className="current-price">{car.price}</div>
+          <div className="original-price">{car.price}</div>
+          <div className="discount-badge">15000 off</div>
+        </div>
+        <div className="includes-text">Includes RC transfer, insurance & more</div>
+      </div>
+
+      {/* EMI Section */}
+      <div className="emi-section">
+        <div className="emi-header">
+          <span className="emi-label">Bonus: EMI starts @10.5%</span>
+          <span className="market-rate">{car.marketRate}</span>
+        </div>
+        
+        <div className="emi-amount">
+        
+          <span className="emi-value">{car.emiAmount}</span>
+        </div>
+        
+        <div className="savings-info">{car.interestSaving}</div>
+        
+       
+      </div>
+
+      {/* Action Buttons */}
+    
+    </div>
+    <ReasonsToBuy ref={registerRef("overview")}/>
+
         {/* Overview */}
-        <section id="overview" ref={registerRef("overview")} className="cd-section overview-section">
+        {/* <section id="overview" ref={registerRef("overview")} className="cd-section overview-section">
           <div className="overview-card">
             <h3>Reasons to buy</h3>
             <p className="muted">Rare price for a well maintained car — Priced ~₹10.5 lakhs lower compared to its original new car on-road price</p>
@@ -289,10 +378,10 @@ export default function CarDetails() {
             <h4>Your loan status <span className="brand-tag">S CAPITAL</span></h4>
             <p className="muted">Finance your dream car. Apply for a loan and pay in easy EMIs</p>
           </div>
-        </section>
+        </section> */}
 
         {/* Basic info */}
-        <section id="basic-info" ref={registerRef("basic-info")} className="cd-section">
+        {/* <section id="basic-info" ref={registerRef("basic-info")} className="cd-section">
           <div className="cd-info-grid big">
             <h3 className="section-title">Basic info</h3>
             <div className="basic-grid">
@@ -304,10 +393,14 @@ export default function CarDetails() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
+        <BasicInfo ref={registerRef("basic-info")}  />
+        <QualityReport ref={registerRef("quality-report")} />
+        <Specifications ref={registerRef("specifications")} />
+        <Features ref={registerRef("features")} />
 
         {/* Quality */}
-        <section id="quality-report" ref={registerRef("quality-report")} className="cd-section">
+        {/* <section id="quality-report" ref={registerRef("quality-report")} className="cd-section">
           <div className="cd-quality">
             <h3 className="section-title">Quality report</h3>
             <p className="muted">1430 parts evaluated by 5 automotive experts</p>
@@ -322,10 +415,10 @@ export default function CarDetails() {
               <div className="q-card"><div className="q-title">Interiors & AC</div><div className="q-score">8.8</div></div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Benefits */}
-        <section id="benefits" ref={registerRef("benefits")} className="cd-section">
+        {/* <section id="benefits" ref={registerRef("benefits")} className="cd-section">
           <div className="cd-info-grid">
             <h3 className="section-title">Benefits & add-ons</h3>
             <p className="muted">Exchange offers, warranty add-ons and other benefits available at purchase.</p>
@@ -335,13 +428,21 @@ export default function CarDetails() {
               <div className="benefit">Doorstep test drive</div>
             </div>
           </div>
-        </section>
+        </section> */}
+<div ref={registerRef("more")} >
+ <SwipableInsights/>
+  <StoryCarousel/>
+  <FaqMob/>
+  <MobileMoreAbout/>
+  </div>
       </main>
+
+     
 
       {/* Footer CTAs */}
       <footer className="cd-footer">
-        <button className="btn-primary large">Book now</button>
-        <button className="btn-outline">Free test drive</button>
+        <button onClick={() => navigate(`/checkout/${car.id}`)} className="btn-primary large book">Book now</button>
+        <button className="btn-outline free">Free test drive</button>
       </footer>
     </div>
   );

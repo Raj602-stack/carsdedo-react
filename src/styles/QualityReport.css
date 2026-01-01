@@ -1,0 +1,506 @@
+/* QualityReport.css */
+.quality-report {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 28px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    border: 1px solid #f0f2f5;
+    box-shadow: 0 4px 20px rgba(12, 33, 58, 0.04);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  /* CSS Variables for score colors */
+  :root {
+    --score-excellent: #10b981;
+    --score-good: #3b82f6;
+    --score-average: #f59e0b;
+    --score-poor: #ef4444;
+  }
+  
+  /* Header */
+  .quality-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  
+  .quality-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0c213a;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  
+  .quality-subtitle {
+    font-size: 15px;
+    color: #6b798e;
+    font-weight: 500;
+  }
+  
+  .parts-count {
+    color: #0c213a;
+    font-weight: 600;
+  }
+  
+  /* Findings */
+  .findings-container {
+    background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f5 100%);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 28px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+  }
+  
+  .findings-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+  }
+  
+  .finding-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    transition: all 0.2s ease;
+  }
+  
+  .finding-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(12, 33, 58, 0.06);
+    border-color: rgba(12, 33, 58, 0.1);
+  }
+  
+  .finding-icon {
+    font-size: 18px;
+    color: #10b981;
+  }
+  
+  .finding-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: #0c213a;
+  }
+  
+  /* Divider */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 32px 0;
+  }
+  
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(226, 232, 240, 0.8) 50%, 
+      transparent 100%);
+  }
+  
+  .divider-label {
+    font-size: 14px;
+    color: #6b798e;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+  
+  /* Systems Grid */
+  .systems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  
+  .system-card {
+    background: linear-gradient(135deg, #ffffff 0%, #fcfdff 100%);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .system-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(12, 33, 58, 0.08);
+    border-color: rgba(12, 33, 58, 0.12);
+  }
+  
+  .system-header {
+    margin-bottom: 20px;
+    flex: 1;
+  }
+  
+  .system-category {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0c213a;
+    margin-bottom: 6px;
+  }
+  
+  .system-description {
+    font-size: 14px;
+    color: #6b798e;
+    line-height: 1.5;
+  }
+  
+  .system-rating {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 16px;
+    border-top: 1px dashed rgba(226, 232, 240, 0.8);
+  }
+  
+  .score-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--score-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+  }
+  
+  .score-circle::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    background: var(--score-color);
+    opacity: 0.1;
+    z-index: -1;
+  }
+  
+  .score-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+  }
+  
+  .rating-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0c213a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  /* Additional Findings */
+  .additional-findings {
+    margin-top: 32px;
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .issues-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 24px;
+  }
+  
+  .issue-card {
+    display: flex;
+    gap: 16px;
+    padding: 20px;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+  }
+  
+  .issue-icon {
+    font-size: 24px;
+    color: #d97706;
+    flex-shrink: 0;
+  }
+  
+  .issue-content {
+    flex: 1;
+  }
+  
+  .issue-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #92400e;
+    margin-bottom: 6px;
+  }
+  
+  .issue-description {
+    font-size: 14px;
+    color: #92400e;
+    opacity: 0.9;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  
+  .issue-impact {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .impact-badge {
+    background: rgba(245, 158, 11, 0.1);
+    color: #92400e;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .impact-text {
+    font-size: 14px;
+    color: #92400e;
+    font-weight: 500;
+  }
+  
+  /* Footer */
+  .report-footer {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(226, 232, 240, 0.8);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  .view-report-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    border: 1.5px solid #e4e8f0;
+    color: #0c213a;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .view-report-btn:hover {
+    background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f5 100%);
+    border-color: #3a506b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(12, 33, 58, 0.08);
+  }
+  
+  .btn-icon {
+    font-size: 16px;
+    transition: transform 0.2s ease;
+  }
+  
+  .view-report-btn:hover .btn-icon {
+    transform: translateY(2px);
+  }
+  
+  .report-summary {
+    font-size: 15px;
+    color: #6b798e;
+  }
+  
+  .summary-text {
+    opacity: 0.8;
+  }
+  
+  .summary-rating {
+    color: #0c213a;
+    font-weight: 600;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .quality-report {
+      padding: 20px;
+      border-radius: 16px;
+      margin: 16px;
+    }
+    
+    .quality-title {
+      font-size: 20px;
+    }
+    
+    .systems-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    
+    .system-card {
+      padding: 20px;
+    }
+    
+    .score-circle {
+      width: 56px;
+      height: 56px;
+    }
+    
+    .score-value {
+      font-size: 20px;
+    }
+    
+    .finding-item {
+      padding: 10px 16px;
+    }
+    
+    .issue-card {
+      flex-direction: column;
+      text-align: center;
+      padding: 16px;
+    }
+    
+    .issue-impact {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .quality-report {
+      padding: 16px;
+      margin: 12px 0px;
+      border-radius: 12px;
+    }
+    
+    .findings-grid {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .finding-item {
+      justify-content: center;
+    }
+    
+    .system-rating {
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      text-align: center;
+    }
+  }
+  
+ 
+  @media (prefers-color-scheme: dark) {
+    .quality-report {
+      background: #1a2438;
+      border-color: #2d3748;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .quality-title {
+      color: #e2e8f0;
+    }
+    
+    .quality-subtitle {
+      color: #a0aec0;
+    }
+    
+    .parts-count {
+      color: #e2e8f0;
+    }
+    
+    .findings-container {
+      background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+      border-color: #4a5568;
+    }
+    
+    .finding-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: #4a5568;
+    }
+    
+    .finding-text {
+      color: #e2e8f0;
+    }
+    
+    .divider-line {
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(74, 85, 104, 0.8) 50%, 
+        transparent 100%);
+    }
+    
+    .divider-label {
+      color: #a0aec0;
+    }
+    
+    .system-card {
+      background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+      border-color: #4a5568;
+    }
+    
+    .system-category {
+      color: #e2e8f0;
+    }
+    
+    .system-description {
+      color: #cbd5e0;
+    }
+    
+    .rating-label {
+      color: #e2e8f0;
+    }
+    
+    .view-report-btn {
+      border-color: #4a5568;
+      color: #e2e8f0;
+    }
+    
+    .view-report-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: #63b3ed;
+    }
+    
+    .report-summary {
+      color: #a0aec0;
+    }
+    
+    .summary-rating {
+      color: #e2e8f0;
+    }
+    
+    .issue-card {
+      background: linear-gradient(135deg, #7c2d12 0%, #9a3412 100%);
+      border-color: rgba(124, 45, 18, 0.3);
+    }
+    
+    .issue-title,
+    .issue-description,
+    .impact-text {
+      color: #fef3c7;
+    }
+    
+    .impact-badge {
+      background: rgba(254, 243, 199, 0.1);
+      color: #fef3c7;
+    }
+  }

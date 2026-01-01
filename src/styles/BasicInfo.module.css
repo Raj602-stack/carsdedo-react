@@ -1,0 +1,77 @@
+.container {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #f0f0f5;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    margin-bottom: 12px;
+  }
+  
+  .heading {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0c213a;
+    margin: 0 0 20px 0;
+    letter-spacing: -0.02em;
+  }
+  
+  .infoTable {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .row {
+    display: flex;
+    padding: 14px 0;
+    border-bottom: 1px solid #f1f5f9;
+    align-items: flex-start;
+  }
+  
+  /* Removes border from the last item to match the clean look */
+  .row:last-child {
+    border-bottom: none;
+  }
+  
+  .labelCol {
+    flex: 0 0 45%; /* Fixed width for the left side labels */
+  }
+  
+  .valueCol {
+    flex: 1;
+  }
+  
+  .label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #8c7f8f; /* Muted purple/gray from image */
+  }
+  
+  .value {
+    font-size: 14px;
+    font-weight: 800; /* Bold values as seen in reference */
+    color: #2b1140;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .infoIcon {
+    color: #5b1de6;
+    font-size: 14px;
+    cursor: help;
+  }
+  
+  /* Responsive adjustment for mobile */
+  @media (max-width: 480px) {
+    .labelCol {
+      flex: 0 0 40%;
+    }
+    
+    .label {
+      font-size: 12px;
+    }
+    
+    .value {
+      font-size: 13px;
+    }
+  }

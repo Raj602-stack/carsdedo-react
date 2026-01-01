@@ -103,15 +103,467 @@
 
 /* footer CTAs (fixed) */
 .cd-footer { position: fixed; left: 12px; right: 12px; bottom: 18px; z-index: 140; display:flex; gap:12px; justify-content:space-between; }
-.btn-primary.large { flex:1; background:#5b1de6; color:#fff; border:0; padding:14px; border-radius:12px; font-weight:900; }
+.btn-primary.large { flex:1; background:#0c213a;color:#fff; border:0; padding:14px; border-radius:12px; font-weight:900; }
 .btn-outline { flex:1; background:#fff; border:1px solid #e9e3ef; padding:12px; border-radius:12px; }
 
 /* responsive */
 @media (max-width: 820px) {
-  .cd-main { padding: 0 12px 220px; }
+  .cd-main { padding: 0 12px 220px;}
   .cd-image-wrap { height: 260px; }
   .basic-grid { grid-template-columns: 1fr; }
   .cd-thumbs { display:none; }
   .cd-tabs.fixed {         top: 42px;} /* adjust header height on small screen */
-  .cd-footer { left: 10px; right: 10px; bottom: 12px; }
+  /* .cd-footer { left: 10px; right: 10px; bottom: 4px; background: #d9e6ff;opacity: 0.6;padding: 10px 0px;} */
 }
+
+.cd-footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #ffffff;
+  border-top: 1px solid #e5e5e5;
+  z-index: 50;
+}
+
+.btn-primary {
+  flex: 1;
+  height: 48px;
+  font-size: 16px;
+}
+
+.btn-outline {
+  flex: 1;
+  height: 48px;
+  font-size: 16px;
+}
+
+  
+
+/* MobileCarCard.css */
+.mobile-car-card {
+
+  background: #1a202c;
+    color: #e2e8f0;
+
+  /* background: #ffffff; */
+  border-radius: 20px;
+  padding: 20px;
+  margin: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* color: #1a1a1a; */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  max-width: 400px;
+  margin: 16px auto;
+}
+
+/* Car Header */
+.car-header {
+  margin-bottom: 20px;
+}
+
+
+.car-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.car-specs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.spec-item {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.spec-divider {
+  color: #999;
+  font-weight: 300;
+}
+
+.budget-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e6f0ff 100%);
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid #d9e6ff;
+}
+
+.budget-icon {
+  font-size: 16px;
+}
+
+.budget-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0066ff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.budget-desc {
+  font-size: 14px;
+  color: #4d4d4d;
+  font-weight: 500;
+}
+
+/* Location Section */
+.location-section {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #edf2f7;
+}
+
+.location-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.location-icon {
+  font-size: 16px;
+  color: #0066ff;
+}
+
+.location-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2d3748;
+  flex: 1;
+}
+
+.validity {
+  font-size: 14px;
+  color: #718096;
+  font-weight: 500;
+  padding-left: 26px;
+}
+
+/* Price Section */
+.price-section {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.price-display {
+  display: flex;
+  
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.current-price {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0c213a;
+}
+
+.original-price {
+  font-size: 14px;
+  color: #718096;
+  text-decoration: line-through;
+  font-weight: 600;
+}
+
+.discount-badge {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
+.includes-text {
+  font-size: 14px;
+  color: #718096;
+  font-weight: 500;
+  padding-top: 8px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+/* EMI Section */
+.emi-section {
+  background: linear-gradient(135deg, #0c213a 0%, #1e3a5f 100%);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.emi-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.emi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.emi-label {
+  font-size: 15px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.market-rate {
+  font-size: 14px;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.emi-amount {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.emi-icon {
+  font-size: 20px;
+}
+
+.emi-value {
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.savings-info {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+  line-height: 1.4;
+}
+
+.emi-calculator-btn {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.emi-calculator-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-primary {
+  flex: 1;
+  background: linear-gradient(135deg, #0066ff 0%, #0052d4 100%);
+  color: white;
+  border: none;
+  padding: 18px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 102, 255, 0.3);
+}
+
+.btn-secondary {
+  flex: 1;
+  background: white;
+  color: #0066ff;
+  border: 2px solid #0066ff;
+  padding: 18px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: #f0f7ff;
+  transform: translateY(-2px);
+}
+
+.btn-icon {
+  font-size: 18px;
+}
+
+/* Responsive Design */
+/* @media (max-width: 480px) {
+  .mobile-car-card {
+    margin: 12px;
+    padding: 16px;
+    border-radius: 16px;
+  }
+  
+  .car-title {
+    font-size: 18px;
+  }
+  
+  .price-display {
+  
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .current-price {
+    font-size: 24px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+} */
+/* 
+@media (max-width: 360px) {
+  .car-title {
+    font-size: 16px;
+  }
+  
+  .budget-tag {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  
+  .price-display {
+    gap: 6px;
+  }
+  
+  .current-price {
+    font-size: 22px;
+  }
+  
+  .emi-value {
+    font-size: 28px;
+  }
+} */
+
+/* Dark mode support */
+/* @media (prefers-color-scheme: dark) {
+  .mobile-car-card {
+    background: #1a202c;
+    color: #e2e8f0;
+  }
+  
+  .car-title {
+    color: #e2e8f0;
+  }
+  
+  .spec-item {
+    color: #a0aec0;
+  }
+  
+  .location-section {
+    background: #2d3748;
+    border-color: #4a5568;
+  }
+  
+  .location-text {
+    color: #e2e8f0;
+  }
+  
+  .validity {
+    color: #a0aec0;
+  }
+  
+  .price-section {
+    background: #2d3748;
+    border-color: #4a5568;
+  }
+  
+  .current-price {
+    color: #e2e8f0;
+  }
+  
+  .original-price {
+    color: #a0aec0;
+  }
+  
+  .includes-text {
+    color: #a0aec0;
+    border-color: #4a5568;
+  }
+  
+  .btn-secondary {
+    background: #2d3748;
+    color: #63b3ed;
+    border-color: #4a5568;
+  }
+  
+  .btn-secondary:hover {
+    background: #4a5568;
+  }
+} */
