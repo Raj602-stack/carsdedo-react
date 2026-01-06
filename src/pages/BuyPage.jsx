@@ -78,14 +78,14 @@ function FilterDropdown({ id, label, options = [], selected = null, onChange }) 
   }, [open]);
 
 
-  useEffect(() => {
-    function onDoc(e) {
-      if ((btnRef.current && btnRef.current.contains(e.target)) || (menuRef.current && menuRef.current.contains(e.target))) return;
-      setOpen(false);
-    }
-    window.addEventListener("click", onDoc);
-    return () => window.removeEventListener("click", onDoc);
-  }, []);
+  // useEffect(() => {
+  //   function onDoc(e) {
+  //     if ((btnRef.current && btnRef.current.contains(e.target)) || (menuRef.current && menuRef.current.contains(e.target))) return;
+  //     setOpen(false);
+  //   }
+  //   window.addEventListener("click", onDoc);
+  //   return () => window.removeEventListener("click", onDoc);
+  // }, []);
 
   // close when another dropdown opens
   useEffect(() => {
@@ -140,46 +140,56 @@ function FilterDropdown({ id, label, options = [], selected = null, onChange }) 
       </button>
 
       {open &&
-        createPortal(
-          <div
-            className="fp-menu"
-            role="menu"
-            ref={(el) => (menuRef.current = el)}
-            onClick={(e) => e.stopPropagation()}
-            style={menuStyle}
-          >
-            <ul role="none" className="fp-options">
-              <li role="none">
-                <button
-                  role="menuitem"
-                  className={`fp-opt ${selected === null ? "selected" : ""}`}
-                  onClick={() => {
-                    onChange?.(null);
-                    setOpen(false);
-                  }}
-                >
-                  All
-                </button>
-              </li>
+  createPortal(
+    <>
+      {/* OVERLAY */}
+      <div
+        className="fp-overlay"
+        onClick={() => setOpen(false)}
+      />
 
-              {options.map((o) => (
-                <li role="none" key={o.value}>
-                  <button
-                    role="menuitem"
-                    className={`fp-opt ${selected === o.value ? "selected" : ""}`}
-                    onClick={() => {
-                      onChange?.(o.value);
-                      setOpen(false);
-                    }}
-                  >
-                    {o.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>,
-          document.body
-        )}
+      {/* MENU */}
+      <div
+        className="fp-menu"
+        role="menu"
+        ref={(el) => (menuRef.current = el)}
+        onClick={(e) => e.stopPropagation()}
+        style={menuStyle}
+      >
+        <ul role="none" className="fp-options">
+          <li role="none">
+            <button
+              role="menuitem"
+              className={`fp-opt ${selected === null ? "selected" : ""}`}
+              onClick={() => {
+                onChange?.(null);
+                setOpen(false);
+              }}
+            >
+              All
+            </button>
+          </li>
+
+          {options.map((o) => (
+            <li role="none" key={o.value}>
+              <button
+                role="menuitem"
+                className={`fp-opt ${selected === o.value ? "selected" : ""}`}
+                onClick={() => {
+                  onChange?.(o.value);
+                  setOpen(false);
+                }}
+              >
+                {o.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>,
+    document.body
+  )}
+
     </div>
   );
 }
@@ -846,8 +856,40 @@ const getTransmissionVal = (transmission) => {
 export default function BuyPage() {
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   const saved = sessionStorage.getItem("buy_scroll_top");
+  //   if (!saved) return;
+  
+  //   let attempts = 0;
+  //   const maxAttempts = 20;
+  
+  //   const tryRestore = () => {
+  //     const scroller = document.querySelector(".buy-main");
+  
+  //     if (
+  //       scroller &&
+  //       scroller.scrollHeight > scroller.clientHeight
+  //     ) {
+  //       scroller.scrollTop = Number(saved);
+  //       return; // ✅ success
+  //     }
+  
+  //     if (attempts < maxAttempts) {
+  //       attempts += 1;
+  //       requestAnimationFrame(tryRestore);
+  //     }
+  //   };
+  
+  //   // unlock body scroll just in case
+  //   document.body.style.overflow = "";
+  
+  //   requestAnimationFrame(tryRestore);
+  // }, []);
+  
+
   useEffect(() => {
-    const saved = sessionStorage.getItem("buy_scroll_top");
+    const key = "buy_scroll_top";
+    const saved = sessionStorage.getItem(key);
     if (!saved) return;
   
     let attempts = 0;
@@ -861,7 +903,11 @@ export default function BuyPage() {
         scroller.scrollHeight > scroller.clientHeight
       ) {
         scroller.scrollTop = Number(saved);
-        return; // ✅ success
+  
+        // ✅ DELETE ONLY AFTER SUCCESSFUL RESTORE
+        sessionStorage.removeItem(key);
+  
+        return;
       }
   
       if (attempts < maxAttempts) {
@@ -876,6 +922,7 @@ export default function BuyPage() {
     requestAnimationFrame(tryRestore);
   }, []);
   
+
 
   const yearOptionsTop = [
     { value: "2024", label: "2024" },

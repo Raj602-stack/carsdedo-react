@@ -77,6 +77,8 @@ html, body, #root { height: 100%; }
   background: linear-gradient(to left, #fff, transparent);
 }
 
+
+
 /* Filter Chip Root */
 .fp-root {
   position: relative;
@@ -195,6 +197,19 @@ html, body, #root { height: 100%; }
   pointer-events: auto; /* Ensure menu items are clickable */
   touch-action: manipulation;
 }
+
+.fp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  background: rgba(12, 33, 58, 0.3);
+  backdrop-filter: blur(2px);
+  
+}
+.fp-menu {
+  z-index: 999;
+}
+
 
 @keyframes menuSlideIn {
   from {
@@ -626,6 +641,7 @@ html, body, #root { height: 100%; }
   z-index: -1;
   opacity: 0;
   animation: fadeIn 0.2s ease forwards;
+  pointer-events: none;
 }
 
 @keyframes fadeIn {
