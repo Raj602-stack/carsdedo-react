@@ -1,0 +1,150 @@
+.page {
+    padding: 16px;
+    background: #ffffff;
+    min-height: 100vh;
+  }
+  
+  h1 {
+    color: #1b2e9a;
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .card {
+    border: 1px solid #e5eaf0;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 5px;
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid #e5eaf0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  .card h3 {
+    color: #1b2e9a;;
+    font-size: 16px;
+  }
+  
+  .card p {
+    color: #555;
+    margin: 12px 0;
+  }
+  
+  .link {
+    background: none;
+    border: none;
+    color: #1b2e9a;
+    font-weight: 600;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .cancel,
+  .reschedule {
+    flex: 1;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: #f1f1f1;
+    font-weight: 600;
+    display: inline-flex;          /* NOT inline-block */
+    align-items: center;  
+    justify-content: center;
+    color: #041e36;
+  }
+  
+  .reschedule {
+    color: #041e36;
+    font-weight: 600;
+  }
+  
+  .note {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 24px;
+  }
+  
+  /* .carCard {
+    display: flex;
+    gap: 16px;
+    border: 1px solid #e5eaf0;
+    border-radius: 16px;
+    padding: 16px;
+  }
+  
+  .carCard img {
+    width: 90px;
+    height: 70px;
+    border-radius: 12px;
+    object-fit: cover;
+  } */
+  
+
+
+
+
+
+
+  
+  .header h1 {
+    font-size: 18px;
+    color: #0c213a;
+  }
+  
+  .backBtn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #0c213a;
+    cursor: pointer;
+  }
+  
+  .carCard {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .carCard img {
+    width: 96px;
+    height: 72px;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+  
+  .carCard h3 {
+    font-size: 15px;
+    color: #0c213a;
+  }
+  
+  .carCard p {
+    font-size: 13px;
+    color: #6b7280;
+  }
+  
+  .carCard strong {
+    display: block;
+    margin-top: 6px;
+    font-size: 16px;
+    color: #0c213a;
+  }
+  
+  .carCard span {
+    font-size: 13px;
+    color: #6b7280;
+  }
+  

@@ -184,7 +184,7 @@ html, body, #root { height: 100%; }
     0 4px 20px rgba(12, 33, 58, 0.08),
     0 1px 8px rgba(12, 33, 58, 0.04);
   border: 1px solid #f0f2f5;
-  z-index: 999999;
+  /* z-index: 10; */
   overflow: hidden;
   min-width: 200px;
   max-width: 300px;
@@ -192,6 +192,8 @@ html, body, #root { height: 100%; }
   overflow-y: auto;
   animation: menuSlideIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: top left;
+  pointer-events: auto; /* Ensure menu items are clickable */
+  touch-action: manipulation;
 }
 
 @keyframes menuSlideIn {
@@ -641,7 +643,8 @@ html, body, #root { height: 100%; }
 .results-header h3 { margin:0; color:#2b1140; font-size:18px; font-weight:800; }
 
 /* product list */
-.buy-main { padding:0 14px 120px; }
+.buy-main { padding:0 14px 120px;  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;height: calc(100vh - 140px);}
 .list { display:flex; flex-direction:column; gap:14px; }
 
 /* car card */

@@ -55,6 +55,30 @@ function FilterDropdown({ id, label, options = [], selected = null, onChange }) 
   const [menuStyle, setMenuStyle] = useState({});
 
   useEffect(() => {
+    function handleClose(e) {
+      // Check if the click is outside BOTH the button and the menu
+      const isInsideButton = btnRef.current?.contains(e.target);
+      const isInsideMenu = menuRef.current?.contains(e.target);
+  
+      if (!isInsideButton && !isInsideMenu) {
+        setOpen(false);
+      }
+    }
+  
+    if (open) {
+      // Adding 'touchstart' is critical for mobile closure
+      window.addEventListener("mousedown", handleClose);
+      window.addEventListener("touchstart", handleClose);
+    }
+  
+    return () => {
+      window.removeEventListener("mousedown", handleClose);
+      window.removeEventListener("touchstart", handleClose);
+    };
+  }, [open]);
+
+
+  useEffect(() => {
     function onDoc(e) {
       if ((btnRef.current && btnRef.current.contains(e.target)) || (menuRef.current && menuRef.current.contains(e.target))) return;
       setOpen(false);
@@ -105,7 +129,7 @@ function FilterDropdown({ id, label, options = [], selected = null, onChange }) 
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={(e) => {
-          e.stopPropagation();
+          // e.stopPropagation();
           const next = !open;
           setOpen(next);
           if (next) window.dispatchEvent(new CustomEvent("fp-open", { detail: { id } }));
@@ -822,6 +846,37 @@ const getTransmissionVal = (transmission) => {
 export default function BuyPage() {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const saved = sessionStorage.getItem("buy_scroll_top");
+    if (!saved) return;
+  
+    let attempts = 0;
+    const maxAttempts = 20;
+  
+    const tryRestore = () => {
+      const scroller = document.querySelector(".buy-main");
+  
+      if (
+        scroller &&
+        scroller.scrollHeight > scroller.clientHeight
+      ) {
+        scroller.scrollTop = Number(saved);
+        return; // ✅ success
+      }
+  
+      if (attempts < maxAttempts) {
+        attempts += 1;
+        requestAnimationFrame(tryRestore);
+      }
+    };
+  
+    // unlock body scroll just in case
+    document.body.style.overflow = "";
+  
+    requestAnimationFrame(tryRestore);
+  }, []);
+  
+
   const yearOptionsTop = [
     { value: "2024", label: "2024" },
     { value: "2023", label: "2023" },
@@ -846,6 +901,9 @@ export default function BuyPage() {
     { value: "Silver", label: "Silver" },
     { value: "Red", label: "Red" }
   ];
+
+
+ 
 
   // local price defaults (numbers in rupees)
   const PRICE_MIN = 50000;
@@ -922,6 +980,14 @@ export default function BuyPage() {
     setCars(transformedCars);
     console.log(cars);
   }, []);
+
+
+ 
+
+
+  
+
+  
 
   /* matchesFilters - robust price & year handling */
   function matchesFilters(c, filters) {
@@ -1182,7 +1248,34 @@ export default function BuyPage() {
   key={car.id} 
   className="car-card" 
   tabIndex={0} 
-  onClick={() => navigate(`/car/${car.id}`, { state: { car } })}
+  // onClick={() => navigate(`/car/${car.id}`, { state: { car } })}
+
+  // onClick={() => {
+   
+
+  //   const el = document.querySelector("main.buy-main");
+  //   if (el) {
+  //     sessionStorage.setItem("buy_main_scroll", el.scrollTop);
+  //   }
+  //   navigate(`/car/${car.id}`, { state: { car } });
+  // }}
+
+  onClick={() => {
+    // const scroller = document.querySelector(".buy-main");
+    // if (scroller) {
+    //   sessionStorage.setItem(
+    //     "buy_scroll_top",
+    //     scroller.scrollTop
+    //   );
+    // }
+
+    const scroller = document.querySelector(".buy-main");
+    if (scroller) {
+      sessionStorage.setItem("buy_scroll_top", scroller.scrollTop);
+    }
+
+    navigate(`/car/${car.id}`, { state: { car } });
+  }}
   onKeyDown={(e) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();

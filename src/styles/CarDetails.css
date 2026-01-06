@@ -78,7 +78,7 @@
 .cd-tab {
   background:transparent; border:0; padding:8px 12px; font-weight:800; color:#7a5f7a; border-radius:8px 8px 0 0; cursor:pointer; white-space:nowrap;
 }
-.cd-tab.active { color:#2b1140; border-bottom:3px solid #5b1de6; background:linear-gradient(180deg, #fff, #faf8ff); }
+.cd-tab.active { color:#2b1140; border-bottom:3px solid #151f84; background:linear-gradient(180deg, #fff, #faf8ff); }
 
 /* sections */
 .cd-section { padding:18px 0 6px; }

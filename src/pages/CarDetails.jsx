@@ -11,6 +11,7 @@ import StoryCarousel from "../components/StoryCarousel";
 import FaqMob from "../components/FaqMob";
 import MobileMoreAbout from "../components/MobileMoreAbout";
 import FooterMobile from "../components/FooterMobile";
+import CarImageCarousel from "../components/CarImageCarousel";
 
 
 export default function CarDetails() {
@@ -265,7 +266,7 @@ export default function CarDetails() {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <div className="cd-image-wrap">
+          {/* <div className="cd-image-wrap">
             {images.length > 0 ? (
               <img src={images[idx]} alt={`${car.title} - ${idx + 1}`} className="cd-image" />
             ) : (
@@ -292,7 +293,10 @@ export default function CarDetails() {
                 ))}
               </div>
             </>
-          )}
+          )} */}
+
+<CarImageCarousel carId={params.id} />
+
         </section>
 
         {/* Tabs (in-flow; become fixed when fixedTabs === true) */}
@@ -302,7 +306,7 @@ export default function CarDetails() {
           role="tablist"
           aria-label="Details sections"
         >
-          {sections.map((s) => (
+          {/* {sections.map((s) => (
             <button
               key={s.id}
               className={`cd-tab ${active === s.id ? "active" : ""}`}
@@ -312,7 +316,29 @@ export default function CarDetails() {
             >
               {s.label}
             </button>
-          ))}
+          ))} */}
+
+{sections.map((s) => (
+  <button
+    key={s.id}
+    ref={(el) => {
+      if (active === s.id && el) {
+        el.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest",
+        });
+      }
+    }}
+    className={`cd-tab ${active === s.id ? "active" : ""}`}
+    onClick={() => scrollTo(s.id)}
+    role="tab"
+    aria-selected={active === s.id}
+  >
+    {s.label}
+  </button>
+))}
+
         </div>
 
         {/* basic car data */}
@@ -442,7 +468,7 @@ export default function CarDetails() {
       {/* Footer CTAs */}
       <footer className="cd-footer">
         <button onClick={() => navigate(`/checkout/${car.id}`)} className="btn-primary large book">Book now</button>
-        <button className="btn-outline free">Free test drive</button>
+        <button    onClick={() => navigate(`/test-drive/${car.id}`)} className="btn-outline free">Free test drive</button>
       </footer>
     </div>
   );
