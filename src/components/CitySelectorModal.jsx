@@ -13,10 +13,13 @@ export default function CitySelectorModal({
   open,
   onClose,
   onSelect,
-  selectedCity = "Delhi",
+  selectedCity = "Lucknow",
   headerImage = "/mnt/data/987949e3-8737-42a6-b4dc-775dfa4097ec.png",
   
 }) {
+
+  const enabledCities = ["Lucknow"];
+
   const overlayRef = useRef(null);
   const searchRef = useRef(null);
 
@@ -51,6 +54,7 @@ export default function CitySelectorModal({
 
   // Map each city to its image (PUT YOUR IMAGE PATHS HERE)
 const cityImages = {
+    Lucknow: process.env.PUBLIC_URL + "/lucknow.png",
     DelhiNCR:process.env.PUBLIC_URL + "/delhincr.png",
     Bangalore: process.env.PUBLIC_URL + "/banglore.png",
     Hyderabad: process.env.PUBLIC_URL + "/hyderabad.png",
@@ -62,7 +66,7 @@ const cityImages = {
     Ahmedabad: process.env.PUBLIC_URL + "/ahmedabad.png",
     Chennai: process.env.PUBLIC_URL + "/chennai.png",
     Kolkata: process.env.PUBLIC_URL + "/kolkata.png",
-    Lucknow: process.env.PUBLIC_URL + "/lucknow.png",
+    
     Jaipur: process.env.PUBLIC_URL + "/jaipur.png",
     Chandigarh: process.env.PUBLIC_URL + "/chandigarh.png",
   
@@ -76,6 +80,7 @@ const cityImages = {
   
 
   const popular = [
+    "Lucknow",
     "DelhiNCR",
     "Bangalore",
     "Hyderabad",
@@ -87,7 +92,7 @@ const cityImages = {
     "Ahmedabad",
     "Chennai",
     "Kolkata",
-    "Lucknow",
+    
     "Jaipur",
     "Chandigarh",
   ];
@@ -116,8 +121,8 @@ const cityImages = {
             <img src={headerImage} alt="Cities" className="cs-header-img" />
           ) : null}
           <div className="cs-header-controls">
-            <h2 className="cs-title">Delhi</h2>
-            <div className="cs-search">
+           
+            {/* <div className="cs-search">
               <input
                 ref={searchRef}
                 type="search"
@@ -127,23 +132,23 @@ const cityImages = {
               <button className="cs-detect" aria-label="Detect location">
                 ⊕ Detect
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
 
         <div className="cs-body">
           <h3 className="cs-subheading">POPULAR CITIES</h3>
 
-          <div className="cs-grid">
+          {/* <div className="cs-grid">
             {popular.map((c,index) => (
               <button
                 key={c}
                 className={`cs-grid-item ${c === selectedCity ? "selected" : ""}`}
                 onClick={() => onSelect?.(c)}
               >
-                {/* icon placeholder — replace with icon if available */}
+               
                 <div className="cs-icon" aria-hidden>
-                  {/* use a simple circle / svg or later replace with icons */}
+                  
                   <img
     src={cityImages[c] || "/images/cities/default.png"}
     
@@ -154,9 +159,45 @@ const cityImages = {
                 <div className="cs-city">{c}</div>
               </button>
             ))}
-          </div>
+          </div> */}
 
-          <h4 className="cs-more-title">MORE CITIES</h4>
+<div className="cs-grid">
+  {popular.map((c) => {
+    const isEnabled = enabledCities.includes(c);
+    const isSelected = c === selectedCity;
+
+    return (
+      <button
+        key={c}
+        className={`cs-grid-item 
+          ${isSelected ? "selected" : ""} 
+          ${!isEnabled ? "disabled" : ""}`
+        }
+        disabled={!isEnabled}
+        onClick={() => {
+          if (isEnabled) onSelect?.(c);
+        }}
+      >
+        <div className="cs-icon" aria-hidden>
+          <img
+            src={cityImages[c] || "/images/cities/default.png"}
+            alt=""
+            className="cs-city-img"
+          />
+        </div>
+
+        <div className="cs-city">{c}</div>
+
+        {!isEnabled && (
+          <div className="cs-coming-soon">Coming Soon</div>
+        )}
+      </button>
+    );
+  })}
+</div>
+
+
+          {/* <h4 className="cs-more-title">MORE CITIES</h4>
           <ul className="cs-more-list">
             {more.map((m) => (
               <li key={m}>
@@ -165,7 +206,7 @@ const cityImages = {
                 </button>
               </li>
             ))}
-          </ul>
+          </ul> */}
         </div>
       </div>
     </div>

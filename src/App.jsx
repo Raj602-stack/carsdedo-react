@@ -25,6 +25,7 @@ import FeaturesPage from "./components/FeaturesPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ScheduleTestDrive from "./components/ScheduleTestDrive";
 import TestDriveConfirmation from "./components/TestDriveConfirmation";
+import CarFilterMobile from "./pages/CarFilterMobile";
 
 export default function App() {
   const isMobile = useIsMobile(900);
@@ -47,6 +48,7 @@ export default function App() {
             <Route path="/features" element={<FeaturesPage/>} />
             <Route path="/checkout/:id" element={<CheckoutPage/>} />
             <Route path="/test-drive/:carId" element={<ScheduleTestDrive/>}/>
+            <Route path="/search" element={<CarFilterMobile/>}/>
 
             <Route path="/test-drive/confirmation/:carId" element={<TestDriveConfirmation/>}/>
 

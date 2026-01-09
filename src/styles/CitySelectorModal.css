@@ -151,3 +151,16 @@
     .cs-sheet { border-radius: 12px 12px 0 0; }
   }
   
+  .cs-grid-item.disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  .cs-coming-soon {
+    font-size: 11px;
+    color: #e92222;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  

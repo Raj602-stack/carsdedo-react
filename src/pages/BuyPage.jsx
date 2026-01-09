@@ -2,6 +2,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 
 import BottomNav from "../components/BottomNav";
 import "../styles/BuyPage.css";
@@ -855,6 +857,44 @@ const getTransmissionVal = (transmission) => {
 /* Main BuyPage component */
 export default function BuyPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+  
+    const brand = params.get("brand");
+    const model = params.get("model");
+    const body = params.get("body");
+    const fuel = params.get("fuel");
+    const trans = params.get("trans");
+    const q = params.get("q");
+  
+    const priceMin = params.get("priceMin");
+    const priceMax = params.get("priceMax");
+  
+    setAppliedFilters((prev) => ({
+      ...prev,
+  
+      // text search
+      q: q ?? null,
+  
+      // brand + model
+      brands: brand ? [brand] : [],
+      brandModels:
+        brand && model ? { [brand]: [model] } : {},
+  
+      // simple filters
+      body: body ? [body] : [],
+      trans: trans ?? null,
+      color: null,
+  
+      // price
+      priceMin: priceMin ? Number(priceMin) : prev.priceMin,
+      priceMax: priceMax ? Number(priceMax) : prev.priceMax,
+    }));
+  }, [location.search]);
+  
 
   // useEffect(() => {
   //   const saved = sessionStorage.getItem("buy_scroll_top");

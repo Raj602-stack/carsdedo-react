@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 
+import { useNavigate } from "react-router-dom";
+
 import "../styles/MobileLayout.css";
 import Sidebar from "../components/Sidebar";
 import CitySelectorModal from "../components/CitySelectorModal";
 import BottomNav from "../components/BottomNav";
 
 export default function MobileLayout({ children }) {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [selectedCity, setSelectedCity] = useState("Delhi");
+  const [selectedCity, setSelectedCity] = useState("Lucknow");
 
   const [cityOpen, setCityOpen] = useState(false);
   const handleSelect = (city) => {
@@ -44,10 +47,15 @@ export default function MobileLayout({ children }) {
         <div className="ml-topbar-row2">
           <div onClick={() => setCityOpen(true)} className="ml-location"> {selectedCity} ▾</div>
 
-          <div className="ml-search-wrap" role="search">
+          <div onClick={() => navigate("/search")}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      navigate("/search");
+    }
+  }} className="ml-search-wrap" role="search">
             <input
               className="ml-search-input"
-              placeholder="Search by assured plus cars"
+              placeholder="Search assured cars"
               aria-label="Search cars"
             />
             <button className="ml-search-icon" aria-label="Open search">🔍</button>

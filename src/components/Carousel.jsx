@@ -39,7 +39,7 @@ export default function Carousel() {
           <div key={s.id} className={"slide " + (i === index ? "active" : "")}>
             <img src={s.img} alt={s.title} />
             <div className="hero-text">
-              <h1>{s.title}</h1>
+              <h1 style={{ color:"#e93b68"}}>{s.title}</h1>
               <p>{s.subtitle}</p>
               <button className="primary">Check eligibility</button>
             </div>
