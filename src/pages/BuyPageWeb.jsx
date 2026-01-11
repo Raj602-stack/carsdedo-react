@@ -1,20 +1,135 @@
 // src/pages/BuyPage.jsx
 import React, { useMemo, useState , useEffect} from "react";
-import carsData from "../data/cars";
+
 import { useLocation } from "react-router-dom";
 import Filters from "../components/Filters";
 import CarCard from "../components/CarCard";
 import styles from  "../styles/BuyPageweb.module.css";
+
+import { useCars } from "../context/CarsContext";
+
+
+
 function capitalize(str = "") {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+const normalizeCar = (car) => {
+  return {
+    id: car.id,
+    title: car.title,
+    brand: car.brand,
+    model: car.model,
+    year: car.year,
+    price: Number(car.discount_price || car.price || 0),
+    originalPrice: Number(car.price || 0),
+    km: car.km,
+    fuel: car.fuel,
+    transmission: car.transmission,
+    body: car.body,
+    city: car.city,
+    colorKey: car.colorKey,
+    tags: car.tags || [],
+
+    // ✅ OLD image compatibility
+    image:
+      car.images?.exterior?.[0]?.image
+        ? `http://localhost:8000${car.images.exterior[0].image}`
+        : "/placeholder-car.png",
+
+    images: {
+      exterior:
+        car.images?.exterior?.map((i) =>
+          `${process.env.REACT_APP_BACKEND_URL}${i.image}`
+        ) || [],
+      interior:
+        car.images?.interior?.map((i) =>
+          `${process.env.REACT_APP_BACKEND_URL}${i.image}`
+        ) || [],
+      engine: [],
+      tyres: [],
+      overview: [],
+    },
+
+    // ✅ OLD features array compatibility
+   
+
+    owner: car.owner_count === 1 ? "First Owner" : `${car.owner_count} Owners`,
+    reasonsToBuy: (car.reasons_to_buy || [])
+    .sort((a, b) => a.sort_order - b.sort_order)
+    .map((r) => ({
+      title: r.title,
+      description: r.description,
+    })),
+
+  /* =========================
+     SPECS (FLATTENED)
+  ========================== */
+  specs: Object.entries(car.specs || {}).flatMap(
+    ([category, items]) =>
+      items.map((i) => ({
+        category,
+        label: i.label,
+        value: i.value,
+      }))
+  ),
+
+  /* =========================
+     FEATURES
+  ========================== */
+
+  // UI-friendly (grouped)
+  featuresByCategory: Object.entries(car.features || {}).map(
+    ([category, items]) => ({
+      category,
+      items: items.map((f) => f.name),
+    })
+  ),
+
+  // Logic-friendly (flat)
+  features: Object.values(car.features || {})
+    .flat()
+    .map((f) => f.name),
+
+  /* =========================
+     QUALITY REPORT
+  ========================== */
+  inspections: (car.inspections || []).map((section) => ({
+    key: section.key,
+    title: section.title,
+    subsections: section.subsections.map((sub) => ({
+      title: sub.title,
+      items: sub.items.map((item) => ({
+        name: item.name,
+        status: item.status, // flawless | minor | major
+        remarks: item.remarks,
+      })),
+    })),
+  })),
+
+
+  };
+};
+
+
 
 export default function BuyPage() {
   const location = useLocation();
+  const { cars, loading, error } = useCars();
+
+ 
+  
+
+const carsData = useMemo(() => {
+  return cars.map(normalizeCar);
+}, [cars]);
+console.log(carsData);
+
 
   // metadata for UI controls
+  // const brands = Array.from(new Set(carsData.map((c) => c.brand))).sort();
   const brands = Array.from(new Set(carsData.map((c) => c.brand))).sort();
+
   // derive years from data (unique sorted descending)
   const yearsSet = Array.from(new Set(carsData.map((c) => c.year)));
   const years = [...yearsSet].sort((a, b) => b - a).filter(Boolean);
@@ -272,10 +387,12 @@ useEffect(() => {
       });
 
     return result;
-  }, [filters]);
+  }, [filters,carsData]);
 
   // readable header text for selected city
   const selectedCity = localStorage.getItem("selectedCity") || "City";
+
+  
 
   return (
     <div className={styles["buy-page"]}>

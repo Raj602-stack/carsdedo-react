@@ -1,36 +1,58 @@
 import React, { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/CarImageCarousel.module.css";
-import cars from "../data/cars";
+import { useCars } from "../context/CarsContext";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 export default function CarImageCarousel({ carId }) {
   const navigate = useNavigate();
-  const [index, setIndex] = useState(0);
+  const { cars, loading } = useCars();
 
+  const [index, setIndex] = useState(0);
   const startX = useRef(0);
   const isDragging = useRef(false);
 
-  // 🔹 HOOK 1
+  /* -------------------------------
+     1️⃣ Find car from context
+  -------------------------------- */
   const car = useMemo(() => {
-    return cars.find(c => c.id === Number(carId));
-  }, [carId]);
+    return cars.find((c) => String(c.id) === String(carId)) || null;
+  }, [cars, carId]);
 
-  // 🔹 HOOK 2
+  /* -------------------------------
+     2️⃣ Normalize images HERE
+     (because backend structure)
+  -------------------------------- */
   const images = useMemo(() => {
     if (!car?.images) return [];
-    const all = Object.values(car.images).flat();
-    return [...new Set(all)];
+
+    const exterior = car.images.exterior || [];
+    const interior = car.images.interior || [];
+
+    return [...exterior, ...interior]
+      .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+      .map((img) => `http://localhost:8000${img.image}`);
   }, [car]);
 
-  if (!car || !images.length) return null;
+  console.log(images);
 
-  const safeIndex = ((index % images.length) + images.length) % images.length;
+  /* -------------------------------
+     Guards
+  -------------------------------- */
+  if (loading || !car || images.length === 0) return null;
 
-  /* ---------------- SWIPE HANDLERS ---------------- */
+  const safeIndex =
+    ((index % images.length) + images.length) % images.length;
 
+  /* -------------------------------
+     Swipe handlers
+  -------------------------------- */
   function handleStart(e) {
     isDragging.current = true;
-    startX.current = e.touches ? e.touches[0].clientX : e.clientX;
+    startX.current = e.touches
+      ? e.touches[0].clientX
+      : e.clientX;
   }
 
   function handleEnd(e) {
@@ -43,16 +65,15 @@ export default function CarImageCarousel({ carId }) {
     const diff = startX.current - endX;
 
     if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        setIndex(prev => prev + 1); // swipe left
-      } else {
-        setIndex(prev => prev - 1); // swipe right
-      }
+      setIndex((prev) => (diff > 0 ? prev + 1 : prev - 1));
     }
 
     isDragging.current = false;
   }
 
+  /* -------------------------------
+     Render
+  -------------------------------- */
   return (
     <div
       className={styles.carousel}
@@ -62,7 +83,14 @@ export default function CarImageCarousel({ carId }) {
       onMouseUp={handleEnd}
       onClick={() => navigate(`/car/${car.id}/gallery`)}
     >
-      <img src={images[safeIndex]} alt={car.title} />
+      <img
+        src={images[safeIndex]}
+        alt={car.title}
+        loading="lazy"
+        onError={(e) => {
+          e.target.src = "/placeholder-car.png";
+        }}
+      />
 
       <div className={styles.dots}>
         {images.map((_, i) => (
@@ -73,7 +101,9 @@ export default function CarImageCarousel({ carId }) {
         ))}
       </div>
 
-      <div className={styles.badge}>360°</div>
+      {images.length > 1 && (
+        <div className={styles.badge}>360°</div>
+      )}
     </div>
   );
 }

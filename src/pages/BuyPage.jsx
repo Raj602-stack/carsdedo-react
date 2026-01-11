@@ -7,7 +7,8 @@ import { useLocation } from "react-router-dom";
 
 import BottomNav from "../components/BottomNav";
 import "../styles/BuyPage.css";
-import carsData from "../data/cars.js"; // Import car data from car.js
+import { useCars } from "../context/CarsContext";
+
 import { IoCodeSlashOutline } from "react-icons/io5";
 
 // Use uploaded hero/banner image (from conversation files)
@@ -858,6 +859,8 @@ const getTransmissionVal = (transmission) => {
 export default function BuyPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { cars, loading, error } = useCars();
+
 
 
   useEffect(() => {
@@ -1034,45 +1037,83 @@ export default function BuyPage() {
   const [sortKey, setSortKey] = useState("relevance");
 
   /* Transform carsData to match the component's expected structure */
-  const [cars, setCars] = useState([]);
+  // const [cars, setCars] = useState([]);
   
-  useEffect(() => {
-    const transformedCars = carsData.map((car) => {
-      console.log(car);
-      const priceNum = car.price / 100000; // Convert to lakhs for sorting/comparison
-      const transVal = getTransmissionVal(car.transmission);
+  // useEffect(() => {
+  //   const transformedCars = carsData.map((car) => {
+  //     console.log(car);
+  //     const priceNum = car.price / 100000; // Convert to lakhs for sorting/comparison
+  //     const transVal = getTransmissionVal(car.transmission);
       
-      return {
-        id: car.id,
-        brand: car.brand,
-        model: car.model,
-        title: car.title,
-        priceNum: priceNum,
-        price: formatPrice(car.price),
-        emi: formatEMI(car.price),
-        kmNum: car.km,
-        km: formatKM(car.km),
-        fuel: car.fuel,
-        trans: car.transmission,
-        transVal: transVal,
-        location: car.city,
-        year: String(car.year),
-        body: car.body,
-        color: car.colorKey,
-        thumb: car.image || process.env.PUBLIC_URL + "/car-default.avif",
-        variant: `${car.brand} ${car.model}`
-      };
-    });
+  //     return {
+  //       id: car.id,
+  //       brand: car.brand,
+  //       model: car.model,
+  //       title: car.title,
+  //       priceNum: priceNum,
+  //       price: formatPrice(car.price),
+  //       emi: formatEMI(car.price),
+  //       kmNum: car.km,
+  //       km: formatKM(car.km),
+  //       fuel: car.fuel,
+  //       trans: car.transmission,
+  //       transVal: transVal,
+  //       location: car.city,
+  //       year: String(car.year),
+  //       body: car.body,
+  //       color: car.colorKey,
+  //       thumb: car.image || process.env.PUBLIC_URL + "/car-default.avif",
+  //       variant: `${car.brand} ${car.model}`
+  //     };
+  //   });
     
-    setCars(transformedCars);
-    console.log(cars);
-  }, []);
+  //   setCars(transformedCars);
+  //   console.log(cars);
+  // }, []);
 
-
+// useEffect(()=>{},[])
  
+const mapCarForMobileCard = (car) => ({
+  id: car.id,
+  brand: car.brand,
+  model: car.model,
+  title: car.title,
+
+  priceNum: car.price / 100000, // lakhs
+  price: formatPrice(car.price),
+  emi: formatEMI(car.price),
+
+  kmNum: car.km,
+  km: formatKM(car.km),
+
+  fuel: car.fuel,
+  trans: car.transmission,
+  transVal: getTransmissionVal(car.transmission),
+
+  location: car.city,
+  year: String(car.year),
+  body: car.body,
+  color: car.colorKey,
+
+  thumb: car.image,
+  variant: `${car.brand} ${car.model}`,
+
+  // ✅ NEW — reuse everywhere
+  features: car.features,
+  reasonsToBuy: car.reasons_to_buy,
+  specs: car.specs,
+  inspections: car.inspections,
+});
+
+const mobileCars = React.useMemo(() => {
+  if (!cars || !cars.length) return [];
+  return cars.map(mapCarForMobileCard);
+}, [cars]);
 
 
-  
+console.log(mobileCars);
+
+
 
   
 
@@ -1214,7 +1255,10 @@ export default function BuyPage() {
   }
 
   // compute visible list using appliedFilters
-  const filtered = applySort(cars.filter((c) => matchesFilters(c, appliedFilters)));
+  // const filtered = applySort(cars.filter((c) => matchesFilters(c, appliedFilters)));
+  const filtered = applySort(
+    mobileCars.filter((c) => matchesFilters(c, appliedFilters))
+  );
   console.log(filtered);
   console.log(cars);
 

@@ -26,12 +26,15 @@ import CheckoutPage from "./pages/CheckoutPage";
 import ScheduleTestDrive from "./components/ScheduleTestDrive";
 import TestDriveConfirmation from "./components/TestDriveConfirmation";
 import CarFilterMobile from "./pages/CarFilterMobile";
+import { CarsProvider } from "./context/CarsContext";
+
 
 export default function App() {
   const isMobile = useIsMobile(900);
 
   return (
     <AuthProvider>
+      <CarsProvider>
       {isMobile ? (
         <Routes>
           <Route path="/" element={<MobileLayout />}>
@@ -76,6 +79,7 @@ export default function App() {
           </Route>
         </Routes>
       )}
+      </CarsProvider>
     </AuthProvider>
   );
 }

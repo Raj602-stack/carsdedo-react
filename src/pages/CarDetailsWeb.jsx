@@ -1,12 +1,16 @@
 // src/pages/CarDetails.jsx
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import carsData from "../data/cars";
+
 import styles from "../styles/CarDetailsWeb.module.css";
 import '../components/RightDrawer'
 import { RightDrawer } from "../components/RightDrawer";
 import { FeaturesDrawer } from "../components/FeaturesDrawer";
 import EMICalculator from "../components/EMICalculator";
+
+import { useCars } from "../context/CarsContext";
+import { normalizeCar } from "../utils"; // or wherever you placed it
+
 
 /**
  * CarDetails page
@@ -38,6 +42,13 @@ const sampleFeatures = [
 ];
 
 export default function CarDetails() {
+  const { cars, loading } = useCars();
+  const { id } = useParams();
+  const rawCar = cars.find((c) => String(c.id) === String(id));
+  const car = rawCar ? normalizeCar(rawCar) : null;
+
+
+
 
   // at top of component
 const [showFeaturesDrawer, setShowFeaturesDrawer] = useState(false);
@@ -45,9 +56,9 @@ const [showFeaturesDrawer, setShowFeaturesDrawer] = useState(false);
 const openFeaturesDrawer = () => setShowFeaturesDrawer(true);
 const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
 
-  const { id } = useParams();
+ 
   const navigate = useNavigate();
-  const car = carsData.find((c) => Number(c.id) === Number(id));
+  // const car = carsData.find((c) => Number(c.id) === Number(id));
 
   const ignoreSpyRef = useRef(false);
 

@@ -13,13 +13,32 @@ import MobileMoreAbout from "../components/MobileMoreAbout";
 import FooterMobile from "../components/FooterMobile";
 import CarImageCarousel from "../components/CarImageCarousel";
 
+import { useCars } from "../context/CarsContext";
+
+
 
 export default function CarDetails() {
-  const location = useLocation();
+  // const location = useLocation();
   const navigate = useNavigate();
   const params = useParams();
-  const passedCar = location.state && location.state.car ? location.state.car : null;
-  const [car, setCar] = useState(passedCar);
+  // const passedCar = location.state && location.state.car ? location.state.car : null;
+  // const [car, setCar] = useState(passedCar);
+
+
+  const { cars, loading } = useCars();
+const { id } = useParams();
+const location = useLocation();
+
+const passedCar = location.state?.car ?? null;
+
+console.log(passedCar);
+
+const car = React.useMemo(() => {
+  if (passedCar) return passedCar;
+  if (!cars || !id) return null;
+  return cars.find((c) => String(c.id) === String(id)) || null;
+}, [passedCar, cars, id]);
+
 
   // useEffect(() => {
   //   const y = sessionStorage.getItem("cars_list_scroll");

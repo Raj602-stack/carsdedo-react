@@ -146,314 +146,314 @@
 
 // src/data/cars.js
 
-const cars = [
-  {
-    id: 1,
-    title: "2019 Jaguar XE",
-    brand: "Jaguar",
-    model: "XE",
-    year: 2019,
-    price: 2168000,
-    km: 63000,
-    fuel: "Petrol",
-    transmission: "Automatic",
-    body: "Sedan",
-    city: "Delhi",
-    colorKey: "black",
+// const cars = [
+//   {
+//     id: 1,
+//     title: "2019 Jaguar XE",
+//     brand: "Jaguar",
+//     model: "XE",
+//     year: 2019,
+//     price: 2168000,
+//     km: 63000,
+//     fuel: "Petrol",
+//     transmission: "Automatic",
+//     body: "Sedan",
+//     city: "Delhi",
+//     colorKey: "black",
 
-    image: process.env.PUBLIC_URL + "/baleno.avif",
+//     image: process.env.PUBLIC_URL + "/baleno.avif",
 
-    images: {
-      overview: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-      exterior: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-      interior: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-      engine: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-      tyres: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-    },
+//     images: {
+//       overview: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//       exterior: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//       interior: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//       engine: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//       tyres: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//     },
 
-    tags: ["Luxury"],
-    features: ["ABS", "Parking Sensors"],
-  },
+//     tags: ["Luxury"],
+//     features: ["ABS", "Parking Sensors"],
+//   },
 
-  {
-    id: 2,
-    title: "2022 Mercedes GLC",
-    brand: "Mercedes",
-    model: "GLC",
-    year: 2022,
-    price: 4330000,
-    km: 28500,
-    fuel: "Petrol",
-    transmission: "Automatic",
-    body: "SUV",
-    city: "Gurgaon",
-    colorKey: "white",
+//   {
+//     id: 2,
+//     title: "2022 Mercedes GLC",
+//     brand: "Mercedes",
+//     model: "GLC",
+//     year: 2022,
+//     price: 4330000,
+//     km: 28500,
+//     fuel: "Petrol",
+//     transmission: "Automatic",
+//     body: "SUV",
+//     city: "Gurgaon",
+//     colorKey: "white",
 
-    image: process.env.PUBLIC_URL + "/innova.avif",
+//     image: process.env.PUBLIC_URL + "/innova.avif",
 
-    images: {
-      overview: [
-        process.env.PUBLIC_URL + "/innova.avif",
-        process.env.PUBLIC_URL + "/innova.avif",
-      ],
-      exterior: [
-        process.env.PUBLIC_URL + "/innova.avif",
-      ],
-      interior: [
-        process.env.PUBLIC_URL + "/innova.avif",
-      ],
-      engine: [
-        process.env.PUBLIC_URL + "/innova.avif",
-      ],
-      tyres: [
-        process.env.PUBLIC_URL + "/innova.avif",
-      ],
-    },
+//     images: {
+//       overview: [
+//         process.env.PUBLIC_URL + "/innova.avif",
+//         process.env.PUBLIC_URL + "/innova.avif",
+//       ],
+//       exterior: [
+//         process.env.PUBLIC_URL + "/innova.avif",
+//       ],
+//       interior: [
+//         process.env.PUBLIC_URL + "/innova.avif",
+//       ],
+//       engine: [
+//         process.env.PUBLIC_URL + "/innova.avif",
+//       ],
+//       tyres: [
+//         process.env.PUBLIC_URL + "/innova.avif",
+//       ],
+//     },
 
-    tags: ["On Hold"],
-    features: ["Sunroof", "Leather Seats"],
-  },
+//     tags: ["On Hold"],
+//     features: ["Sunroof", "Leather Seats"],
+//   },
 
-  {
-    id: 3,
-    title: "2021 Hyundai i20",
-    brand: "Hyundai",
-    model: "i20",
-    year: 2021,
-    price: 804000,
-    km: 37000,
-    fuel: "Petrol",
-    transmission: "Automatic",
-    body: "Hatchback",
-    city: "Noida",
-    colorKey: "blue",
+//   {
+//     id: 3,
+//     title: "2021 Hyundai i20",
+//     brand: "Hyundai",
+//     model: "i20",
+//     year: 2021,
+//     price: 804000,
+//     km: 37000,
+//     fuel: "Petrol",
+//     transmission: "Automatic",
+//     body: "Hatchback",
+//     city: "Noida",
+//     colorKey: "blue",
 
-    image: process.env.PUBLIC_URL + "/venue.avif",
+//     image: process.env.PUBLIC_URL + "/venue.avif",
 
-    images: {
-      overview: [
-        process.env.PUBLIC_URL + "/venue.avif",
-        process.env.PUBLIC_URL + "/venue.avif",
-      ],
-      exterior: [
-        process.env.PUBLIC_URL + "/venue.avif",
-      ],
-      interior: [
-        process.env.PUBLIC_URL + "/venue.avif",
-      ],
-      engine: [
-        process.env.PUBLIC_URL + "/venue.avif",
-      ],
-      tyres: [
-        process.env.PUBLIC_URL + "/venue.avif",
-      ],
-    },
+//     images: {
+//       overview: [
+//         process.env.PUBLIC_URL + "/venue.avif",
+//         process.env.PUBLIC_URL + "/venue.avif",
+//       ],
+//       exterior: [
+//         process.env.PUBLIC_URL + "/venue.avif",
+//       ],
+//       interior: [
+//         process.env.PUBLIC_URL + "/venue.avif",
+//       ],
+//       engine: [
+//         process.env.PUBLIC_URL + "/venue.avif",
+//       ],
+//       tyres: [
+//         process.env.PUBLIC_URL + "/venue.avif",
+//       ],
+//     },
 
-    tags: ["Assured"],
-    features: ["Reverse Camera"],
-  },
+//     tags: ["Assured"],
+//     features: ["Reverse Camera"],
+//   },
 
-  {
-    id: 4,
-    title: "2022 Hyundai i20",
-    brand: "Hyundai",
-    model: "i20",
-    year: 2022,
-    price: 773000,
-    km: 100000,
-    fuel: "Electric",
-    transmission: "Automatic",
-    body: "Hatchback",
-    city: "Noida",
-    colorKey: "silver",
+//   {
+//     id: 4,
+//     title: "2022 Hyundai i20",
+//     brand: "Hyundai",
+//     model: "i20",
+//     year: 2022,
+//     price: 773000,
+//     km: 100000,
+//     fuel: "Electric",
+//     transmission: "Automatic",
+//     body: "Hatchback",
+//     city: "Noida",
+//     colorKey: "silver",
 
-    image: process.env.PUBLIC_URL + "/vento.avif",
+//     image: process.env.PUBLIC_URL + "/vento.avif",
 
-    images: {
-      overview: [
-        process.env.PUBLIC_URL + "/vento.avif",
-        process.env.PUBLIC_URL + "/vento.avif",
-      ],
-      exterior: [
-        process.env.PUBLIC_URL + "/vento.avif",
-      ],
-      interior: [
-        process.env.PUBLIC_URL + "/vento.avif",
-      ],
-      engine: [
-        process.env.PUBLIC_URL + "/vento.avif",
-      ],
-      tyres: [
-        process.env.PUBLIC_URL + "/vento.avif",
-      ],
-    },
+//     images: {
+//       overview: [
+//         process.env.PUBLIC_URL + "/vento.avif",
+//         process.env.PUBLIC_URL + "/vento.avif",
+//       ],
+//       exterior: [
+//         process.env.PUBLIC_URL + "/vento.avif",
+//       ],
+//       interior: [
+//         process.env.PUBLIC_URL + "/vento.avif",
+//       ],
+//       engine: [
+//         process.env.PUBLIC_URL + "/vento.avif",
+//       ],
+//       tyres: [
+//         process.env.PUBLIC_URL + "/vento.avif",
+//       ],
+//     },
 
-    tags: [],
-    features: [],
-  },
+//     tags: [],
+//     features: [],
+//   },
 
-  {
-    id: 5,
-    title: "2019 Jeep Compass",
-    brand: "Jeep",
-    model: "Compass",
-    year: 2019,
-    price: 890000,
-    km: 59500,
-    fuel: "Diesel",
-    transmission: "Automatic",
-    body: "SUV",
-    city: "Delhi",
-    colorKey: "green",
+//   {
+//     id: 5,
+//     title: "2019 Jeep Compass",
+//     brand: "Jeep",
+//     model: "Compass",
+//     year: 2019,
+//     price: 890000,
+//     km: 59500,
+//     fuel: "Diesel",
+//     transmission: "Automatic",
+//     body: "SUV",
+//     city: "Delhi",
+//     colorKey: "green",
 
-    image: process.env.PUBLIC_URL + "/baleno.avif",
+//     image: process.env.PUBLIC_URL + "/baleno.avif",
 
-    images: {
-      overview: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-      exterior: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-      interior: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-      engine: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-      tyres: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-    },
+//     images: {
+//       overview: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//       exterior: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//       interior: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//       engine: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//       tyres: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//     },
 
-    tags: [],
-    features: ["ABS"],
-  },
+//     tags: [],
+//     features: ["ABS"],
+//   },
 
-  {
-    id: 6,
-    title: "2021 Honda Jazz",
-    brand: "Honda",
-    model: "Jazz",
-    year: 2021,
-    price: 628000,
-    km: 111000,
-    fuel: "Petrol",
-    transmission: "Automatic",
-    body: "Hatchback",
-    city: "Noida",
-    colorKey: "purple",
+//   {
+//     id: 6,
+//     title: "2021 Honda Jazz",
+//     brand: "Honda",
+//     model: "Jazz",
+//     year: 2021,
+//     price: 628000,
+//     km: 111000,
+//     fuel: "Petrol",
+//     transmission: "Automatic",
+//     body: "Hatchback",
+//     city: "Noida",
+//     colorKey: "purple",
 
-    image: process.env.PUBLIC_URL + "/innova.avif",
+//     image: process.env.PUBLIC_URL + "/innova.avif",
 
-    images: {
-      overview: [
-        process.env.PUBLIC_URL + "/innova.avif",
-      ],
-      exterior: [
-        process.env.PUBLIC_URL + "/innova.avif",
-      ],
-      interior: [
-        process.env.PUBLIC_URL + "/innova.avif",
-      ],
-      engine: [
-        process.env.PUBLIC_URL + "/innova.avif",
-      ],
-      tyres: [
-        process.env.PUBLIC_URL + "/innova.avif",
-      ],
-    },
+//     images: {
+//       overview: [
+//         process.env.PUBLIC_URL + "/innova.avif",
+//       ],
+//       exterior: [
+//         process.env.PUBLIC_URL + "/innova.avif",
+//       ],
+//       interior: [
+//         process.env.PUBLIC_URL + "/innova.avif",
+//       ],
+//       engine: [
+//         process.env.PUBLIC_URL + "/innova.avif",
+//       ],
+//       tyres: [
+//         process.env.PUBLIC_URL + "/innova.avif",
+//       ],
+//     },
 
-    tags: [],
-    features: ["Parking Sensors"],
-  },
+//     tags: [],
+//     features: ["Parking Sensors"],
+//   },
 
-  {
-    id: 7,
-    title: "2016 Ford Figo",
-    brand: "Ford",
-    model: "Figo",
-    year: 2016,
-    price: 347000,
-    km: 57500,
-    fuel: "Cng",
-    transmission: "Manual",
-    body: "Hatchback",
-    city: "Ghaziabad",
-    colorKey: "red",
+//   {
+//     id: 7,
+//     title: "2016 Ford Figo",
+//     brand: "Ford",
+//     model: "Figo",
+//     year: 2016,
+//     price: 347000,
+//     km: 57500,
+//     fuel: "Cng",
+//     transmission: "Manual",
+//     body: "Hatchback",
+//     city: "Ghaziabad",
+//     colorKey: "red",
 
-    image: process.env.PUBLIC_URL + "/baleno.avif",
+//     image: process.env.PUBLIC_URL + "/baleno.avif",
 
-    images: {
-      overview: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-      exterior: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-      interior: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-      engine: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-      tyres: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-    },
+//     images: {
+//       overview: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//       exterior: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//       interior: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//       engine: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//       tyres: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//     },
 
-    tags: ["Budget"],
-    features: [],
-  },
+//     tags: ["Budget"],
+//     features: [],
+//   },
 
-  {
-    id: 8,
-    title: "2016 Maruti Swift",
-    brand: "Maruti",
-    model: "Swift",
-    year: 2016,
-    price: 384000,
-    km: 28500,
-    fuel: "Cng",
-    transmission: "Manual",
-    body: "Hatchback",
-    city: "Noida",
-    colorKey: "orange",
+//   {
+//     id: 8,
+//     title: "2016 Maruti Swift",
+//     brand: "Maruti",
+//     model: "Swift",
+//     year: 2016,
+//     price: 384000,
+//     km: 28500,
+//     fuel: "Cng",
+//     transmission: "Manual",
+//     body: "Hatchback",
+//     city: "Noida",
+//     colorKey: "orange",
 
-    image: process.env.PUBLIC_URL + "/innova.avif",
+//     image: process.env.PUBLIC_URL + "/innova.avif",
 
-    images: {
-      overview: [
-        process.env.PUBLIC_URL + "/innova.avif",
-      ],
-      exterior: [
-        process.env.PUBLIC_URL + "/baleno.avif",
-      ],
-      interior: [
-        process.env.PUBLIC_URL + "/innova.avif",
-      ],
-      engine: [
-        process.env.PUBLIC_URL + "/innova.avif",
-      ],
-      tyres: [
-        process.env.PUBLIC_URL + "/innova.avif",
-      ],
-    },
+//     images: {
+//       overview: [
+//         process.env.PUBLIC_URL + "/innova.avif",
+//       ],
+//       exterior: [
+//         process.env.PUBLIC_URL + "/baleno.avif",
+//       ],
+//       interior: [
+//         process.env.PUBLIC_URL + "/innova.avif",
+//       ],
+//       engine: [
+//         process.env.PUBLIC_URL + "/innova.avif",
+//       ],
+//       tyres: [
+//         process.env.PUBLIC_URL + "/innova.avif",
+//       ],
+//     },
 
-    tags: [],
-    features: [],
-  },
-];
+//     tags: [],
+//     features: [],
+//   },
+// ];
 
-export default cars;
+// export default cars;
