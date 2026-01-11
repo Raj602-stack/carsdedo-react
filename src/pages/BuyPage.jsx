@@ -8,6 +8,8 @@ import { useLocation } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 import "../styles/BuyPage.css";
 import { useCars } from "../context/CarsContext";
+import Loader from "../components/Loader";
+import Sidebar from "../components/Sidebar";
 
 import { IoCodeSlashOutline } from "react-icons/io5";
 
@@ -17,8 +19,8 @@ const HERO_BANNER = "/mnt/data/93f9b768-4f04-44ea-a832-90320b25060b.png";
 /* small SVG checkmark used across controls */
 function IconCheck({ checked }) {
   return (
-    <svg className={`checkmark ${checked ? "show" : ""}`} width="14" height="14" viewBox="0 0 24 24" aria-hidden>
-      <path fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" d="M20 6L9 17l-5-5" />
+    <svg className={`checkmark ${checked ? "show" : ""}`} width="10" height="10" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
     </svg>
   );
 }
@@ -283,11 +285,14 @@ function FilterDrawer({ open, onClose, appliedFilters = {}, onApply, onClear }) 
   ];
   const bodyOptions = ["Hatchback", "Sedan", "SUV", "MPV", "Coupe", "Convertible", "Wagon", "Van", "Crossover", "Micro"];
   const ownerOptions = ["1st owner", "2nd owner", "3rd owner"];
+  const fuelOptions = ["Petrol", "Diesel", "CNG", "Electric", "Hybrid"];
+  const categoryOptions = ["Hatchback", "Sedan", "SUV", "MUV", "Convertible", "Coupe"];
+  const hubOptions = ["Gaur City Mall, Noida", "Trillium Avenue, Gurgaon", "Indirapuram, Ghaziabad"];
 
   const categories = [
     "Saved Filters", "Price Range", "Brands + Models", "Year", "Kms Driven", "Fuel Type",
     "Body Type", "Transmission", "Car Category", "Color", "Features", "Seats", "RTO",
-    "Owner"
+    "Owner", "Hubs"
   ];
 
   const [local, setLocal] = useState({
@@ -301,6 +306,9 @@ function FilterDrawer({ open, onClose, appliedFilters = {}, onApply, onClear }) 
     seats: appliedFilters.seats ?? [],
     rto: appliedFilters.rto ?? [],
     body: appliedFilters.body ?? [],
+    fuel: appliedFilters.fuel ?? [],
+    category: appliedFilters.category ?? [],
+    hubs: appliedFilters.hubs ?? [],
     priceMin: appliedFilters.priceMin ?? PRICE_MIN,
     priceMax: appliedFilters.priceMax ?? PRICE_MAX,
     owner: appliedFilters.owner ?? []
@@ -324,6 +332,9 @@ function FilterDrawer({ open, onClose, appliedFilters = {}, onApply, onClear }) 
         seats: appliedFilters.seats ?? [],
         rto: appliedFilters.rto ?? [],
         body: appliedFilters.body ?? [],
+        fuel: appliedFilters.fuel ?? [],
+        category: appliedFilters.category ?? [],
+        hubs: appliedFilters.hubs ?? [],
         priceMin: appliedFilters.priceMin ?? PRICE_MIN,
         priceMax: appliedFilters.priceMax ?? PRICE_MAX,
         owner: appliedFilters.owner ?? []
@@ -408,6 +419,9 @@ function FilterDrawer({ open, onClose, appliedFilters = {}, onApply, onClear }) 
       seats: local.seats,
       rto: local.rto,
       body: local.body,
+      fuel: local.fuel,
+      category: local.category,
+      hubs: local.hubs,
       priceMin: safeMin,
       priceMax: safeMax,
       owner: local.owner ?? []
@@ -418,7 +432,7 @@ function FilterDrawer({ open, onClose, appliedFilters = {}, onApply, onClear }) 
 
   function handleClear() {
     setLocal({
-      year: [], kms: [], brands: [], brandModels: {}, colors: [], trans: [], features: [], seats: [], rto: [], body: [], priceMin: PRICE_MIN, priceMax: PRICE_MAX, owner: []
+      year: [], kms: [], brands: [], brandModels: {}, colors: [], trans: [], features: [], seats: [], rto: [], body: [], fuel: [], category: [], hubs: [], priceMin: PRICE_MIN, priceMax: PRICE_MAX, owner: []
     });
     onClear?.();
   }
@@ -470,6 +484,18 @@ function FilterDrawer({ open, onClose, appliedFilters = {}, onApply, onClear }) 
       }
       case "Owner": {
         const n = (local.owner || []).length;
+        return n > 0 ? `${n} selected` : null;
+      }
+      case "Fuel Type": {
+        const n = (local.fuel || []).length;
+        return n > 0 ? `${n} selected` : null;
+      }
+      case "Car Category": {
+        const n = (local.category || []).length;
+        return n > 0 ? `${n} selected` : null;
+      }
+      case "Hubs": {
+        const n = (local.hubs || []).length;
         return n > 0 ? `${n} selected` : null;
       }
       default:
@@ -532,12 +558,12 @@ function FilterDrawer({ open, onClose, appliedFilters = {}, onApply, onClear }) 
                 <div className="price-range-wrap">
                   <div className="price-rail-vertical" style={{
                     background: `linear-gradient(180deg,
-                      #f0e8ff 0%,
-                      #f0e8ff ${topPct}%,
-                      #6b2be6 ${topPct}%,
-                      #6b2be6 ${bottomPct}%,
-                      #f0e8ff ${bottomPct}%,
-                      #f0e8ff 100%)`
+                      #e8f0f8 0%,
+                      #e8f0f8 ${topPct}%,
+                      #0c213a ${topPct}%,
+                      #0c213a ${bottomPct}%,
+                      #e8f0f8 ${bottomPct}%,
+                      #e8f0f8 100%)`
                   }} />
 
                   <div className="bubbles-wrapper">
@@ -777,8 +803,47 @@ function FilterDrawer({ open, onClose, appliedFilters = {}, onApply, onClear }) 
               </div>
             )}
 
+            {/* Fuel Type */}
+            {active === "Fuel Type" && (
+              <div className="panel-section">
+                <h5 className="select-by">SELECT BY</h5>
+                <div className="grid-cols">
+                  {fuelOptions.map((f) => {
+                    const checked = (local.fuel || []).includes(f);
+                    return <FancyCheckbox key={f} id={`fuel-${f}`} label={f} checked={checked} onToggle={() => toggleArray("fuel", f)} />;
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Car Category */}
+            {active === "Car Category" && (
+              <div className="panel-section">
+                <h5 className="select-by">SELECT BY</h5>
+                <div className="grid-cols">
+                  {categoryOptions.map((c) => {
+                    const checked = (local.category || []).includes(c);
+                    return <FancyCheckbox key={c} id={`category-${c}`} label={c} checked={checked} onToggle={() => toggleArray("category", c)} />;
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Hubs */}
+            {active === "Hubs" && (
+              <div className="panel-section">
+                <h5 className="select-by">SELECT BY</h5>
+                <div className="grid-cols">
+                  {hubOptions.map((h) => {
+                    const checked = (local.hubs || []).includes(h);
+                    return <FancyCheckbox key={h} id={`hub-${h}`} label={h} checked={checked} onToggle={() => toggleArray("hubs", h)} />;
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* fallback */}
-            {["Saved Filters", "Fuel Type", "Car Category"].includes(active) && (
+            {active === "Saved Filters" && (
               <div className="panel-section"><p className="placeholder">Options for <strong>{active}</strong> go here.</p></div>
             )}
           </div>
@@ -860,8 +925,13 @@ export default function BuyPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { cars, loading, error } = useCars();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-
+  // Lock body scroll when sidebar is open
+  useEffect(() => {
+    document.body.classList.toggle("no-scroll", sidebarOpen);
+    return () => document.body.classList.remove("no-scroll");
+  }, [sidebarOpen]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -1026,8 +1096,11 @@ export default function BuyPage() {
     seats: [],
     rto: [],
     body: [],
-    priceMin: null,   // ✅ important
-    priceMax: null,   // ✅ important
+    fuel: [],
+    category: [],
+    hubs: [],
+    priceMin: PRICE_MIN,   // ✅ Set default values
+    priceMax: PRICE_MAX,   // ✅ Set default values
     owner: []
   });
   
@@ -1073,37 +1146,61 @@ export default function BuyPage() {
 
 // useEffect(()=>{},[])
  
-const mapCarForMobileCard = (car) => ({
-  id: car.id,
-  brand: car.brand,
-  model: car.model,
-  title: car.title,
+const mapCarForMobileCard = (car) => {
+  // ✅ Properly format image URL with fallback
+  const getImageUrl = () => {
+    // If car already has formatted image, use it
+    if (car.image && car.image.startsWith('http')) {
+      return car.image;
+    }
+    // If car has images.exterior array, use first image
+    if (car.images?.exterior?.[0]?.image) {
+      return `http://localhost:8000${car.images.exterior[0].image}`;
+    }
+    // Fallback to placeholder
+    return process.env.PUBLIC_URL + "/placeholder-car.png";
+  };
 
-  priceNum: car.price / 100000, // lakhs
-  price: formatPrice(car.price),
-  emi: formatEMI(car.price),
+  // Get prices - API provides: price (original) and discount_price (discounted)
+  // Check if discount_price exists and is different from price
+  const originalPrice = car.price || 0; // Original price from API
+  const discountedPrice = car.discount_price || car.price || 0; // Discounted price if available
+  const hasDiscount = car.discount_price && car.discount_price < car.price && car.discount_price > 0;
 
-  kmNum: car.km,
-  km: formatKM(car.km),
+  return {
+    id: car.id,
+    brand: car.brand,
+    model: car.model,
+    title: car.title,
 
-  fuel: car.fuel,
-  trans: car.transmission,
-  transVal: getTransmissionVal(car.transmission),
+    priceNum: discountedPrice / 100000, // lakhs (use discounted for sorting/filtering)
+    price: formatPrice(discountedPrice), // Discounted price (display)
+    originalPrice: hasDiscount ? formatPrice(originalPrice) : null, // Original price (for strikethrough)
+    hasDiscount: hasDiscount,
+    emi: formatEMI(discountedPrice),
 
-  location: car.city,
-  year: String(car.year),
-  body: car.body,
-  color: car.colorKey,
+    kmNum: car.km,
+    km: formatKM(car.km),
 
-  thumb: car.image,
-  variant: `${car.brand} ${car.model}`,
+    fuel: car.fuel,
+    trans: car.transmission || car.trans || '-',
+    transVal: getTransmissionVal(car.transmission || car.trans),
 
-  // ✅ NEW — reuse everywhere
-  features: car.features,
-  reasonsToBuy: car.reasons_to_buy,
-  specs: car.specs,
-  inspections: car.inspections,
-});
+    location: car.city,
+    year: String(car.year),
+    body: car.body,
+    color: car.colorKey,
+
+    thumb: getImageUrl(),
+    variant: `${car.brand} ${car.model}`,
+
+    // ✅ NEW — reuse everywhere
+    features: car.features,
+    reasonsToBuy: car.reasons_to_buy,
+    specs: car.specs,
+    inspections: car.inspections,
+  };
+};
 
 const mobileCars = React.useMemo(() => {
   if (!cars || !cars.length) return [];
@@ -1111,9 +1208,23 @@ const mobileCars = React.useMemo(() => {
 }, [cars]);
 
 
+
+
 console.log(mobileCars);
 
+const getCarImages = (car) => {
+  if (!car?.images) return [];
 
+  const exterior = car.images.exterior || [];
+  const interior = car.images.interior || [];
+
+  return [...exterior, ...interior]
+    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+    .map((img) => `${process.env.REACT_APP_BACKEND_URL}${img.image}`);
+};
+
+
+console.log(getCarImages);
 
   
 
@@ -1164,7 +1275,13 @@ console.log(mobileCars);
        Transmission
     ------------------------------ */
     if (filters.trans) {
-      if (!car.trans || filters.trans !== car.trans) return false;
+      // Normalize both values to lowercase for comparison
+      const carTrans = (car.transVal || car.trans || "").toLowerCase().trim();
+      const filterTrans = String(filters.trans).toLowerCase().trim();
+      
+      if (!carTrans || carTrans !== filterTrans) {
+        return false;
+      }
     }
   
     /* ------------------------------
@@ -1208,35 +1325,45 @@ console.log(mobileCars);
        Color
     ------------------------------ */
     if (filters.color) {
-      if (!car.color || filters.color !== car.color) return false;
+      // Normalize color comparison (case-insensitive)
+      const carColor = (car.color || "").toLowerCase().trim();
+      const filterColor = String(filters.color).toLowerCase().trim();
+      if (!carColor || carColor !== filterColor) return false;
     }
   
     /* ------------------------------
        Body Type
     ------------------------------ */
     if (filters.body?.length) {
-      if (!car.body || !filters.body.includes(car.body)) return false;
+      if (!car.body) return false;
+      // Normalize body type comparison (case-insensitive)
+      const carBody = (car.body || "").toLowerCase().trim();
+      const filterBodies = filters.body.map(b => String(b).toLowerCase().trim());
+      if (!filterBodies.includes(carBody)) return false;
     }
   
     /* ------------------------------
        Price (filters in rupees, car in lakhs)
     ------------------------------ */
-    const min = filters.priceMin != null ? Number(filters.priceMin) : null;
-    const max = filters.priceMax != null ? Number(filters.priceMax) : null;
+    // Only filter by price if both min and max are set and valid
+    if (filters.priceMin != null && filters.priceMax != null) {
+      const min = Number(filters.priceMin);
+      const max = Number(filters.priceMax);
+      
+      // Skip price filtering if values are invalid or at defaults
+      if (!isNaN(min) && !isNaN(max) && min !== PRICE_MIN && max !== PRICE_MAX) {
+        if (car.priceNum == null || isNaN(car.priceNum)) return false;
   
-    if (min !== null || max !== null) {
-      if (car.priceNum == null || isNaN(car.priceNum)) return false;
+        let carPrice = car.priceNum * 100000;
+        let _min = min;
+        let _max = max;
   
-      let carPrice = car.priceNum * 100000;
-      let _min = min;
-      let _max = max;
+        if (_min > _max) {
+          [_min, _max] = [_max, _min];
+        }
   
-      if (_min !== null && _max !== null && _min > _max) {
-        [_min, _max] = [_max, _min];
+        if (carPrice < _min || carPrice > _max) return false;
       }
-  
-      if (_min !== null && carPrice < _min) return false;
-      if (_max !== null && carPrice > _max) return false;
     }
   
     return true;
@@ -1275,11 +1402,21 @@ console.log(mobileCars);
       ? `${uniqueCities.slice(0, 2).join(", ")}${uniqueCities.length > 2 ? ` +${uniqueCities.length - 2} more` : ''}`
       : "Delhi"; // Default fallback
 
+  if (loading) {
+    return <Loader message="Loading cars..." fullScreen={true} />;
+  }
+
   return (
     <div className="buypage-root">
       <header className="buy-header">
         <div className="buy-header-inner">
-          <button className="hamburger" aria-label="Open menu">☰</button>
+          <button 
+            className="hamburger" 
+            aria-label="Open menu"
+            onClick={() => setSidebarOpen(true)}
+          >
+            ☰
+          </button>
           {/* <div className="brand">CarsDedo</div> */}
             <div className="brand">
     <img
@@ -1330,6 +1467,84 @@ console.log(mobileCars);
           />
         </div>
       </header>
+
+      {/* Applied Filters Display */}
+      {((appliedFilters.year || appliedFilters.kms || appliedFilters.brands?.length || appliedFilters.color || appliedFilters.trans || appliedFilters.body?.length || (appliedFilters.priceMin !== PRICE_MIN || appliedFilters.priceMax !== PRICE_MAX)) && (
+        <div className="applied-filters-bar">
+          <div className="applied-filters-container">
+            {appliedFilters.year && (
+              <span className="applied-filter-tag">
+                Year: {appliedFilters.year}
+                <button 
+                  className="filter-remove-btn" 
+                  onClick={() => setAppliedFilters(s => ({ ...s, year: null }))}
+                  aria-label="Remove year filter"
+                >×</button>
+              </span>
+            )}
+            {appliedFilters.kms && (
+              <span className="applied-filter-tag">
+                KMs: {appliedFilters.kms}
+                <button 
+                  className="filter-remove-btn" 
+                  onClick={() => setAppliedFilters(s => ({ ...s, kms: null }))}
+                  aria-label="Remove kms filter"
+                >×</button>
+              </span>
+            )}
+            {appliedFilters.brands?.length > 0 && (
+              <span className="applied-filter-tag">
+                Brand{appliedFilters.brands.length > 1 ? 's' : ''}: {appliedFilters.brands.join(', ')}
+                <button 
+                  className="filter-remove-btn" 
+                  onClick={() => setAppliedFilters(s => ({ ...s, brands: [], brandModels: {} }))}
+                  aria-label="Remove brand filter"
+                >×</button>
+              </span>
+            )}
+            {appliedFilters.color && (
+              <span className="applied-filter-tag">
+                Color: {appliedFilters.color}
+                <button 
+                  className="filter-remove-btn" 
+                  onClick={() => setAppliedFilters(s => ({ ...s, color: null }))}
+                  aria-label="Remove color filter"
+                >×</button>
+              </span>
+            )}
+            {appliedFilters.trans && (
+              <span className="applied-filter-tag">
+                Transmission: {appliedFilters.trans}
+                <button 
+                  className="filter-remove-btn" 
+                  onClick={() => setAppliedFilters(s => ({ ...s, trans: null }))}
+                  aria-label="Remove transmission filter"
+                >×</button>
+              </span>
+            )}
+            {appliedFilters.body?.length > 0 && (
+              <span className="applied-filter-tag">
+                Body: {appliedFilters.body.join(', ')}
+                <button 
+                  className="filter-remove-btn" 
+                  onClick={() => setAppliedFilters(s => ({ ...s, body: [] }))}
+                  aria-label="Remove body filter"
+                >×</button>
+              </span>
+            )}
+            {(appliedFilters.priceMin !== PRICE_MIN || appliedFilters.priceMax !== PRICE_MAX) && (
+              <span className="applied-filter-tag">
+                Price: ₹{Math.round(appliedFilters.priceMin / 1000)}k - ₹{Math.round(appliedFilters.priceMax / 100000)}L
+                <button 
+                  className="filter-remove-btn" 
+                  onClick={() => setAppliedFilters(s => ({ ...s, priceMin: PRICE_MIN, priceMax: PRICE_MAX }))}
+                  aria-label="Remove price filter"
+                >×</button>
+              </span>
+            )}
+          </div>
+        </div>
+      ))}
 
       <div className="results-header">
         <h3>{filtered.length} Used cars in {locationText}</h3>
@@ -1425,10 +1640,13 @@ console.log(mobileCars);
   <div className="car-thumb">
     <img 
       src={car.thumb} 
-      alt={car.title} 
+      alt={car.title || "Car image"}
       loading="lazy"
       onError={(e) => {
-        e.target.src = '/cars/default-car.png';
+        // Prevent infinite loop by checking if already on fallback
+        if (!e.target.src.includes('placeholder-car.png')) {
+          e.target.src = process.env.PUBLIC_URL + "/placeholder-car.png";
+        }
       }}
     />
   </div>
@@ -1442,7 +1660,14 @@ console.log(mobileCars);
         <div className="car-variant">{car.variant}</div>
       </div>
       <div className="car-price">
-        <div className="price">{car.price}</div>
+        {car.hasDiscount && car.originalPrice ? (
+          <div className="price-with-discount">
+            <div className="price-discounted">{car.price}</div>
+            <div className="price-original">{car.originalPrice}</div>
+          </div>
+        ) : (
+          <div className="price">{car.price}</div>
+        )}
         <div className="emi">{car.emi}</div>
       </div>
     </div>
@@ -1451,8 +1676,7 @@ console.log(mobileCars);
     <div className="car-tags">
       <span className="tag">{car.km}</span>
       <span className="tag">{car.fuel}</span>
-      <span className="tag">{car.trans}</span>
-      <span className="tag">{car.location}</span>
+      <span className="tag">{car.trans || '-'}</span>
     </div>
 
     {/* Footer */}
@@ -1529,6 +1753,8 @@ console.log(mobileCars);
           owner: [] 
         })}
       />
+
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
     </div>
   );
 }

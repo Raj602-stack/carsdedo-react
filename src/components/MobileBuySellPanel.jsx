@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/MobileBuySellPanel.css";
 
 /**
@@ -9,6 +10,7 @@ import "../styles/MobileBuySellPanel.css";
  */
 
 export default function MobileBuySellPanel() {
+  const navigate = useNavigate();
   const [mode, setMode] = useState("buy"); // 'buy' or 'sell'
 
   return (
@@ -52,7 +54,7 @@ export default function MobileBuySellPanel() {
           <div className="mbs-hero-title">
             {mode === "buy" ? (
               <>
-                <div className="mbs-hero-kicker">Spinny Assured</div>
+                <div className="mbs-hero-kicker">CarsDedo Assured</div>
                 <h3 className="mbs-hero-head"><img src={process.env.PUBLIC_URL + "/shortlogoo.png"}/>benefits</h3>
               </>
             ) : (
@@ -73,9 +75,13 @@ export default function MobileBuySellPanel() {
         <div className="mbs-cta-wrap">
           <button
             className="mbs-cta-primary"
-            onClick={() =>
-              window.alert(mode === "buy" ? "Browse cars" : "Get price")
-            }
+            onClick={() => {
+              if (mode === "buy") {
+                navigate("/buy");
+              } else {
+                navigate("/sell");
+              }
+            }}
           >
             {mode === "buy" ? "Browse cars" : "Get price"}
           </button>
@@ -159,7 +165,7 @@ function SellContent() {
       </div>
 
       <div className="mbs-sell-footer">
-        <img src={process.env.PUBLIC_URL + "/shortlogoo.png"} alt="SellRight" className="mbs-sell-logo"/>
+        <img src={process.env.PUBLIC_URL + "/shortlogoo.png"} alt="CarsDedo" className="mbs-sell-logo"/>
       </div>
     </div>
   );

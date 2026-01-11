@@ -1,7 +1,9 @@
 import React, { useState,useMemo , useEffect} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "../styles/ScheduleTestDrive.module.css";
-import cars from "../data/cars";
+// import cars from "../data/cars";
+import { useCars } from "../context/CarsContext";
+
 
 // const DATES = [
 //   { label: "2 Jan", sub: "Today" },
@@ -46,6 +48,8 @@ function getNextDates(count = 3) {
   
 
 export default function ScheduleTestDrive() {
+    const { cars, loading } = useCars();
+
 
 const dates = useMemo(() => getNextDates(4), []);
 
@@ -72,10 +76,26 @@ useEffect(() => {
 
 
 
-  const car = useMemo(
-    () => cars.find(c => c.id === Number(carId)),
-    [carId, cars]
-  );
+//   const car = useMemo(
+//     () => cars.find(c => c.id === Number(carId)),
+//     [carId, cars]
+//   );
+
+const car = useMemo(() => {
+    return cars.find((c) => String(c.id) === String(carId)) || null;
+  }, [cars, carId]);
+
+  const images = useMemo(() => {
+    if (!car?.images) return [];
+  
+    const exterior = car.images.exterior || [];
+    const interior = car.images.interior || [];
+  
+    return [...exterior, ...interior]
+      .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+      .map((img) => `http://localhost:8000${img.image}`);
+  }, [car]);
+  
   
   return (
     <div className={styles.page}>
@@ -87,12 +107,13 @@ useEffect(() => {
 
       {/* Car Card */}
       <section className={styles.carCard}>
-        <img src={car.image} alt="car" />
+        <img src={images[0]} alt="car" />
         <div>
-          <h3>2015 Hyundai Grand i10 Sportz 1.2</h3>
-          <p>36K Km · Petrol · Manual</p>
-          <strong>₹ 3.53 Lakh</strong>
-          <span>EMI ₹7,576 /mo</span>
+        <h3>{car.title}</h3>
+<p>{car.km} Km · {car.fuel} · {car.transmission}</p>
+<strong>₹ {car.price}</strong>
+<span>EMI ₹{car.emi} /mo</span>
+
         </div>
       </section>
 

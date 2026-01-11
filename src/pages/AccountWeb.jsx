@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "../styles/Account.module.css";
 
 export default function AccountWeb() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("buy");
 
   return (
@@ -35,7 +37,10 @@ export default function AccountWeb() {
 
         <div className={styles.carIcon}>🚗</div>
 
-        <button className={styles.buyButton}>
+        <button 
+          className={styles.buyButton}
+          onClick={() => navigate("/buy")}
+        >
           Buy car <span>→</span>
         </button>
       </div>

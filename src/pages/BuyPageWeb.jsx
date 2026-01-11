@@ -7,6 +7,7 @@ import CarCard from "../components/CarCard";
 import styles from  "../styles/BuyPageweb.module.css";
 
 import { useCars } from "../context/CarsContext";
+import Loader from "../components/Loader";
 
 
 
@@ -35,16 +36,16 @@ const normalizeCar = (car) => {
     image:
       car.images?.exterior?.[0]?.image
         ? `http://localhost:8000${car.images.exterior[0].image}`
-        : "/placeholder-car.png",
+        : process.env.PUBLIC_URL + "/placeholder-car.png",
 
     images: {
       exterior:
         car.images?.exterior?.map((i) =>
-          `${process.env.REACT_APP_BACKEND_URL}${i.image}`
+          `http://localhost:8000${i.image}`
         ) || [],
       interior:
         car.images?.interior?.map((i) =>
-          `${process.env.REACT_APP_BACKEND_URL}${i.image}`
+          `http://localhost:8000${i.image}`
         ) || [],
       engine: [],
       tyres: [],
@@ -199,8 +200,22 @@ useEffect(() => {
   
       // MAKE / BRAND
       const make = params.get("make");
-      if (make) {
+      const brand = params.get("brand");
+      if (brand) {
+        next.brands = [capitalize(brand)];
+      } else if (make) {
         next.brands = [capitalize(make)];
+      }
+  
+      // MODEL
+      const model = params.get("model");
+      if (model && brand) {
+        // If we have both brand and model, we need to filter by both
+        // Store model in a way that can be used for filtering
+        if (!next.brandModels) next.brandModels = {};
+        if (next.brands && next.brands.length > 0) {
+          next.brandModels[next.brands[0]] = [capitalize(model)];
+        }
       }
   
       // YEAR
@@ -290,9 +305,18 @@ useEffect(() => {
           if (!matchesAny(filters.colors, c.colorKey)) return false;
         }
 
-        // brands
+        // brands + models
         if (filters.brands && filters.brands.length > 0) {
-          if (!matchesAny(filters.brands, c.brand)) return false;
+          const brandSelected = filters.brands.includes(c.brand);
+          const modelSelections = filters.brandModels?.[c.brand];
+          
+          if (modelSelections && modelSelections.length > 0) {
+            // If specific models are selected for this brand, car must match one of them
+            if (!modelSelections.includes(c.model)) return false;
+          } else if (!brandSelected) {
+            // If no models selected but brand is required, check brand match
+            return false;
+          }
         }
 
         // year (year filter means "selectedYear & above")
@@ -394,6 +418,10 @@ useEffect(() => {
 
   
 
+  if (loading) {
+    return <Loader message="Loading cars..." fullScreen={true} />;
+  }
+
   return (
     <div className={styles["buy-page"]}>
       <Filters
@@ -403,6 +431,84 @@ useEffect(() => {
       />
     
       <main className={styles["results"]} role="main">
+        {/* Applied Filters Display */}
+        {((filters.year || filters.kms?.length || filters.brands?.length || filters.colors?.length || filters.transmission?.length || filters.body?.length || (filters.priceMin > 0 || filters.priceMax < 5000000)) && (
+          <div className={styles["applied-filters-bar"]}>
+            <div className={styles["applied-filters-container"]}>
+              {filters.year && (
+                <span className={styles["applied-filter-tag"]}>
+                  Year: {filters.year}
+                  <button 
+                    className={styles["filter-remove-btn"]} 
+                    onClick={() => setFilters(s => ({ ...s, year: null }))}
+                    aria-label="Remove year filter"
+                  >×</button>
+                </span>
+              )}
+              {filters.kms?.length > 0 && (
+                <span className={styles["applied-filter-tag"]}>
+                  KMs: {filters.kms.join(', ')}
+                  <button 
+                    className={styles["filter-remove-btn"]} 
+                    onClick={() => setFilters(s => ({ ...s, kms: [] }))}
+                    aria-label="Remove kms filter"
+                  >×</button>
+                </span>
+              )}
+              {filters.brands?.length > 0 && (
+                <span className={styles["applied-filter-tag"]}>
+                  Brand{filters.brands.length > 1 ? 's' : ''}: {filters.brands.join(', ')}
+                  <button 
+                    className={styles["filter-remove-btn"]} 
+                    onClick={() => setFilters(s => ({ ...s, brands: [] }))}
+                    aria-label="Remove brand filter"
+                  >×</button>
+                </span>
+              )}
+              {filters.colors?.length > 0 && (
+                <span className={styles["applied-filter-tag"]}>
+                  Color{filters.colors.length > 1 ? 's' : ''}: {filters.colors.join(', ')}
+                  <button 
+                    className={styles["filter-remove-btn"]} 
+                    onClick={() => setFilters(s => ({ ...s, colors: [] }))}
+                    aria-label="Remove color filter"
+                  >×</button>
+                </span>
+              )}
+              {filters.transmission?.length > 0 && (
+                <span className={styles["applied-filter-tag"]}>
+                  Transmission: {filters.transmission.join(', ')}
+                  <button 
+                    className={styles["filter-remove-btn"]} 
+                    onClick={() => setFilters(s => ({ ...s, transmission: [] }))}
+                    aria-label="Remove transmission filter"
+                  >×</button>
+                </span>
+              )}
+              {filters.body?.length > 0 && (
+                <span className={styles["applied-filter-tag"]}>
+                  Body: {filters.body.join(', ')}
+                  <button 
+                    className={styles["filter-remove-btn"]} 
+                    onClick={() => setFilters(s => ({ ...s, body: [] }))}
+                    aria-label="Remove body filter"
+                  >×</button>
+                </span>
+              )}
+              {(filters.priceMin > 0 || filters.priceMax < 5000000) && (
+                <span className={styles["applied-filter-tag"]}>
+                  Price: ₹{Math.round(filters.priceMin / 1000)}k - ₹{Math.round(filters.priceMax / 100000)}L
+                  <button 
+                    className={styles["filter-remove-btn"]} 
+                    onClick={() => setFilters(s => ({ ...s, priceMin: 0, priceMax: 5000000 }))}
+                    aria-label="Remove price filter"
+                  >×</button>
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+
         <div className={styles["results-header"]}>
           <div className={styles["breadcrumbs"]}>
             Home › Used Cars › Used Cars in {selectedCity}

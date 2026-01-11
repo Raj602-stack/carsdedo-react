@@ -163,4 +163,10 @@
     font-weight: 600;
     margin-top: 2px;
   }
-  
+
+  .cs-city-img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    display: block;
+  }

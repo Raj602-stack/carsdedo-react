@@ -24,9 +24,15 @@ export default function CarCard({ car }) {
       <div className={styles["car-image-wrap"]}>
         <img
           src={car.image}
-          alt={car.title}
+          alt={car.title || "Car image"}
           className={styles["car-image"]}
-          onError={(e) => (e.target.src = "/cars/default-car.png")}
+          loading="lazy"
+          onError={(e) => {
+            // Prevent infinite loop by checking if already on fallback
+            if (!e.target.src.includes('placeholder-car.png')) {
+              e.target.src = process.env.PUBLIC_URL + "/placeholder-car.png";
+            }
+          }}
         />
       </div>
 

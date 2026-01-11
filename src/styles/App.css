@@ -1,7 +1,24 @@
 :root {
+  /* New Color Scheme - Light Gray with Blue Accents */
+  --bg-primary: #f5f5f5;
+  --bg-white: #ffffff;
+  --bg-light: #f8f8f8;
+  
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  
+  --border-light: #e0e0e0;
+  --border-medium: #d0d0d0;
+  
+  --accent-blue: #007bff;
+  --accent-blue-light: rgba(0, 123, 255, 0.1);
+  --accent-blue-hover: #0056b3;
+  
+  /* Legacy variables for backward compatibility */
   --purple: #041e36;
   --purple-dark: #2d0738;
-  --accent: #e93b68;
+  --accent: #007bff;
   --topbar-height: 72px;
   --subnav-height: 50px;
 }
@@ -339,32 +356,35 @@ body {
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* ---------- HERO / CAROUSEL ---------- */
+/* ---------- HERO / CAROUSEL - Elegant Redesign ---------- */
 .hero {
   position: relative;
   overflow: hidden;
+  background: linear-gradient(135deg, #0c213a 0%, #1a2d4a 100%);
 }
 
 /* dynamic height */
 .carousel {
   position: relative;
   width: 100%;
-  height: 65vh;
-  min-height: 360px;
-  max-height: 700px;
+  height: 70vh;
+  min-height: 500px;
+  max-height: 800px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .slide {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   opacity: 0;
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   display: block;
 }
+
 .slide.active {
   opacity: 1;
 }
@@ -376,93 +396,147 @@ body {
   object-fit: cover;
   object-position: 70% 50%;
   display: block;
-  filter: brightness(0.7) saturate(1.1);
+  filter: brightness(0.75) saturate(1.15);
 }
 
-/* left gradient overlay for contrast */
+/* Elegant gradient overlay for contrast */
 .carousel::before {
   content: "";
   position: absolute;
   left: 0;
   top: 0;
-  width: 48%;
+  width: 50%;
   height: 100%;
   pointer-events: none;
-  background: linear-gradient(90deg, rgba(15, 15, 15, 0.65) 0%, rgba(15, 15, 15, 0.25) 40%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(12, 33, 58, 0.75) 0%,
+    rgba(12, 33, 58, 0.4) 45%,
+    rgba(12, 33, 58, 0) 100%
+  );
   z-index: 2;
 }
 
-/* hero text */
+/* hero text - elegant typography */
 .hero-text {
   position: absolute;
   top: 50%;
-  left: 6%;
+  left: 8%;
   transform: translateY(-50%);
   color: #fff;
-  max-width: 46%;
+  max-width: 500px;
   z-index: 3;
 }
+
 .hero-text h1 {
-  font-size: clamp(1.6rem, 3.2vw, 3rem);
-  margin: 6px 0;
-  font-weight: 700;
-}
-.hero-text p {
-  margin: 6px 0 16px;
-  font-size: clamp(0.9rem, 1.1vw, 1.2rem);
-  opacity: 0.95;
-}
-.primary {
-  background: var(--accent);
-  border: none;
-  padding: 12px 20px;
-  border-radius: 10px;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(233, 59, 104, 0.18);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  margin: 0 0 16px 0;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  color: #ffffff;
 }
 
-/* arrows */
+.hero-text p {
+  margin: 0 0 28px 0;
+  font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+  opacity: 0.95;
+  font-weight: 500;
+  line-height: 1.5;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.primary {
+  background: linear-gradient(135deg, #e15367 0%, #e93b68 100%);
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(225, 83, 103, 0.35);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.3px;
+}
+
+.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(225, 83, 103, 0.45);
+}
+
+.primary:active {
+  transform: translateY(0);
+}
+
+/* Elegant arrows */
 .arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.22);
-  border: none;
-  width: 40px;
-  height: 40px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   cursor: pointer;
   z-index: 4;
-}
-.arrow.left {
-  left: 14px;
-}
-.arrow.right {
-  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #fff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 300;
 }
 
-/* dots */
+.arrow:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.arrow.left {
+  left: 24px;
+}
+
+.arrow.right {
+  right: 24px;
+}
+
+/* Elegant dots */
 .dots {
   position: absolute;
-  right: 18px;
-  bottom: 18px;
+  right: 24px;
+  bottom: 24px;
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: 10px;
   z-index: 4;
 }
+
 .dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.4);
   display: inline-block;
   cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
 }
-.dot.active {
-  background: white;
+
+.dot:hover {
+  background: rgba(255, 255, 255, 0.6);
   transform: scale(1.2);
+}
+
+.dot.active {
+  background: #e15367;
+  width: 10px;
+  height: 10px;
+  box-shadow: 0 0 0 3px rgba(225, 83, 103, 0.3);
 }
 
 /* ---------- TOGGLE PILL ---------- */
@@ -500,20 +574,27 @@ body {
   box-shadow: 0 8px 18px rgba(63, 15, 90, 0.18);
 }
 
-/* ---------- BENEFITS ---------- */
+/* ---------- BENEFITS - Elegant Redesign ---------- */
 .benefits {
-  padding: 36px 20px;
-  background: linear-gradient(#f3e9f6, #fff);
+  padding: 60px 20px;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
   text-align: center;
 }
+
 .benefits h2 {
-  color: var(--purple);
-  margin-bottom: 18px;
+  color: #0c213a;
+  margin-bottom: 40px;
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -1px;
 }
+
 .cards {
   display: flex;
-  gap: 18px;
+  gap: 24px;
   justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
   flex-wrap: wrap;
 }
 .card {

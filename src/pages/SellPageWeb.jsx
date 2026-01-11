@@ -2,7 +2,7 @@
 import React from "react";
 import SellCarHero from "../components/SellCarHero";
 import styles from "../styles/SellPageWeb.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SellHowItWorks from "../components/SellHowItWorks";
 import ReviewsSlider from "../components/ReviewsSlider";
 import SellStats from "../components/SellStats";
@@ -48,6 +48,7 @@ const REVIEWS = [
   
 
 export default function SellPageWeb() {
+    const navigate = useNavigate();
     const logoPath = process.env.PUBLIC_URL + "/carsdedo-background.png";
   return (
     <div className={styles.page}>
@@ -65,7 +66,12 @@ export default function SellPageWeb() {
 
           <div className={styles.headerCtas}>
             <button className={styles.btnOutline}>Login</button>
-            <button className={styles.btnPrimary}>Sell Your Car</button>
+            <button 
+              className={styles.btnPrimary}
+              onClick={() => navigate("/sell")}
+            >
+              Sell Your Car
+            </button>
           </div>
         </div>
       </header>

@@ -10,6 +10,7 @@ import EMICalculator from "../components/EMICalculator";
 
 import { useCars } from "../context/CarsContext";
 import { normalizeCar } from "../utils"; // or wherever you placed it
+import Loader from "../components/Loader";
 
 
 /**
@@ -70,6 +71,7 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
   const reportRef = useRef(null);
   const specsRef = useRef(null);
   const financeRef = useRef(null);
+  const reasonsRef = useRef(null);
   const rightRef = useRef(null);
   const rightCardRef = useRef(null);
 
@@ -462,6 +464,10 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
     };
   }, [showReportDrawer]);
 
+  if (loading) {
+    return <Loader message="Loading car details..." fullScreen={true} />;
+  }
+
   if (!car) {
     return (
       <div className={styles.carDetailsPageWrapper}>
@@ -563,17 +569,21 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
               <div className={styles.overviewRow}>
                 <div className={styles.overviewField}>
                   <div className={styles.fieldLabel}>Make Year</div>
-                  <div className={styles.fieldValue}>May 2024</div>
+                  <div className={styles.fieldValue}>
+                    {car.makeYear ? (typeof car.makeYear === 'string' && car.makeYear.includes('-') ? car.makeYear : car.makeYear.toString()) : (car.year ? car.year.toString() : "-")}
+                  </div>
                 </div>
 
                 <div className={styles.overviewField}>
                   <div className={styles.fieldLabel}>Registration Year</div>
-                  <div className={styles.fieldValue}>Jun 2024</div>
+                  <div className={styles.fieldValue}>
+                    {car.regYear ? (typeof car.regYear === 'string' && car.regYear.includes('-') ? car.regYear : car.regYear.toString()) : (car.year ? car.year.toString() : "-")}
+                  </div>
                 </div>
 
                 <div className={styles.overviewField}>
                   <div className={styles.fieldLabel}>Fuel Type</div>
-                  <div className={styles.fieldValue}>{car.fuel}</div>
+                  <div className={styles.fieldValue}>{car.fuel || "-"}</div>
                 </div>
               </div>
 
@@ -586,7 +596,7 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
 
                 <div className={styles.overviewField}>
                   <div className={styles.fieldLabel}>Transmission</div>
-                  <div className={styles.fieldValue}>{car.transmission}</div>
+                  <div className={styles.fieldValue}>{car.transmission || "-"}</div>
                 </div>
 
                 <div className={styles.overviewField}>
@@ -599,17 +609,40 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
               <div className={styles.overviewRow}>
                 <div className={styles.overviewField}>
                   <div className={styles.fieldLabel}>Insurance Validity</div>
-                  <div className={styles.fieldValue}>Jun 2026</div>
+                  <div className={styles.fieldValue}>
+                    {(() => {
+                      if (!car.insuranceValid) return "-";
+                      try {
+                        // Format date like "2026-08-10" to "Aug 2026"
+                        if (typeof car.insuranceValid === 'string' && car.insuranceValid.includes('-')) {
+                          const date = new Date(car.insuranceValid);
+                          if (!isNaN(date.getTime())) {
+                            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                            return `${months[date.getMonth()]} ${date.getFullYear()}`;
+                          }
+                        }
+                        return car.insuranceValid;
+                      } catch (e) {
+                        return car.insuranceValid;
+                      }
+                    })()}
+                  </div>
                 </div>
 
                 <div className={styles.overviewField}>
                   <div className={styles.fieldLabel}>Insurance Type</div>
-                  <div className={styles.fieldValue}>Comprehensive</div>
+                  <div className={styles.fieldValue}>
+                    {car.insuranceType 
+                      ? (typeof car.insuranceType === 'string' 
+                          ? car.insuranceType.charAt(0).toUpperCase() + car.insuranceType.slice(1).toLowerCase()
+                          : car.insuranceType)
+                      : "-"}
+                  </div>
                 </div>
 
                 <div className={styles.overviewField}>
                   <div className={styles.fieldLabel}>RTO</div>
-                  <div className={styles.fieldValue}>UP14</div>
+                  <div className={styles.fieldValue}>{car.locationRto || "-"}</div>
                 </div>
               </div>
 
@@ -617,241 +650,239 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
               <div className={`${styles.overviewRow} ${styles.locationRow}`}>
                 <div>
                   <div className={styles.locationLabel}>Car Location</div>
-                  <div className={styles.locationValue}>{car.city}</div>
+                  <div className={styles.locationValue}>{car.locationFull || car.city || "-"}</div>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* REPORT - integrated design (keeps previous structure but upgraded visuals) */}
-         {/* REPORT */}
+          {/* REPORT - using actual inspection data */}
 <section id="report" ref={reportRef} data-section="report" className={`${styles.cdSection} ${styles.reportSection}`}>
-  <h2 className={styles.cdSectionTitle}>Quality report</h2>
-  <p className={styles.meta}>1571 parts evaluated by 5 automotive experts</p>
+  <h2 className={styles.cdSectionTitle}>Quality Report</h2>
+  {(() => {
+    // Calculate total parts
+    const totalParts = car?.inspections 
+      ? car.inspections.reduce((total, insp) => 
+          total + insp.subsections.reduce((subTotal, sub) => subTotal + sub.items.length, 0), 0
+        )
+      : 0;
+    
+    // Helper to calculate score
+    const calculateScore = (items) => {
+      if (!items || items.length === 0) return 0;
+      const statusValues = { flawless: 10, minor: 7, major: 4 };
+      const total = items.reduce((sum, item) => sum + (statusValues[item.status] || 5), 0);
+      return (total / items.length).toFixed(1);
+    };
+    
+    // Helper to get rating
+    const getRating = (score) => {
+      const num = parseFloat(score);
+      if (num >= 9) return "Excellent";
+      if (num >= 7) return "Good";
+      if (num >= 5) return "Average";
+      return "Fair";
+    };
+    
+    // Get systems from inspections
+    const systems = car?.inspections?.length > 0
+      ? car.inspections.map((inspection) => {
+          const allItems = inspection.subsections.flatMap(sub => sub.items);
+          const score = calculateScore(allItems);
+          return {
+            category: inspection.title,
+            description: inspection.subsections[0]?.title || "",
+            score: parseFloat(score),
+            rating: getRating(score),
+            key: inspection.key,
+          };
+        })
+      : [];
+    
+    // Extract positive findings
+    const findings = car?.inspections
+      ? car.inspections
+          .flatMap(inspection => 
+            inspection.subsections.flatMap(sub => 
+              sub.items
+                .filter(item => item.status === 'flawless')
+                .slice(0, 3)
+                .map(item => item.name)
+            )
+          )
+          .slice(0, 3)
+      : [];
+    
+    if (systems.length === 0) return null;
+    
+    return (
+      <>
+        <p className={styles.meta}>{totalParts} parts evaluated by automotive experts</p>
 
-  <div className={styles.reportSummaryCard}>
-    {/* top badges */}
-    <div className={styles.badgesRow}>
-      <span className={styles.badge}>✓ Meter not tampered</span>
-      <span className={styles.badge}>✓ Non-flooded</span>
-      <span className={styles.badge}>✓ Core structure intact</span>
-    </div>
+        <div className={styles.reportSummaryCard}>
+          {/* top badges */}
+          {findings.length > 0 && (
+            <div className={styles.badgesRow}>
+              {findings.map((finding, idx) => (
+                <span key={idx} className={styles.badge}>✓ {finding}</span>
+              ))}
+            </div>
+          )}
 
-    {/* main two-column inside the card */}
-   {/* main two-column inside the card */}
-<div className={styles.reportGridTwoCol}>
-  {/* LEFT: stacked list with icons, descriptions and their individual ratings */}
-  <div className={styles.reportLeftList}>
-    <div className={styles.reportLeftItem}>
-      <div className={styles.reportLeftIcon}>🛠</div>
-      <div className={styles.reportLeftText}>
-        <div className={styles.reportLeftTitle}>Core systems</div>
-        <div className={styles.reportLeftSub}>Engine, transmission & chassis</div>
-      </div>
+          {/* main two-column inside the card */}
+          <div className={styles.reportGridTwoCol}>
+            {/* LEFT: stacked list with icons, descriptions and their individual ratings */}
+            <div className={styles.reportLeftList}>
+              {systems.map((system, idx) => (
+                <div key={idx} className={styles.reportLeftItem}>
+                  <div className={styles.reportLeftIcon}>
+                    {idx === 0 ? '🛠' : idx === 1 ? '🎧' : '⚙️'}
+                  </div>
+                  <div className={styles.reportLeftText}>
+                    <div className={styles.reportLeftTitle}>{system.category}</div>
+                    <div className={styles.reportLeftSub}>{system.description}</div>
+                  </div>
 
-      {/* rating for Core systems */}
-      <div className={styles.itemRatingWrap}>
-        <div className={styles.scorePillLarge}>
-          <div className={styles.scoreNumLarge}>9.8</div>
-          <div className={styles.scoreLabelSmall}>Excellent</div>
-        </div>
-      </div>
-    </div>
-
-    <div className={styles.reportLeftItem}>
-      <div className={styles.reportLeftIcon}>🎧</div>
-      <div className={styles.reportLeftText}>
-        <div className={styles.reportLeftTitle}>Interiors & AC</div>
-        <div className={styles.reportLeftSub}>Seats, AC, audio & other features</div>
-      </div>
-
-      {/* rating for Interiors */}
-      <div className={styles.itemRatingWrap}>
-        <div className={styles.scorePillLarge}>
-          <div className={styles.scoreNumLarge}>9.7</div>
-          <div className={styles.scoreLabelSmall}>Excellent</div>
-        </div>
-      </div>
-    </div>
-
-    <div className={styles.reportLeftItem}>
-      <div className={styles.reportLeftIcon}>⚙️</div>
-      <div className={styles.reportLeftText}>
-        <div className={styles.reportLeftTitle}>Wear & tear parts</div>
-        <div className={styles.reportLeftSub}>Tyres, clutch, brakes & more</div>
-      </div>
-
-      {/* rating for Wear & tear */}
-      <div className={styles.itemRatingWrap}>
-        <div className={styles.scorePillLarge}>
-          <div className={styles.scoreNumLarge}>9.6</div>
-          <div className={styles.scoreLabelSmall}>Good</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {/* RIGHT: keep CTA at bottom-right and keep the extra small score pill (9.3) */}
-  <div className={styles.reportRightCol}>
-   
-
-    <div className={styles.reportRightBottom}>
-      <div className={styles.nextServiceWithExtra}>
-        <div className={styles.nextServiceText}>No immediate servicing required</div>
-
-        {/* optional extra summary score (kept from original 4th pill) */}
-       
-      </div>
-
-      <button type="button" className={styles.viewReportBtn} onClick={openReportDrawer}>
-        View full report
-      </button>
-    </div>
-  </div>
-</div>
-
-  </div>
-</section>
-
-{/*specs*/ }
-  {/* Specs section (place above features on the page) */}
-
-  <section data-section="specs" ref={specsRef} >
-  <section className={styles.specsSection}>
-        <h2 className={styles.specsTitle}>Car Specifications</h2>
-
-        <div className={styles.specsCard}>
-          <div className={styles.specsGrid}>
-            {sampleSpecs.slice(0, 3).map((s) => (
-              <div key={s.id} className={styles.specCell}>
-                <div className={styles.specIcon}>{s.icon}</div>
-                <div className={styles.specMeta}>
-                  <div className={styles.specLabel}>{s.label}</div>
-                  <div className={styles.specValue}>{s.value}</div>
+                  {/* rating */}
+                  <div className={styles.itemRatingWrap}>
+                    <div className={styles.scorePillLarge}>
+                      <div className={styles.scoreNumLarge}>{system.score}</div>
+                      <div className={styles.scoreLabelSmall}>{system.rating}</div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-
-          {/* single-line displacement below */}
-          <div className={styles.specRowSeparator} />
-
-          <div className={styles.specsFooter}>
-            <div className={styles.specsLeft}>
-              <div className={styles.specIcon}>🔩</div>
-              <div>
-                <div className={styles.specLabel}>Displacement</div>
-                <div className={styles.specValue}>1956 cc</div>
-              </div>
+              ))}
             </div>
 
-            <div className={styles.specsActions}>
-              <button
-                type="button"
-                className={styles.viewAllSpecsBtn}
-                onClick={() => openDrawerTab("specs")}
-                aria-haspopup="dialog"
-                aria-expanded={drawerOpen}
-              >
-                VIEW ALL SPECIFICATIONS
-              </button>
+            {/* RIGHT: CTA */}
+            <div className={styles.reportRightCol}>
+              <div className={styles.reportRightBottom}>
+                <div className={styles.nextServiceWithExtra}>
+                  <div className={styles.nextServiceText}>No immediate servicing required</div>
+                </div>
+
+                <button type="button" className={styles.viewReportBtn} onClick={openReportDrawer}>
+                  View full report
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </section>
+      </>
+    );
+  })()}
+</section>
 
-      {/* ... your other page content (features, etc.) ... */}
-
-      {/* Right Drawer (Features + Specs) */}
-      <RightDrawer
-           open={drawerOpen}
-           activeTab={drawerTab}
-           onClose={closeDrawer}
-           specs={sampleSpecs}
-           features={sampleFeatures}
-           onTabChange={(tab) => setDrawerTab(tab)}
-      />
-
-   
-      
-
-
-          {/* SPECS */}
-          <section className={styles.featuresSection}>
-  <h2 className={styles.featuresTitle}>Top Features of this car</h2>
-
-  <div className={styles.featuresCard}>
-    <div className={styles.featuresColumns}>
-      {/* Column 1 */}
-      <div className={styles.featuresCol}>
-        <div className={styles.featuresColTitle}>COMFORT &amp; CONVENIENCE</div>
-
-        <div className={styles.featureRow}>
-          <span className={styles.featureTick}>✓</span>
-          <span className={styles.featureText}>Cruise control</span>
-          <button className={styles.featureIconBtn}>🖼️</button>
+{/* Reasons to Buy Section */}
+<section data-section="reasons" ref={reasonsRef} className={styles.reasonsSection}>
+  <h2 className={styles.sectionTitle}>Why Choose This Car?</h2>
+  <div className={styles.reasonsGrid}>
+    {(car?.reasonsToBuy || []).map((reason, idx) => (
+      <div key={idx} className={styles.reasonCard}>
+        <div className={styles.reasonIcon}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </div>
-
-        <div className={styles.featureRow}>
-          <span className={styles.featureTick}>✓</span>
-          <span className={styles.featureText}>Keyless start</span>
-          <button className={styles.featureIconBtn}>🖼️</button>
-        </div>
-
-        <div className={styles.featureRow}>
-          <span className={styles.featureTick}>✓</span>
-          <span className={styles.featureText}>Dual zone climate control</span>
-          <button className={styles.featureIconBtn}>ℹ️</button>
+        <div className={styles.reasonContent}>
+          <h3 className={styles.reasonTitle}>{reason.title}</h3>
+          <p className={styles.reasonDescription}>{reason.description}</p>
         </div>
       </div>
-
-      {/* Column 2 */}
-      <div className={styles.featuresCol}>
-        <div className={styles.featuresColTitle}>EXTERIOR</div>
-
-        <div className={styles.featureRow}>
-          <span className={styles.featureTick}>✓</span>
-          <span className={styles.featureText}>Sunroof</span>
-          <button className={styles.featureIconBtn}>🖼️</button>
-        </div>
-
-        <div className={styles.featureRow}>
-          <span className={styles.featureTick}>✓</span>
-          <span className={styles.featureText}>Rain sensing wipers</span>
-          <button className={styles.featureIconBtn}>ℹ️</button>
-        </div>
-      </div>
-
-      {/* Column 3 */}
-      <div className={styles.featuresCol}>
-        <div className={styles.featuresColTitle}>SAFETY</div>
-
-        <div className={styles.featureRow}>
-          <span className={styles.featureTick}>✓</span>
-          <span className={styles.featureText}>Airbags</span>
-          <button className={styles.featureIconBtn}>🖼️</button>
-        </div>
-
-        <div className={styles.featureRow}>
-          <span className={styles.featureTick}>✓</span>
-          <span className={styles.featureText}>Rear camera</span>
-          <button className={styles.featureIconBtn}>ℹ️</button>
-        </div>
-      </div>
-    </div>
-
-    <div className={styles.featuresCardFooter}>
-      <button
-        type="button"
-        className={styles.viewAllFeaturesBtn}
-        onClick={openFeaturesDrawer}
-      >
-        VIEW ALL FEATURES
-      </button>
-    </div>
+    ))}
   </div>
 </section>
+
+{/* Specs Section */}
+<section data-section="specs" ref={specsRef} className={styles.specsSection}>
+  <h2 className={styles.sectionTitle}>Car Specifications</h2>
+  <p className={styles.sectionSubtitle}>Detailed technical specifications</p>
+  
+  {(() => {
+    const specsByCategory = {};
+    if (car?.specs && car.specs.length > 0) {
+      car.specs.forEach(spec => {
+        if (!specsByCategory[spec.category]) {
+          specsByCategory[spec.category] = [];
+        }
+        specsByCategory[spec.category].push(spec);
+      });
+    }
+    const categories = Object.keys(specsByCategory);
+    
+    return categories.length > 0 ? (
+      <div className={styles.specsCategories}>
+        {categories.map((category, catIdx) => (
+          <div key={catIdx} className={styles.specCategory}>
+            <h3 className={styles.categoryTitle}>{category}</h3>
+            <div className={styles.specsGrid}>
+              {specsByCategory[category].map((spec, specIdx) => (
+                <div key={specIdx} className={styles.specItem}>
+                  <div className={styles.specLabel}>{spec.label}</div>
+                  <div className={styles.specValue}>{spec.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : null;
+  })()}
+  
+  <div className={styles.specsActions}>
+    <button
+      type="button"
+      className={styles.viewAllBtn}
+      onClick={() => openDrawerTab("specs")}
+    >
+      VIEW ALL SPECIFICATIONS
+    </button>
+  </div>
 </section>
+
+{/* Features Section */}
+<section data-section="features" className={styles.featuresSection}>
+  <h2 className={styles.sectionTitle}>Car Features</h2>
+  <p className={styles.sectionSubtitle}>All the features this car has to offer</p>
+  
+  <div className={styles.featuresCategories}>
+    {(car?.featuresByCategory || []).slice(0, 3).map((category, catIdx) => (
+      <div key={catIdx} className={styles.featureCategory}>
+        <h3 className={styles.categoryTitle}>{category.category}</h3>
+        <div className={styles.featuresList}>
+          {category.items.slice(0, 6).map((feature, featIdx) => (
+            <div key={featIdx} className={styles.featureItem}>
+              <svg className={styles.featureCheck} width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <span className={styles.featureName}>{feature}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+  
+  <div className={styles.featuresActions}>
+    <button
+      type="button"
+      className={styles.viewAllBtn}
+      onClick={openFeaturesDrawer}
+    >
+      VIEW ALL FEATURES
+    </button>
+  </div>
+</section>
+
+{/* Right Drawer (Features + Specs) */}
+<RightDrawer
+  open={drawerOpen}
+  activeTab={drawerTab}
+  onClose={closeDrawer}
+  specs={car?.specs || []}
+  features={car?.featuresByCategory || []}
+  onTabChange={(tab) => setDrawerTab(tab)}
+/>
 
           {/* FINANCE */}
           {/* <section id="finance" ref={financeRef} data-section="finance" className={styles.cdSection}>
@@ -920,7 +951,11 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
  type="button" className={styles.btnBook}>
                   BOOK NOW
                 </button>
-                <button type="button" className={styles.btnTest}>
+                <button 
+                  type="button" 
+                  className={styles.btnTest}
+                  onClick={() => navigate(`/test-drive/${car.id}`)}
+                >
                   FREE TEST DRIVE
                 </button>
               </div>

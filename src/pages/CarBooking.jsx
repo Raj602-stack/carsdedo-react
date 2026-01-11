@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import styles from "../styles/CarBooking.module.css";
+import { useCars } from "../context/CarsContext";
+import Loader from "../components/Loader";
 import { 
   FaCar, 
   FaHome, 
@@ -20,7 +22,28 @@ const BOOKING_AMOUNT = 50000;
 export default function CarBooking() {
   const { id } = useParams();
   const location = useLocation();
-  const car = location.state?.car;
+  const { cars, loading } = useCars();
+  
+  // Get car from state or fetch from context
+  const car = useMemo(() => {
+    if (location.state?.car) {
+      return location.state.car;
+    }
+    // Fallback to fetching from context
+    return cars.find((c) => String(c.id) === String(id)) || null;
+  }, [location.state, cars, id]);
+
+  // Ensure car image is properly formatted (must be before early returns)
+  const carImage = useMemo(() => {
+    if (!car) return process.env.PUBLIC_URL + "/placeholder-car.png";
+    if (car.image && car.image.startsWith('http')) {
+      return car.image;
+    }
+    if (car.images?.exterior?.[0]?.image) {
+      return `http://localhost:8000${car.images.exterior[0].image}`;
+    }
+    return process.env.PUBLIC_URL + "/placeholder-car.png";
+  }, [car]);
 
   const [loanRequired, setLoanRequired] = useState(false);
   const [testDrive, setTestDrive] = useState(null);
@@ -32,6 +55,10 @@ export default function CarBooking() {
     email: "",
     preferredTime: "morning"
   });
+
+  if (loading) {
+    return <Loader message="Loading car details..." fullScreen={true} />;
+  }
 
   if (!car) {
     return (
@@ -203,7 +230,16 @@ export default function CarBooking() {
         <div className={styles.right}>
           <div className={styles.summaryCard}>
             <div className={styles.carImageContainer}>
-              <img src={car.image} alt={car.title} className={styles.carImage} />
+              <img 
+                src={carImage} 
+                alt={car.title} 
+                className={styles.carImage}
+                onError={(e) => {
+                  if (!e.target.src.includes('placeholder-car.png')) {
+                    e.target.src = process.env.PUBLIC_URL + "/placeholder-car.png";
+                  }
+                }}
+              />
               <div className={styles.carBadge}>Reserved</div>
             </div>
 

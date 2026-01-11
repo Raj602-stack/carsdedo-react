@@ -1,64 +1,58 @@
-import React, { forwardRef } from "react";
-import "../styles/featuresmob.css";
-import { useNavigate } from "react-router-dom";
+import React, { forwardRef } from 'react';
+import '../styles/features.css';
 
-const FEATURES = {
-  "Entertainment & Communication": [
-    { label: "Integrated (in-dash) music system" }
-  ],
-  Exterior: [
-    { label: "Rear defogger", info: true }
-  ],
-  Safety: [
-    { label: "Parking sensors", info: true },
-    { label: "Engine immobilizer", info: true }
-  ],
-  "Comfort & Convenience": [
-    { label: "Adjustable ORVM" },
-    { label: "Glove box cooling", info: true },
-    { label: "Power windows", info: true },
-    { label: "Power steering" },
-    { label: "One touch-down power windows - Driver", info: true }
-  ]
-};
+const Features = forwardRef(({ car }, ref) => {
+  const featuresByCategory = car?.featuresByCategory || [];
 
-const Features = forwardRef(function Features(_, ref) {
-  const navigate = useNavigate();
+  if (featuresByCategory.length === 0) {
+    return null;
+  }
+
+  // Icon mapping for feature categories
+  const categoryIcons = {
+    'Exterior': '🚗',
+    'Interior': '🪑',
+    'Comfort & Convenience': '✨',
+    'Safety': '🛡️',
+    'Entertainment': '🎵',
+    'Technology': '📱',
+    'Performance': '⚡',
+    'Other': '📋',
+  };
 
   return (
-    <section className="features-card" ref={ref}>
-      <h2 className="features-title">Top Features</h2>
-
-      {Object.entries(FEATURES).map(([category, items]) => (
-        <div key={category} className="feature-group">
-          <div className="feature-group-title">{category}</div>
-
-          {items.map((item, idx) => (
-            <div key={idx} className="feature-item">
-              <span className="feature-check">✓</span>
-
-              <span className="feature-label">{item.label}</span>
-
-              {item.info && (
-                <button className="feature-info">i</button>
-              )}
+    <section id="features" ref={ref} className="features-section">
+      <div className="features-container">
+        <h2 className="features-heading">Car Features</h2>
+        <p className="features-subtitle">All the features this car has to offer</p>
+        
+        <div className="features-categories">
+          {featuresByCategory.map((category, catIdx) => (
+            <div key={catIdx} className="feature-category">
+              <div className="category-header">
+                <span className="category-icon">{categoryIcons[category.category] || '✨'}</span>
+                <h3 className="category-title">{category.category}</h3>
+                <span className="feature-count">{category.items.length}</span>
+              </div>
+              
+              <div className="features-list">
+                {category.items.map((feature, featIdx) => (
+                  <div key={featIdx} className="feature-item">
+                    <svg className="feature-check" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <span className="feature-name">{feature}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
-      ))}
-
-      <button
-        className="view-all-features"
-        onClick={() => {
-          const el = document.querySelector("main.cd-main");
-          if (el) sessionStorage.setItem("cd_main_scroll", el.scrollTop);
-          navigate("/features");
-        }}
-      >
-        View all features
-      </button>
+      </div>
     </section>
   );
 });
+
+Features.displayName = 'Features';
 
 export default Features;

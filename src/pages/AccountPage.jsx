@@ -28,8 +28,18 @@ export default function AccountPage() {
         </div>
 
         <div className="acc-tabs">
-          <button className="tab active">Buy</button>
-          <button className="tab">Sell</button>
+          <button 
+            className="tab active"
+            onClick={() => navigate("/buy")}
+          >
+            Buy
+          </button>
+          <button 
+            className="tab"
+            onClick={() => navigate("/sell")}
+          >
+            Sell
+          </button>
           <button className="tab">Services</button>
         </div>
 

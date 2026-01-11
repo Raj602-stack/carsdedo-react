@@ -1,10 +1,14 @@
 import { useParams, useNavigate } from "react-router-dom";
-import cars from "../data/cars";
+// import cars from "../data/cars";
+import { useCars } from "../context/CarsContext";
+
 import { useMemo, useState } from "react";
 import styles from "../styles/CheckoutPage.module.css";
 import InterestFormScreen from "../components/InterestFormScreen";
 
 export default function CheckoutPage() {
+    const { cars, loading } = useCars();
+
     const [showForm, setShowForm] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -12,10 +16,27 @@ export default function CheckoutPage() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("9664573074");
 
-  const car = useMemo(
-    () => cars.find(c => c.id === Number(id)),
-    [id]
-  );
+//   const car = useMemo(
+//     () => cars.find(c => c.id === Number(id)),
+//     [id]
+//   );
+
+const car = useMemo(() => {
+    return cars.find((c) => String(c.id) === String(id)) || null;
+  }, [cars, id]);
+  console.log(car);
+
+  const images = useMemo(() => {
+    if (!car?.images) return [];
+
+    const exterior = car.images.exterior || [];
+    const interior = car.images.interior || [];
+
+    return [...exterior, ...interior]
+      .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+      .map((img) => `http://localhost:8000${img.image}`);
+  }, [car]);
+
 
   if (!car) {
     return <div className={styles.loading}>Car not found</div>;
@@ -57,7 +78,17 @@ export default function CheckoutPage() {
       {/* Car Summary */}
       <div className={styles.carCard}>
         <div className={styles.carImageWrapper}>
-          <img src={car.image} alt={car.title} className={styles.carImage} />
+          {/* <img src={car.images[0]} alt={car.title} className={styles.carImage} /> */}
+
+          <img
+  src={images[0]}
+  alt={car.title}
+  className={styles.carImage}
+  onError={(e) => {
+    e.target.src = "/placeholder-car.png";
+  }}
+/>
+
         </div>
         <div className={styles.carInfo}>
           <h2 className={styles.carTitle}>{car.title}</h2>

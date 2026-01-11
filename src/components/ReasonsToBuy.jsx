@@ -1,54 +1,48 @@
 import React, { forwardRef } from 'react';
-import styles from '../styles/ReasonsToBuy.module.css';
+import '../styles/ReasonsToBuy.css';
 
-// Using forwardRef to allow the parent to scroll to this section
-const ReasonsToBuy = forwardRef((props, ref) => {
-  const reasons = [
-    {
-      id: 1,
-      title: 'Indian Car of the Year (ICOTY)',
-      description: 'Winner of the prestigious award in 2014',
-      icon: '🏆',
-    },
-    {
-      id: 2,
-      title: 'New battery',
-      description: 'New battery for a reduced ownership cost',
-      icon: '🔋',
-    },
-    {
-      id: 3,
-      title: 'Less driven per year',
-      description: 'Usage lower than 5,000km per year',
-      icon: '🛣️',
-    }
-  ];
+const ReasonsToBuy = forwardRef(({ car }, ref) => {
+  const reasons = car?.reasonsToBuy?.length > 0 
+    ? car.reasonsToBuy
+    : [
+        {
+          title: 'Well maintained car',
+          description: 'Rare price for a well maintained car',
+        },
+        {
+          title: 'Great value',
+          description: 'Priced lower compared to its original new car on-road price',
+        }
+      ];
 
   return (
     <section 
       id="overview" 
       ref={ref} 
-      className={styles.container}
+      className="reasons-section"
     >
-      <h2 className={styles.mainHeading}>Reasons to buy</h2>
-      <div className={styles.reasonsList}>
-        {reasons.map((reason) => (
-          <div key={reason.id} className={styles.reasonItem}>
-            <div className={styles.iconWrapper}>
-              <span className={styles.icon}>{reason.icon}</span>
+      <div className="reasons-container">
+        <h2 className="reasons-heading">Why Choose This Car?</h2>
+        <div className="reasons-grid">
+          {reasons.map((reason, index) => (
+            <div key={index} className="reason-card">
+              <div className="reason-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div className="reason-content">
+                <h3 className="reason-title">{reason.title}</h3>
+                <p className="reason-description">{reason.description}</p>
+              </div>
             </div>
-            <div className={styles.textContent}>
-              <h3 className={styles.reasonTitle}>{reason.title}</h3>
-              <p className={styles.reasonDescription}>{reason.description}</p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
 });
 
-// Important: Add a display name for debugging
 ReasonsToBuy.displayName = 'ReasonsToBuy';
 
 export default ReasonsToBuy;

@@ -1,7 +1,9 @@
 import React from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import styles from "../styles/TestDriveConfirmation.module.css";
-import cars from "../data/cars";
+// import cars from "../data/cars";
+import { useCars } from "../context/CarsContext";
+
 import {
     FaTimes,
     FaRegClock
@@ -10,12 +12,29 @@ import {
 
 
 export default function TestDriveConfirmation() {
+    const { cars, loading } = useCars();
+
   const { carId } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  const car = cars.find(c => c.id === Number(carId));
+//   const car = cars.find(c => c.id === Number(carId));
+const car = React.useMemo(() => {
+    return cars.find((c) => String(c.id) === String(carId));
+  }, [cars, carId]);
 
+  const images = React.useMemo(() => {
+    if (!car?.images) return [];
+  
+    const exterior = car.images.exterior || [];
+    const interior = car.images.interior || [];
+  
+    return [...exterior, ...interior]
+      .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+      .map((img) => `http://localhost:8000${img.image}`);
+  }, [car]);
+  
+console.log(images);
   if (!car || !state) {
     return <p style={{ padding: 20 }}>Invalid test drive</p>;
   }
@@ -77,12 +96,17 @@ export default function TestDriveConfirmation() {
       </div> */}
 
 <section className={styles.carCard}>
-        <img src={car.image} alt="car" />
+        <img src={images[0]} alt="car" />
         <div>
-          <h3>2015 Hyundai Grand i10 Sportz 1.2</h3>
+          {/* <h3>2015 Hyundai Grand i10 Sportz 1.2</h3>
           <p>36K Km · Petrol · Manual</p>
           <strong>₹ 3.53 Lakh</strong>
-          <span>EMI ₹7,576 /mo</span>
+          <span>EMI ₹7,576 /mo</span> */}
+          <h3>{car.title}</h3>
+<p>{car.km} Km · {car.fuel} · {car.transmission}</p>
+<strong>₹ {car.price}</strong>
+<span>EMI ₹{car.emi} /mo</span>
+
         </div>
       </section>
     </div>

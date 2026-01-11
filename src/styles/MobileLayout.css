@@ -1,10 +1,11 @@
 /* MobileLayout.css - updated topbar to match screenshot */
 
 :root{
-    --ml-bg: #2d063b;       /* deep purple */
+    --ml-bg: #0c213a;       /* dark navy blue */
+    --ml-bg-light: #1a3452; /* slightly lighter navy for buttons */
     --ml-accent: #e93b68;   /* pink/red CTA */
     --ml-white: #ffffff;
-    --ml-muted: rgba(255,255,255,0.08);
+    --ml-muted: rgba(255,255,255,0.1);
     --ml-pill-bg: rgba(255,255,255,0.95);
   }
   
@@ -14,29 +15,126 @@
     /* min-width: 100vw; */
     display: flex;
     flex-direction: column;
-    background: #e38c3a65;
+    background: #f8fafc;
     color: var(--ml-white);
     -webkit-font-smoothing: antialiased;
   }
   
   /* Topbar container (two stacked rows) */
   .ml-topbar {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 80;
-    background: #de8d4a;
-    padding: 10px 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.22);
+    background: linear-gradient(135deg, #0c213a 0%, #1a3452 50%, #0c213a 100%);
+    padding: 0;
+    box-shadow: 
+      0 4px 16px rgba(12, 33, 58, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    overflow: hidden; /* Hide overflow so row2 slides up inside */
   }
   
-  /* ROW 1 - hamburger, logo (left) & Sell/Buy (right) */
+  /* Beautiful gradient overlay for depth - only on row1 */
+  .ml-topbar-row1::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      transparent 30%,
+      transparent 70%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  /* Ensure content is above gradient overlay */
+  .ml-topbar-row1 > * {
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* ROW 1 - hamburger, logo (left) & Sell/Buy (right) - Always fixed at top */
   .ml-topbar-row1 {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    padding: 10px 12px;
+    position: relative;
+    z-index: 3; /* Higher z-index to stay above row2 */
+    background: linear-gradient(135deg, #0c213a 0%, #1a3452 50%, #0c213a 100%);
+    box-shadow: 0 2px 8px rgba(12, 33, 58, 0.3);
+    min-height: 56px; /* Fixed height for row1 */
+  }
+  
+  /* Compact search/location inside row1 - appears when collapsed */
+  .ml-row1-compact {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    margin: 0 10px;
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: all 0.25s ease;
+    max-width: 0;
+    overflow: hidden;
+  }
+  
+  .ml-row1-compact.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    max-width: 100%;
+  }
+  
+  .ml-location-compact {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 12px;
+    color: #ffffff;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
+  .ml-search-wrap-compact {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 4px 6px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+  }
+  
+  .ml-search-placeholder {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: rgba(237, 227, 227, 0.9);
+    font-size: 13px;
+    padding: 2px 4px;
+    pointer-events: none;
   }
   
   /* left cluster (hamburger + logo) */
@@ -51,23 +149,32 @@
     display: flex;
     gap: 12px;
     align-items: center;
+    margin-left: auto;
   }
   
   /* top actions (Sell/Buy) */
   .ml-top-action {
-    color: rgba(255,255,255,0.8);
+    color: rgba(255,255,255,0.9);
     background: transparent;
     border: none;
     font-weight: 700;
     font-size: 14px;
-    padding: 6px 8px;
-    border-radius: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
     cursor: pointer;
-    opacity: 0.95;
+    transition: all 0.2s ease;
+  }
+  .ml-top-action:hover {
+    color: var(--ml-white);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
   .ml-top-action--active {
     color: var(--ml-white);
-    opacity: 1;
+    background: linear-gradient(135deg, var(--ml-bg-light) 0%, rgba(26, 52, 82, 0.8) 100%);
+    box-shadow: 
+      0 2px 6px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
   
   /* brand logo sizing */
@@ -80,6 +187,7 @@
     height: 26px;
     display: block;
     object-fit: contain;
+    filter: brightness(0) invert(1); /* Make logo white */
   }
   
   /* generic small control */
@@ -101,31 +209,118 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    background: var(--ml-muted);
+    background: linear-gradient(135deg, var(--ml-bg-light) 0%, rgba(26, 52, 82, 0.8) 100%);
     border-radius: 10px;
+    color: var(--ml-white);
+    font-size: 18px;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 2px 6px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
   
-  /* ROW 2 - location pill and search */
+  .ml-hamburger:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 
+      0 4px 10px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  
+  /* ROW 2 - location pill and search - Expanded layout */
   .ml-topbar-row2 {
     display: flex;
     gap: 10px;
     align-items: center;
+    padding: 0 12px 10px 12px;
+    position: relative;
+    z-index: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease, padding 0.3s ease, height 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 70px;
+    height: auto;
+    overflow: hidden;
   }
   
-  /* location pill */
+  /* Hide row2 when collapsed - slides up inside topbar */
+  .ml-topbar-row2.hidden {
+    opacity: 0;
+    transform: translateY(-100%);
+    max-height: 0;
+    height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
+  }
+  
+  /* location pill - Dark Navy Theme with Gradient */
   .ml-location {
-    display:flex;
-    gap:8px;
-    align-items:center;
-    padding: 8px 12px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 24px;
-    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     font-size: 14px;
-    color: var(--ml-white);
-    border: 1px solid rgba(255,255,255,0.04);
+    color: #ffffff;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.2px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     min-width: 92px;
     justify-content: center;
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  /* Shiny effect - slides across on hover */
+  .ml-location::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    transition: left 0.6s ease;
+  }
+
+  .ml-location:hover::before {
+    left: 100%;
+  }
+
+  .ml-location:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.1) 100%);
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .ml-location:active,
+  .ml-location:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.35);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.12) 100%);
   }
   
   /* search wrap spans remaining width */
@@ -135,12 +330,16 @@
     max-width: 100%;
     display: flex;
     align-items: center;
-    gap: 8px;
-    background: rgba(231, 226, 226, 0.03);
-    padding: 8px;
-    border-radius: 28px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.03);
+    gap: 6px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 6px 8px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
   
   /* search input styling */
@@ -151,8 +350,9 @@
     border: 0;
     outline: none;
     color: rgba(255, 255, 255, 0.95);
-    font-size: 14px;
-    padding: 6px 8px;
+    font-size: 13px;
+    padding: 4px 6px;
+    line-height: 1.4;
   }
   
   .ml-search-input::placeholder {
@@ -161,23 +361,48 @@
   }
   /* search icon button on right */
   .ml-search-icon {
-    background: rgba(255,255,255,0.04);
-    border-radius: 10px;
-    width: 40px;
-    height: 36px;
+    background: linear-gradient(135deg, var(--ml-bg-light) 0%, rgba(26, 52, 82, 0.8) 100%);
+    border-radius: 8px;
+    width: 32px;
+    height: 28px;
     display:flex;
     align-items:center;
     justify-content:center;
-    border: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     cursor: pointer;
     color: var(--ml-white);
+    transition: all 0.2s ease;
+    box-shadow: 
+      0 2px 6px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    font-size: 14px;
+    flex-shrink: 0;
   }
   
-  /* Main content below topbar */
+  .ml-search-icon:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 
+      0 4px 10px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+  
+  /* Main content below topbar - add padding to account for fixed header */
   .ml-main {
     flex: 1 1 auto;
     padding: 7px;
-    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.02) 100%);
+    padding-top: 60px; /* Base space for fixed topbar row1 only */
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    transition: padding-top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-x: hidden; /* Prevent horizontal scroll during page transitions */
+    position: relative;
+  }
+  
+  /* When row2 is visible, add more top padding */
+  .ml-main:has(+ .ml-topbar-row2:not(.ml-row2-hidden)),
+  .ml-root:has(.ml-topbar-row2:not(.ml-row2-hidden)) .ml-main {
+    padding-top: 130px; /* Space for both rows when visible */
   }
   
   /* small responsive tweaks */

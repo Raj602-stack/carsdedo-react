@@ -14,6 +14,8 @@ import FooterMobile from "../components/FooterMobile";
 import CarImageCarousel from "../components/CarImageCarousel";
 
 import { useCars } from "../context/CarsContext";
+import { normalizeCar } from "../utils";
+import Loader from "../components/Loader";
 
 
 
@@ -31,13 +33,53 @@ const location = useLocation();
 
 const passedCar = location.state?.car ?? null;
 
-console.log(passedCar);
+console.log('passedCar from location.state:', passedCar);
 
-const car = React.useMemo(() => {
-  if (passedCar) return passedCar;
+// Always get the raw car from context to ensure we have the original API data
+// The passed car might be normalized, so we need the raw data for proper normalization
+const rawCar = React.useMemo(() => {
+  // Always prefer raw car from context to ensure we have insurance_valid_till, insurance_type, etc.
   if (!cars || !id) return null;
-  return cars.find((c) => String(c.id) === String(id)) || null;
-}, [passedCar, cars, id]);
+  const rawCarFromContext = cars.find((c) => String(c.id) === String(id));
+  
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Raw car from context:', rawCarFromContext);
+    console.log('Has insurance_valid_till?', rawCarFromContext?.insurance_valid_till);
+    console.log('Has insurance_type?', rawCarFromContext?.insurance_type);
+  }
+  
+  return rawCarFromContext || null;
+}, [cars, id]);
+
+const car = rawCar ? normalizeCar(rawCar) : null;
+
+// Debug: Log the normalized car data being used in CarDetails
+React.useEffect(() => {
+  if (car && process.env.NODE_ENV === 'development') {
+    console.log('=== CarDetails - Normalized Car Data ===');
+    console.log('Full normalized car object:', car);
+    console.log('Insurance fields:', {
+      insuranceValid: car.insuranceValid,
+      insuranceType: car.insuranceType,
+    });
+    console.log('Location fields:', {
+      locationRto: car.locationRto,
+      locationFull: car.locationFull,
+      city: car.city,
+    });
+    console.log('Owner info:', {
+      owner: car.owner,
+    });
+    console.log('Other key fields:', {
+      makeYear: car.makeYear,
+      regYear: car.regYear,
+      km: car.km,
+      fuel: car.fuel,
+      transmission: car.transmission,
+    });
+    console.log('========================================');
+  }
+}, [car]);
 
 
   // useEffect(() => {
@@ -129,6 +171,8 @@ const car = React.useMemo(() => {
     isSwiping.current = false;
   }
 
+  console.log(car);
+
   // sections & refs
   const sections = [
     { id: "overview", label: "Overview" },
@@ -154,49 +198,120 @@ const car = React.useMemo(() => {
   // optional compact header state
   const [compactHeader, setCompactHeader] = useState(false);
 
+  // Refs to track previous values and prevent flickering
+  const lastFixedTabsRef = useRef(false);
+  const lastActiveRef = useRef(active);
+  const rafIdRef = useRef(null);
+  const carouselBottomScrollRef = useRef(0); // Store scroll position when carousel bottom reaches threshold
+
   // scroll handling: update fixedTabs, compactHeader, active tab
   useEffect(() => {
     const main = mainRef.current;
-    if (!main) return;
+    const carousel = carouselRef.current;
+    if (!main || !carousel) return;
+
+    const ACTIVE_TAB_THRESHOLD = 140;
+    const HEADER_HEIGHT = 64;
+    const TABS_HEIGHT = 50;
+    
+    // Calculate the scroll position where carousel bottom reaches header + tabs
+    const calculateThreshold = () => {
+      if (!carousel) return 0;
+      // Carousel offsetTop + height - (header + tabs height)
+      return carousel.offsetTop + carousel.offsetHeight - (HEADER_HEIGHT + TABS_HEIGHT);
+    };
+    
+    // Store threshold once
+    const fixedThreshold = calculateThreshold();
+    
+    // Hysteresis: different thresholds for becoming fixed vs unfixed (prevents flickering)
+    const FIXED_THRESHOLD_ON = fixedThreshold - 5;  // Become fixed slightly earlier
+    const FIXED_THRESHOLD_OFF = fixedThreshold - 15; // Unfix slightly later (larger buffer)
 
     function update() {
-      const carousel = carouselRef.current;
-      const headerHeight = 64; // adjust if header CSS changes
-      if (carousel) {
-        const mainRect = main.getBoundingClientRect();
-        const carouselRect = carousel.getBoundingClientRect();
-        // carouselBottomRelative = distance from main top to carousel bottom
-        const carouselBottomRelative = carouselRect.bottom - mainRect.top;
-        // when carousel bottom has moved up past headerHeight, fix tabs
-        setFixedTabs(carouselBottomRelative <= headerHeight + 6);
-      }
+      if (rafIdRef.current) return;
+      
+      rafIdRef.current = requestAnimationFrame(() => {
+        const scrollTop = main.scrollTop;
+        
+        // Determine if tabs should be fixed using scroll position with hysteresis
+        let shouldBeFixed;
+        if (lastFixedTabsRef.current) {
+          // Currently fixed: need to scroll up MORE to unfix (prevents rapid toggling)
+          shouldBeFixed = scrollTop >= FIXED_THRESHOLD_OFF;
+        } else {
+          // Currently not fixed: become fixed when threshold is reached
+          shouldBeFixed = scrollTop >= FIXED_THRESHOLD_ON;
+        }
+        
+        // Only update if state actually changed
+        if (shouldBeFixed !== lastFixedTabsRef.current) {
+          lastFixedTabsRef.current = shouldBeFixed;
+          setFixedTabs(shouldBeFixed);
+          // Store the scroll position when state changes
+          carouselBottomScrollRef.current = scrollTop;
+        }
 
-      if (carousel) {
-        const mainScrollTop = main.scrollTop;
-        const threshold = Math.max(60, (carousel.offsetHeight || 300) - 80);
-        setCompactHeader(mainScrollTop >= threshold);
-      }
+        // Compact header logic
+        const headerThreshold = Math.max(60, carousel.offsetHeight - 80);
+        setCompactHeader(scrollTop >= headerThreshold);
 
-      // active tab detection: choose the last section whose top is <= 120px from main top
-      const mainRect2 = main.getBoundingClientRect();
-      let best = active;
-      let bestOffset = -Infinity;
+        // Active tab detection using offsetTop (more stable than getBoundingClientRect)
+        let best = lastActiveRef.current;
+        let bestScrollOffset = Infinity;
+        
+        for (const s of sections) {
+          const el = sectionRefs.current[s.id];
+          if (!el) continue;
+          
+          // Use offsetTop which is stable regardless of fixed tabs
+          const sectionOffsetTop = el.offsetTop;
+          const sectionScrollOffset = sectionOffsetTop - scrollTop;
+          
+          // Find the section that's closest to but above the threshold
+          if (sectionScrollOffset <= ACTIVE_TAB_THRESHOLD && sectionScrollOffset >= -20) {
+            if (sectionScrollOffset < bestScrollOffset) {
+              best = s.id;
+              bestScrollOffset = sectionScrollOffset;
+            }
+          }
+        }
+        
+        // Fallback: if no section found above threshold, use the one just passed
+        if (best === lastActiveRef.current) {
       for (const s of sections) {
         const el = sectionRefs.current[s.id];
         if (!el) continue;
-        const r = el.getBoundingClientRect();
-        const topOffset = r.top - mainRect2.top;
-        if (topOffset <= 120 && topOffset > bestOffset) {
+            const sectionOffsetTop = el.offsetTop;
+            const sectionScrollOffset = sectionOffsetTop - scrollTop;
+            
+            if (sectionScrollOffset < 0 && Math.abs(sectionScrollOffset) < Math.abs(bestScrollOffset)) {
           best = s.id;
-          bestOffset = topOffset;
+              bestScrollOffset = sectionScrollOffset;
+            }
+          }
         }
+        
+        // Only update if different to prevent unnecessary re-renders
+        if (best !== lastActiveRef.current && best !== active) {
+          lastActiveRef.current = best;
+          setActive(best);
       }
-      if (best !== active) setActive(best);
+        
+        rafIdRef.current = null;
+      });
     }
 
     main.addEventListener("scroll", update, { passive: true });
     update(); // run once
-    return () => main.removeEventListener("scroll", update);
+    
+    return () => {
+      main.removeEventListener("scroll", update);
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
+    };
   }, [active, sections]);
 
   const scrollTo = (id) => {
@@ -210,12 +325,16 @@ const car = React.useMemo(() => {
     main.scrollTo({ top: main.scrollTop + delta - offset, behavior: "smooth" });
   };
 
+  if (loading) {
+    return <Loader message="Loading car details..." fullScreen={true} />;
+  }
+
   if (!car) {
     return (
       <div className="car-details-root">
         <div className="cd-header">
           <button onClick={() => navigate(-1)} className="cd-back">←</button>
-          <div className="cd-title">Spinny</div>
+          <div className="cd-title">CarsDedo</div>
           <div className="cd-actions" />
         </div>
         <main className="cd-main" ref={mainRef}>
@@ -235,7 +354,7 @@ const car = React.useMemo(() => {
     { k: "Reg. Year", v: car.regYear ?? `Jan ${car.year ?? "-"}` },
     { k: "Fuel", v: car.fuel ?? "-" },
     { k: "Km driven", v: car.km ?? "-" },
-    { k: "Transmission", v: car.trans ?? "-" },
+    { k: "Transmission", v: car.transmission ?? "-" },
     { k: "No. of Owner(s)", v: car.owner ?? "1st Owner" },
     { k: "Insurance Validity", v: car.insuranceValid ?? "—" },
     { k: "Insurance Type", v: car.insuranceType ?? "—" },
@@ -275,7 +394,7 @@ const car = React.useMemo(() => {
       <main
         className="cd-main"
         ref={mainRef}
-        style={fixedTabs ? { paddingTop: (tabsRef.current ? tabsRef.current.offsetHeight + 12 : 64) } : {}}
+        style={fixedTabs ? { paddingTop: '58px' } : {}}
       >
         {/* Carousel now inside main (so it scrolls) */}
         <section
@@ -367,50 +486,59 @@ const car = React.useMemo(() => {
         <h1 className="car-title">{car.title}</h1>
         
         <div className="car-specs">
-          <span className="spec-item">{car.km}</span>
-          <span className="spec-divider">·</span>
-          <span className="spec-item">{car.fuel}</span>
-          <span className="spec-divider">·</span>
-          <span className="spec-item">{car.trans}</span>
+          <span className="spec-badge">
+            {(() => {
+              if (!car.km && car.km !== 0) return '-';
+              if (typeof car.km === 'string' && car.km.includes('km')) return car.km;
+              const kmNum = typeof car.km === 'number' ? car.km : parseInt(String(car.km).replace(/[^0-9]/g, ''), 10);
+              if (isNaN(kmNum)) return '-';
+              if (kmNum >= 1000 && kmNum < 100000) return `${Math.round(kmNum / 1000)}K km`;
+              return `${kmNum.toLocaleString()} km`;
+            })()}
+          </span>
+          <span className="spec-badge">{car.fuel || '-'}</span>
+          {car.transmission && <span className="spec-badge">{car.transmission}</span>}
         </div>
-        
-      
       </div>
-
-      {/* Location & Validity */}
-     
 
       {/* Price Section */}
       <div className="price-section">
         <div className="price-display">
-          <div className="current-price">{car.price}</div>
-          <div className="original-price">{car.price}</div>
-          <div className="discount-badge">15000 off</div>
+          {car.originalPrice && car.originalPrice > car.price ? (
+            <>
+              <div className="original-price">
+                {car.originalPrice >= 100000 
+                  ? `₹${(car.originalPrice / 100000).toFixed(2)} Lakh`
+                  : `₹${(car.originalPrice / 1000).toFixed(0)}k`}
+              </div>
+              <div className="current-price">
+                {car.price >= 100000 
+                  ? `₹${(car.price / 100000).toFixed(2)} Lakh`
+                  : `₹${(car.price / 1000).toFixed(0)}k`}
+              </div>
+              {car.originalPrice - car.price > 0 && (
+                <div className="discount-badge">
+                  ₹{((car.originalPrice - car.price) / 1000).toFixed(0)}k off
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="current-price">
+              {car.price >= 100000 
+                ? `₹${(car.price / 100000).toFixed(2)} Lakh`
+                : `₹${(car.price / 1000).toFixed(0)}k`}
+            </div>
+          )}
         </div>
         <div className="includes-text">Includes RC transfer, insurance & more</div>
       </div>
 
       {/* EMI Section */}
       <div className="emi-section">
-        <div className="emi-header">
-          <span className="emi-label">Bonus: EMI starts @10.5%</span>
-          <span className="market-rate">{car.marketRate}</span>
-        </div>
-        
-        <div className="emi-amount">
-        
-          <span className="emi-value">{car.emiAmount}</span>
-        </div>
-        
-        <div className="savings-info">{car.interestSaving}</div>
-        
-       
+        <div className="emi-label">Bonus: EMI starts @10.5%</div>
       </div>
-
-      {/* Action Buttons */}
-    
     </div>
-    <ReasonsToBuy ref={registerRef("overview")}/>
+    <ReasonsToBuy ref={registerRef("overview")} car={car} />
 
         {/* Overview */}
         {/* <section id="overview" ref={registerRef("overview")} className="cd-section overview-section">
@@ -439,10 +567,10 @@ const car = React.useMemo(() => {
             </div>
           </div>
         </section> */}
-        <BasicInfo ref={registerRef("basic-info")}  />
-        <QualityReport ref={registerRef("quality-report")} />
-        <Specifications ref={registerRef("specifications")} />
-        <Features ref={registerRef("features")} />
+        <BasicInfo ref={registerRef("basic-info")} car={car} />
+        <QualityReport ref={registerRef("quality-report")} car={car} />
+        <Specifications ref={registerRef("specifications")} car={car} />
+        <Features ref={registerRef("features")} car={car} />
 
         {/* Quality */}
         {/* <section id="quality-report" ref={registerRef("quality-report")} className="cd-section">

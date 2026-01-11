@@ -32,9 +32,37 @@ export default function MobileCarousel() {
   const [index, setIndex] = useState(0);
   const startX = useRef(0);
   const translateX = useRef(0);
+  const isInteracting = useRef(false);
+  const autoPlayInterval = useRef(null);
+
+  // Auto-change slides every 4 seconds (like desktop)
+  useEffect(() => {
+    // Clear any existing interval
+    if (autoPlayInterval.current) {
+      clearInterval(autoPlayInterval.current);
+    }
+
+    // Only auto-play if user is not interacting
+    if (!isInteracting.current) {
+      autoPlayInterval.current = setInterval(() => {
+        setIndex((i) => (i + 1) % promoSlides.length);
+      }, 4000);
+    }
+
+    return () => {
+      if (autoPlayInterval.current) {
+        clearInterval(autoPlayInterval.current);
+      }
+    };
+  }, [index]);
 
   const handleTouchStart = (e) => {
+    isInteracting.current = true;
     startX.current = e.touches[0].clientX;
+    // Pause auto-play when user starts interacting
+    if (autoPlayInterval.current) {
+      clearInterval(autoPlayInterval.current);
+    }
   };
 
   const handleTouchMove = (e) => {
@@ -49,13 +77,18 @@ export default function MobileCarousel() {
       setIndex(index - 1);
     }
     translateX.current = 0;
+    
+    // Resume auto-play after a short delay
+    setTimeout(() => {
+      isInteracting.current = false;
+    }, 1000);
   };
 
   return (
     <div className="promo-carousel">
       <div
         className="promo-track"
-        style={{ transform: `translateX(-${index * 100}%)` }}
+        style={{ transform: `translateX(calc(-${index * 100}% - ${index * 16}px))` }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}

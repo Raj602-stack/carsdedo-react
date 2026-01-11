@@ -4,12 +4,13 @@ import "../styles/Topbar.css"; // make sure path is correct
 import { Link, useNavigate } from "react-router-dom";
 import { FiHeart } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
-import carsData from "../data/cars";
+import { useCars } from "../context/CarsContext";
 import { useLocation } from "react-router-dom";
 
 
 export default function Topbar() {
   const navigate = useNavigate();
+  const { cars, loading } = useCars();
   const [searchValue, setSearchValue] = useState("");
 
   const [isOpen, setIsOpen] = useState(false);
@@ -29,19 +30,18 @@ export default function Topbar() {
   const handleSearch = (value) => {
     setQuery(value);
   
-    if (!value.trim()) {
+    if (!value.trim() || !cars || cars.length === 0) {
       setSuggestions([]);
       return;
     }
   
     const q = value.toLowerCase();
   
-    const matches = carsData
-      .filter((c) =>
-        `${c.title} ${c.brand} ${c.model} ${c.fuel} ${c.body} ${c.city}`
-          .toLowerCase()
-          .includes(q)
-      )
+    const matches = cars
+      .filter((c) => {
+        const searchText = `${c.title || ''} ${c.brand || ''} ${c.model || ''} ${c.fuel || ''} ${c.body || ''} ${c.city || ''} ${c.transmission || ''} ${c.color_key || ''}`.toLowerCase();
+        return searchText.includes(q);
+      })
       .slice(0, 6); // limit suggestions
   
     setSuggestions(matches);
@@ -232,26 +232,42 @@ useEffect(() => {
     setSearchValue(val);
     handleSearch(val);
   }}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter' && searchValue.trim()) {
+      navigate(`/buy?q=${encodeURIComponent(searchValue.trim())}`);
+      setSuggestions([]);
+      setQuery("");
+      setSearchValue("");
+    }
+  }}
 />
 
             {suggestions.length > 0 && (
     <div className="search-suggestions">
-      {suggestions.map((car) => (
-        <div
-          key={car.id}
-          className="suggestion-item"
-          onClick={() => {
-            navigate(`/buy?q=${encodeURIComponent(car.brand)}`);
-            setSuggestions([]);
-            setQuery("");
-          }}
-        >
-          <strong>{car.brand}</strong> {car.model}
-          <span className="meta">
-            {car.body} · {car.fuel} · {car.city}
-          </span>
-        </div>
-      ))}
+      {suggestions.map((car) => {
+        // Only use brand and model for filtering, not body/fuel
+        const params = new URLSearchParams();
+        if (car.brand) params.append('brand', car.brand);
+        if (car.model) params.append('model', car.model);
+        
+        return (
+          <div
+            key={car.id}
+            className="suggestion-item"
+            onClick={() => {
+              navigate(`/buy?${params.toString()}`);
+              setSuggestions([]);
+              setQuery("");
+              setSearchValue("");
+            }}
+          >
+            <strong>{car.brand || 'Unknown'}</strong> {car.model || ''}
+            <span className="meta">
+              {[car.body, car.fuel, car.city].filter(Boolean).join(' · ')}
+            </span>
+          </div>
+        );
+      })}
     </div>
   )}
 

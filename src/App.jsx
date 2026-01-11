@@ -24,6 +24,7 @@ import SpecificationsPage from "./components/SpecificationsPage";
 import FeaturesPage from "./components/FeaturesPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import ScheduleTestDrive from "./components/ScheduleTestDrive";
+import ScheduleTestDriveWeb from "./pages/ScheduleTestDriveWeb";
 import TestDriveConfirmation from "./components/TestDriveConfirmation";
 import CarFilterMobile from "./pages/CarFilterMobile";
 import { CarsProvider } from "./context/CarsContext";
@@ -69,6 +70,8 @@ export default function App() {
             <Route path="/car/:id" element={<CarDetailsWeb />} />
            
             <Route path="/car/:id/book" element={<CarBooking />} />
+            <Route path="/test-drive/:carId" element={<ScheduleTestDriveWeb/>}/>
+            <Route path="/test-drive/confirmation/:carId" element={<TestDriveConfirmation/>}/>
 
             <Route path="login" element={<LoginWeb/>} />
             <Route path="account" element={<AccountWeb/>} />
