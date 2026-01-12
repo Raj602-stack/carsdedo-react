@@ -11,6 +11,7 @@ import "../styles/BuyPage.css";
 import { useCars } from "../context/CarsContext";
 import Loader from "../components/Loader";
 import Sidebar from "../components/Sidebar";
+import PromotionalCarousel from "../components/PromotionalCarousel";
 
 import { IoCodeSlashOutline } from "react-icons/io5";
 
@@ -1557,6 +1558,9 @@ console.log(getCarImages);
           </div>
         </div>
       ))}
+
+      {/* Promotional Carousel */}
+      <PromotionalCarousel isMobile={true} />
 
       <div className="results-header">
         <h3>{filtered.length} Used cars in {locationText}</h3>

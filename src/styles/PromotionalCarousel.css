@@ -32,17 +32,19 @@
 .promo-slides-track {
   display: flex;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  gap: 12px;
+  gap: 20px;
 }
 
 .promo-slide-desktop {
-  flex: 0 0 calc((100% - 24px) / 3);
+  flex: 0 0 calc((100% - 40px) / 3);
   position: relative;
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  height: 160px;
+  margin-right: 0;
 }
 
 .promo-slide-desktop:hover {
@@ -55,13 +57,22 @@
   width: 100%;
   height: 160px;
   overflow: hidden;
+  display: block;
 }
 
 .promo-slide-img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.5s ease;
+  display: block;
+  margin: 0;
+  padding: 0;
+  vertical-align: bottom;
 }
 
 .promo-slide-desktop:hover .promo-slide-img {
@@ -88,12 +99,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 16px 20px;
+  padding: 0 20px 12px 20px;
   color: white;
   z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  box-sizing: border-box;
 }
 
 .promo-logo {
@@ -213,7 +225,7 @@
 
 /* Mobile Carousel */
 .promo-carousel-mobile {
-  padding: 16px;
+  padding: 0 16px;
   margin-bottom: 16px;
 }
 
@@ -240,10 +252,12 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  height: 140px;
 }
 
 .promo-slide-mobile .promo-slide-bg {
-  height: 140px;
+  height: 100%;
+  width: 100%;
 }
 
 .promo-slide-content-mobile {
@@ -326,7 +340,7 @@
   }
   
 .promo-carousel-desktop .promo-slides-track {
-  gap: 12px;
+  gap: 20px;
 }
 }
 

@@ -28,7 +28,7 @@
 .promo-slide {
   flex: 0 0 calc(100% - 0px); /* Full width minus gap compensation */
   min-width: 0;
-  height: 460px;
+  margin-right: 10px;
   background-size: cover;
   background-position: center;
   border-radius: 20px;
