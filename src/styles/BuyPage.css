@@ -10,8 +10,11 @@ html, body, #root { height: 100%; }
 .buy-header-inner { max-width:980px; margin:8px auto 0; padding:0 14px; display:flex; align-items:center; justify-content:space-between; gap:8px; overflow: visible; }
 .hamburger { background:transparent; border:0; font-size:20px; cursor:pointer; }
 .brand { font-weight:900; color:#2b1140; }
+.header-actions { display: flex; align-items: center; gap: 8px; }
 .header-actions .action { background:transparent; border:0; padding:6px 10px; font-weight:800; color:#6e5a6e; cursor:pointer; }
 .header-actions .active { color:#2b1140; }
+.header-actions .search-icon-btn { padding: 6px 8px; font-size: 18px; display: flex; align-items: center; justify-content: center; color: #6e5a6e; }
+.header-actions .search-icon-btn svg { width: 18px; height: 18px; }
 .hero-banner { margin:12px 14px; border-radius:12px; overflow:hidden; }
 .hero-img { width:100%; display:block; object-fit:cover; }
 

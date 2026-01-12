@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import Filters from "../components/Filters";
 import CarCard from "../components/CarCard";
 import styles from  "../styles/BuyPageweb.module.css";
+import PromotionalCarousel from "../components/PromotionalCarousel";
 
 import { useCars } from "../context/CarsContext";
 import Loader from "../components/Loader";
@@ -209,12 +210,13 @@ useEffect(() => {
   
       // MODEL
       const model = params.get("model");
-      if (model && brand) {
-        // If we have both brand and model, we need to filter by both
-        // Store model in a way that can be used for filtering
+      if (model) {
+        // If we have model, store it with the brand
         if (!next.brandModels) next.brandModels = {};
-        if (next.brands && next.brands.length > 0) {
-          next.brandModels[next.brands[0]] = [capitalize(model)];
+        // Use the capitalized brand from the brands array we just set
+        const brandForModel = next.brands && next.brands.length > 0 ? next.brands[0] : null;
+        if (brandForModel) {
+          next.brandModels[brandForModel] = [capitalize(model)];
         }
       }
   
@@ -242,6 +244,7 @@ useEffect(() => {
     priceMin: 0,
     priceMax: 5000000,
     brands: [],
+    brandModels: {}, // For brand+model filtering
     year: "",
     kms: [],
     fuel: [],
@@ -307,12 +310,19 @@ useEffect(() => {
 
         // brands + models
         if (filters.brands && filters.brands.length > 0) {
-          const brandSelected = filters.brands.includes(c.brand);
-          const modelSelections = filters.brandModels?.[c.brand];
+          // Case-insensitive brand matching
+          const carBrandLower = (c.brand || "").toLowerCase();
+          const brandSelected = filters.brands.some(b => b.toLowerCase() === carBrandLower);
+          
+          // Find matching brand key in brandModels (case-insensitive)
+          const brandKey = filters.brands.find(b => b.toLowerCase() === carBrandLower);
+          const modelSelections = brandKey ? filters.brandModels?.[brandKey] : null;
           
           if (modelSelections && modelSelections.length > 0) {
-            // If specific models are selected for this brand, car must match one of them
-            if (!modelSelections.includes(c.model)) return false;
+            // If specific models are selected for this brand, car must match one of them (case-insensitive)
+            const carModelLower = (c.model || "").toLowerCase();
+            const modelMatch = modelSelections.some(m => m.toLowerCase() === carModelLower);
+            if (!modelMatch) return false;
           } else if (!brandSelected) {
             // If no models selected but brand is required, check brand match
             return false;
@@ -534,6 +544,9 @@ useEffect(() => {
             </select>
           </div>
         </div>
+
+        {/* Promotional Carousel */}
+        <PromotionalCarousel isMobile={false} />
     
         <div className={styles["cars-grid"]} aria-live="polite">
           {filtered.map((car) => (

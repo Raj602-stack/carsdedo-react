@@ -44,6 +44,15 @@
   max-width: 250px;
 }
 
+.carLoader.small .carContainer {
+  height: 60px;
+  bottom: 10px;
+}
+
+.carLoader.small .carSvg {
+  width: 120px;
+}
+
 .carLoader.medium {
   height: 120px;
   max-width: 350px;

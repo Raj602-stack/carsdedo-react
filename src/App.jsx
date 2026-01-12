@@ -27,6 +27,8 @@ import ScheduleTestDrive from "./components/ScheduleTestDrive";
 import ScheduleTestDriveWeb from "./pages/ScheduleTestDriveWeb";
 import TestDriveConfirmation from "./components/TestDriveConfirmation";
 import CarFilterMobile from "./pages/CarFilterMobile";
+import Blog from "./pages/Blog";
+import BlogDetail from "./pages/BlogDetail";
 import { CarsProvider } from "./context/CarsContext";
 
 
@@ -45,6 +47,8 @@ export default function App() {
             <Route path="*" element={<MobileHome />} />
           </Route>
           <Route path="buy" element={<BuyPage />} />
+          <Route path="blog" element={<Blog/>} />
+          <Route path="blog/:id" element={<BlogDetail/>} />
             <Route path="car/:id" element={<CarDetails />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="account" element={<ProtectedRoute><AccountPage/></ProtectedRoute>} />
@@ -77,6 +81,8 @@ export default function App() {
             <Route path="account" element={<AccountWeb/>} />
             <Route path="/wishlist" element={<Wishlist/>} />
             <Route path="/scroll" element={<ScrollSections/>} />
+            <Route path="/blog" element={<Blog/>} />
+            <Route path="/blog/:id" element={<BlogDetail/>} />
             
 
           </Route>

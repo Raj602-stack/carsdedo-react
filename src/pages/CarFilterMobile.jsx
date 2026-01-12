@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useCars } from "../context/CarsContext";
+import Loader from "../components/Loader";
 import styles from "../styles/CarFilterMobile.module.css";
 
 const PRICE_PRESETS = [
@@ -84,6 +85,31 @@ export default function CarFilterMobile() {
       .sort((a, b) => b.count - a.count)
       .slice(0, 9);
   }, [cars]);
+
+  // Show loader while data is being fetched to prevent laggy UI
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <button
+            className={styles.backBtn}
+            onClick={() => {
+              if (window.history.length > 1) {
+                navigate(-1);
+              } else {
+                navigate("/");
+              }
+            }}
+            aria-label="Go back"
+          >
+            ←
+          </button>
+          <div className={styles.headerTitle}>Search Cars</div>
+        </div>
+        <Loader message="Loading cars..." fullScreen={false} />
+      </div>
+    );
+  }
 
   return (
     <div className={`${styles.container} ${isAnimating ? styles.slideIn : ''}`}>

@@ -18,6 +18,7 @@ export default function Layout() {
     /^\/sell(\/|$)/,
     /^\/login(\/|$)/,
     /^\/account(\/|$)/,
+    /^\/blog(\/|$)/,  // blog pages
     // keep other patterns as needed
   ];
 
@@ -25,6 +26,7 @@ export default function Layout() {
     
     /^\/login(\/|$)/,
     /^\/wishlist(\/|$)/,
+    /^\/blog(\/|$)/,  // blog pages
     // keep other patterns as needed
   ];
 

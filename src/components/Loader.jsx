@@ -23,14 +23,14 @@ const Loader = ({ message = "Loading...", fullScreen = false, size = "medium" })
               {/* Car Body */}
               <path 
                 d="M30 50 L50 35 L120 35 L140 50 L160 50 L170 60 L170 70 L160 70 L155 75 L145 75 L140 70 L60 70 L55 75 L45 75 L40 70 L30 70 L20 60 Z" 
-                fill="#0c213a" 
-                stroke="#1a3452" 
+                fill="#dc2626" 
+                stroke="#991b1b" 
                 strokeWidth="2"
               />
               {/* Car Window */}
               <path 
                 d="M55 50 L55 40 L115 40 L115 50 Z" 
-                fill="#1a3452" 
+                fill="#991b1b" 
                 opacity="0.6"
               />
               {/* Car Window Divider */}
@@ -39,7 +39,7 @@ const Loader = ({ message = "Loading...", fullScreen = false, size = "medium" })
                 y1="40" 
                 x2="85" 
                 y2="50" 
-                stroke="#0c213a" 
+                stroke="#7f1d1d" 
                 strokeWidth="1.5"
               />
               {/* Front Wheel */}
@@ -48,14 +48,14 @@ const Loader = ({ message = "Loading...", fullScreen = false, size = "medium" })
                 cy="70" 
                 r="8" 
                 fill="#2d2d2d" 
-                stroke="#1a3452" 
+                stroke="#991b1b" 
                 strokeWidth="2"
               />
               <circle 
                 cx="50" 
                 cy="70" 
                 r="4" 
-                fill="#0c213a"
+                fill="#7f1d1d"
               />
               {/* Back Wheel */}
               <circle 
@@ -63,14 +63,14 @@ const Loader = ({ message = "Loading...", fullScreen = false, size = "medium" })
                 cy="70" 
                 r="8" 
                 fill="#2d2d2d" 
-                stroke="#1a3452" 
+                stroke="#991b1b" 
                 strokeWidth="2"
               />
               <circle 
                 cx="150" 
                 cy="70" 
                 r="4" 
-                fill="#0c213a"
+                fill="#7f1d1d"
               />
               {/* Headlights */}
               <circle 

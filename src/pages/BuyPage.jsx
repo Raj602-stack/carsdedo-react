@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { FiSearch } from "react-icons/fi";
 import { useLocation } from "react-router-dom";
 
 
@@ -1427,8 +1428,19 @@ console.log(getCarImages);
 </div>
 
           <div className="header-actions">
-            <button className="action">Sell</button>
-            <button className="action active">Buy</button>
+            <button 
+              className="action search-icon-btn" 
+              onClick={() => navigate("/search")}
+              aria-label="Search cars"
+            >
+              <FiSearch />
+            </button>
+            <button 
+              className="action" 
+              onClick={() => navigate("/sell")}
+            >
+              Sell
+            </button>
           </div>
         </div>
 

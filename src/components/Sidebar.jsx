@@ -12,7 +12,8 @@ import {
   faMobileAlt,
   faKey,
   faHeart,
-  faUser
+  faUser,
+  faNewspaper
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function Sidebar({ open, onClose }) {
@@ -211,6 +212,18 @@ export default function Sidebar({ open, onClose }) {
                 <FontAwesomeIcon icon={faExchangeAlt} />
                 <span>Exchange</span>
                 <span className="ml-badge">NEW</span>
+                <span className="ml-chevron">›</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Blog Section */}
+          <div className="ml-section">
+            <h4>Resources</h4>
+            <div className="ml-links">
+              <button onClick={() => handleNavigation("/blog")}>
+                <FontAwesomeIcon icon={faNewspaper} />
+                <span>Blogs</span>
                 <span className="ml-chevron">›</span>
               </button>
             </div>

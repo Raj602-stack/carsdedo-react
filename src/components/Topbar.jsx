@@ -30,6 +30,12 @@ export default function Topbar() {
   const handleSearch = (value) => {
     setQuery(value);
   
+    // Don't show suggestions if data is still loading
+    if (loading) {
+      setSuggestions([]);
+      return;
+    }
+  
     if (!value.trim() || !cars || cars.length === 0) {
       setSuggestions([]);
       return;
@@ -225,15 +231,16 @@ useEffect(() => {
 
 <input
   className="top-search"
-  placeholder="Search cars, brands, models…"
+  placeholder={loading ? "Loading cars..." : "Search cars, brands, models…"}
   value={searchValue}              // 🔑 controlled
+  disabled={loading}                // Disable input while loading
   onChange={(e) => {
     const val = e.target.value;
     setSearchValue(val);
     handleSearch(val);
   }}
   onKeyDown={(e) => {
-    if (e.key === 'Enter' && searchValue.trim()) {
+    if (e.key === 'Enter' && searchValue.trim() && !loading) {
       navigate(`/buy?q=${encodeURIComponent(searchValue.trim())}`);
       setSuggestions([]);
       setQuery("");
@@ -242,7 +249,20 @@ useEffect(() => {
   }}
 />
 
-            {suggestions.length > 0 && (
+            {loading && searchValue.trim() && (
+              <div className="search-suggestions">
+                <div className="suggestion-item" style={{ 
+                  textAlign: 'center', 
+                  color: '#666', 
+                  cursor: 'default',
+                  pointerEvents: 'none'
+                }}>
+                  Loading suggestions...
+                </div>
+              </div>
+            )}
+
+            {!loading && suggestions.length > 0 && (
     <div className="search-suggestions">
       {suggestions.map((car) => {
         // Only use brand and model for filtering, not body/fuel
@@ -295,10 +315,9 @@ useEffect(() => {
     </div>
 
     <div className="dropdown">
-      <div className="action">Service ▾</div>
+      <div className="action">More ▾</div>
       <div className="dropdown-menu">
-        <div className="dropdown-item">Used Cars</div>
-        <div className="dropdown-item">Certified Cars</div>
+        <div onClick={() => navigate("/blog")} className="dropdown-item">Blogs</div>
       </div>
     </div>
   </nav>
