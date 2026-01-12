@@ -17,6 +17,31 @@ function capitalize(str = "") {
 }
 
 const normalizeCar = (car) => {
+  // Extract specs from API data
+  const specs = Object.entries(car.specs || {}).flatMap(
+    ([category, items]) =>
+      items.map((i) => ({
+        category,
+        label: i.label,
+        value: i.value,
+      }))
+  );
+
+  // Extract power, mileage, seats from specs
+  const findSpecValue = (labelPattern) => {
+    const spec = specs.find(s => 
+      s.label && s.label.toLowerCase().includes(labelPattern.toLowerCase())
+    );
+    return spec?.value || null;
+  };
+
+  const power = findSpecValue('power') || findSpecValue('bhp') || findSpecValue('hp');
+  const mileage = findSpecValue('mileage') || findSpecValue('kmpl') || findSpecValue('km/l');
+  const seats = car.seats || findSpecValue('seat') || findSpecValue('seating');
+
+  // Check if there's a discount
+  const hasDiscount = car.discount_price && car.discount_price < car.price && car.discount_price > 0;
+
   return {
     id: car.id,
     title: car.title,
@@ -25,6 +50,7 @@ const normalizeCar = (car) => {
     year: car.year,
     price: Number(car.discount_price || car.price || 0),
     originalPrice: Number(car.price || 0),
+    hasDiscount: hasDiscount,
     km: car.km,
     fuel: car.fuel,
     transmission: car.transmission,
@@ -32,6 +58,9 @@ const normalizeCar = (car) => {
     city: car.city,
     colorKey: car.colorKey,
     tags: car.tags || [],
+    power: power,
+    mileage: mileage,
+    seats: seats,
 
     // ✅ OLD image compatibility
     image:
@@ -67,14 +96,7 @@ const normalizeCar = (car) => {
   /* =========================
      SPECS (FLATTENED)
   ========================== */
-  specs: Object.entries(car.specs || {}).flatMap(
-    ([category, items]) =>
-      items.map((i) => ({
-        category,
-        label: i.label,
-        value: i.value,
-      }))
-  ),
+  specs: specs,
 
   /* =========================
      FEATURES
@@ -441,6 +463,9 @@ useEffect(() => {
       />
     
       <main className={styles["results"]} role="main">
+        {/* Promotional Carousel */}
+        <PromotionalCarousel isMobile={false} />
+        
         {/* Applied Filters Display */}
         {((filters.year || filters.kms?.length || filters.brands?.length || filters.colors?.length || filters.transmission?.length || filters.body?.length || (filters.priceMin > 0 || filters.priceMax < 5000000)) && (
           <div className={styles["applied-filters-bar"]}>
@@ -544,9 +569,6 @@ useEffect(() => {
             </select>
           </div>
         </div>
-
-        {/* Promotional Carousel */}
-        <PromotionalCarousel isMobile={false} />
     
         <div className={styles["cars-grid"]} aria-live="polite">
           {filtered.map((car) => (

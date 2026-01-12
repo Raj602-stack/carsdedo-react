@@ -1,6 +1,7 @@
 // Updated CarCard.jsx component
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { FiZap, FiNavigation, FiUsers, FiCalendar, FiMapPin } from "react-icons/fi";
 import styles from "../styles/CarCard.module.css";
 
 export default function CarCard({ car }) {
@@ -8,6 +9,12 @@ export default function CarCard({ car }) {
   
   const formatPrice = (p) =>
     p >= 100000 ? `₹${(p / 100000).toFixed(2)} Lakh` : `₹${(p / 1000).toFixed(0)}k`;
+
+  // Calculate EMI (60 months)
+  const formatEMI = (price) => {
+    const emi = Math.round(price / 60);
+    return `EMI ₹${emi.toLocaleString()}/m*`;
+  };
 
   return (
     <article
@@ -43,9 +50,22 @@ export default function CarCard({ car }) {
           <h4 id={`car-${car.id}`} className={styles["car-title"]}>
             {car.title}
           </h4>
-          <span className={styles["price-tag"]}>
-            {formatPrice(car.price)}
-          </span>
+          <div className={styles["price-section"]}>
+            {car.hasDiscount && car.originalPrice ? (
+              <div className={styles["price-with-discount"]}>
+                <div className={styles["price-discounted"]}>
+                  {formatPrice(car.price)}
+                </div>
+                <div className={styles["price-original"]}>
+                  {formatPrice(car.originalPrice)}
+                </div>
+              </div>
+            ) : (
+              <div className={styles["price-tag"]}>
+                {formatPrice(car.price)}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Meta badges */}
@@ -66,20 +86,26 @@ export default function CarCard({ car }) {
 
         {/* Specifications grid */}
         <div className={styles["car-specs"]}>
+          {car.power && (
+            <div className={styles["spec-item"]}>
+              <FiZap className={styles["spec-icon"]} />
+              <span>Power: <span className={styles["spec-value"]}>{car.power}</span></span>
+            </div>
+          )}
+          {car.mileage && (
+            <div className={styles["spec-item"]}>
+              <FiNavigation className={styles["spec-icon"]} />
+              <span>Mileage: <span className={styles["spec-value"]}>{car.mileage}</span></span>
+            </div>
+          )}
+          {car.seats && (
+            <div className={styles["spec-item"]}>
+              <FiUsers className={styles["spec-icon"]} />
+              <span>Seats: <span className={styles["spec-value"]}>{car.seats}</span></span>
+            </div>
+          )}
           <div className={styles["spec-item"]}>
-            <span className={styles["spec-icon"]}>⚡</span>
-            <span>Power: <span className={styles["spec-value"]}>{car.power || "N/A"}</span></span>
-          </div>
-          <div className={styles["spec-item"]}>
-            <span className={styles["spec-icon"]}>🛣️</span>
-            <span>Mileage: <span className={styles["spec-value"]}>{car.mileage || "N/A"}</span></span>
-          </div>
-          <div className={styles["spec-item"]}>
-            <span className={styles["spec-icon"]}>👥</span>
-            <span>Seats: <span className={styles["spec-value"]}>{car.seats || "5"}</span></span>
-          </div>
-          <div className={styles["spec-item"]}>
-            <span className={styles["spec-icon"]}>📅</span>
+            <FiCalendar className={styles["spec-icon"]} />
             <span>Year: <span className={styles["spec-value"]}>{car.year || "N/A"}</span></span>
           </div>
         </div>
@@ -87,18 +113,23 @@ export default function CarCard({ car }) {
         {/* Bottom section */}
         <div className={styles["car-bottom"]}>
           <div className={styles["car-city"]}>
-            <span className={styles["city-icon"]}>📍</span>
+            <FiMapPin className={styles["city-icon"]} />
             {car.city}
           </div>
-          <button 
-            className={styles["view-button"]}
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/car/${car.id}`);
-            }}
-          >
-            View Details
-          </button>
+          <div className={styles["bottom-right"]}>
+            <div className={styles["emi-text"]}>
+              {formatEMI(car.price)}
+            </div>
+            <button 
+              className={styles["view-button"]}
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/car/${car.id}`);
+              }}
+            >
+              View Details
+            </button>
+          </div>
         </div>
       </div>
     </article>

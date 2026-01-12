@@ -9,7 +9,7 @@
     opacity: 0;
     visibility: hidden;
   transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
-    z-index: 88;
+    z-index: 10000;
   }
 
   .ml-sidebar-overlay.visible {
@@ -29,7 +29,7 @@
     transform: translateX(110%);
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: -20px 0 60px rgba(12, 33, 58, 0.15);
-    z-index: 90;
+    z-index: 10001;
     display: flex;
     flex-direction: column;
   color: #0c213a;

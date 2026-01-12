@@ -12,6 +12,7 @@ import FaqMob from "../components/FaqMob";
 import MobileMoreAbout from "../components/MobileMoreAbout";
 import FooterMobile from "../components/FooterMobile";
 import CarImageCarousel from "../components/CarImageCarousel";
+import MobileReportDrawer from "../components/MobileReportDrawer";
 
 import { useCars } from "../context/CarsContext";
 import { normalizeCar } from "../utils";
@@ -114,6 +115,17 @@ React.useEffect(() => {
  console.log(car);
   // images & carousel state
   const images = (car && (car.images || [car.thumb])) || [];
+
+  // Report drawer state
+  const [showReportDrawer, setShowReportDrawer] = useState(false);
+  
+  const openReportDrawer = () => {
+    setShowReportDrawer(true);
+  };
+  
+  const closeReportDrawer = () => {
+    setShowReportDrawer(false);
+  };
   const [idx, setIdx] = useState(0);
 
   // touch tracking to distinguish horizontal swipe vs vertical scroll
@@ -568,7 +580,7 @@ React.useEffect(() => {
           </div>
         </section> */}
         <BasicInfo ref={registerRef("basic-info")} car={car} />
-        <QualityReport ref={registerRef("quality-report")} car={car} />
+        <QualityReport ref={registerRef("quality-report")} car={car} onViewFullReport={openReportDrawer} />
         <Specifications ref={registerRef("specifications")} car={car} />
         <Features ref={registerRef("features")} car={car} />
 
@@ -617,6 +629,13 @@ React.useEffect(() => {
         <button onClick={() => navigate(`/checkout/${car.id}`)} className="btn-primary large book">Book now</button>
         <button    onClick={() => navigate(`/test-drive/${car.id}`)} className="btn-outline free">Free test drive</button>
       </footer>
+      
+      {/* Mobile Report Drawer */}
+      <MobileReportDrawer 
+        open={showReportDrawer} 
+        onClose={closeReportDrawer} 
+        car={car} 
+      />
     </div>
   );
 }

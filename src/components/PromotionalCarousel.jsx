@@ -97,7 +97,8 @@ export default function PromotionalCarousel({ isMobile = false }) {
     setTimeout(() => setIsAutoPlaying(true), 10000);
   };
 
-  if (isMobile) {
+    if (isMobile) {
+      const mobileGap = 12; // gap in px between slides
     // Mobile: Single slide at a time, simpler layout
     return (
       <div className="promo-carousel promo-carousel-mobile">
@@ -105,7 +106,7 @@ export default function PromotionalCarousel({ isMobile = false }) {
           <div 
             className="promo-slide-wrapper"
             style={{
-              transform: `translateX(-${currentIndex * 100}%)`,
+                transform: `translateX(calc(-${currentIndex * 100}% - ${currentIndex * mobileGap}px))`,
             }}
           >
             {promotionalSlides.map((slide) => (

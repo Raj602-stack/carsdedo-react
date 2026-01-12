@@ -1,13 +1,14 @@
-/* MobileCarousel.css - Elegant & Classy Redesign */
+/* MobileCarousel.module.css - Elegant & Classy Redesign */
 
-:root {
-  --primary-navy: #0c213a;
-  --deep-purple: #2d063b;
-  --accent-pink: #e93b68;
-  --accent-red: #e15367;
-  --accent-purple: #6f1e9c;
-  --bg-white: #ffffff;
-  --bg-light: #f8fafc;
+/* CSS Variables - using :global for root variables */
+:global(:root) {
+  --mobile-carousel-primary-navy: #0c213a;
+  --mobile-carousel-deep-purple: #2d063b;
+  --mobile-carousel-accent-pink: #e93b68;
+  --mobile-carousel-accent-red: #e15367;
+  --mobile-carousel-accent-purple: #6f1e9c;
+  --mobile-carousel-bg-white: #ffffff;
+  --mobile-carousel-bg-light: #f8f9fa;
 }
 
 .promo-carousel {
@@ -28,7 +29,7 @@
 .promo-slide {
   flex: 0 0 calc(100% - 0px); /* Full width minus gap compensation */
   min-width: 0;
-  margin-right: 10px;
+  height: 420px;
   background-size: cover;
   background-position: center;
   border-radius: 20px;
@@ -165,7 +166,7 @@
 
 /* CTA Button */
 .promo-btn {
-  background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-pink) 100%);
+  background: linear-gradient(135deg, var(--mobile-carousel-accent-red) 0%, var(--mobile-carousel-accent-pink) 100%);
   color: #fff;
   font-weight: 700;
   border: none;
@@ -208,8 +209,9 @@
   cursor: pointer;
 }
 
-.promo-dot.active {
-  background: var(--accent-red);
+.promo-dot.active,
+.active {
+  background: var(--mobile-carousel-accent-red);
   width: 24px;
   border-radius: 4px;
   opacity: 1;

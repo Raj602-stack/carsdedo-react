@@ -67,7 +67,7 @@ export const normalizeCar = (car) => {
       transmission: car.transmission || car.trans,
       body: car.body,
       city: car.city,
-      locationRto: car.location_rto || car.locationRto || car.rto || car.rto_code || 
+      locationRto: car.rto || car.location_rto || car.locationRto || car.rto_code || 
                    (car.location && car.location.rto) || (car.location && car.location.rto_code),
       locationFull: car.location_full || car.locationFull || car.location || car.full_location ||
                    (typeof car.location === 'object' && car.location.full) ||
@@ -140,16 +140,24 @@ export const normalizeCar = (car) => {
       features: Object.values(car.features || {})
         .flat()
         .map((f) => f.name),
-
+  
       /* =========================
          QUALITY REPORT
       ========================== */
       inspections: (car.inspections || []).map((section) => ({
         key: section.key,
         title: section.title,
-        subsections: section.subsections.map((sub) => ({
+        description: section.description,
+        score: section.score,
+        rating: section.rating,
+        status: section.status,
+        remarks: section.remarks,
+        subsections: (section.subsections || []).map((sub) => ({
+          key: sub.key,
           title: sub.title,
-          items: sub.items.map((item) => ({
+          status: sub.status,
+          remarks: sub.remarks,
+          items: (sub.items || []).map((item) => ({
             name: item.name,
             status: item.status, // flawless | minor | major
             remarks: item.remarks,

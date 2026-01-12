@@ -1481,6 +1481,9 @@ console.log(getCarImages);
         </div>
       </header>
 
+      {/* Promotional Carousel */}
+      <PromotionalCarousel isMobile={true} />
+
       {/* Applied Filters Display */}
       {((appliedFilters.year || appliedFilters.kms || appliedFilters.brands?.length || appliedFilters.color || appliedFilters.trans || appliedFilters.body?.length || (appliedFilters.priceMin !== PRICE_MIN || appliedFilters.priceMax !== PRICE_MAX)) && (
         <div className="applied-filters-bar">
@@ -1558,9 +1561,6 @@ console.log(getCarImages);
           </div>
         </div>
       ))}
-
-      {/* Promotional Carousel */}
-      <PromotionalCarousel isMobile={true} />
 
       <div className="results-header">
         <h3>{filtered.length} Used cars in {locationText}</h3>
@@ -1693,6 +1693,7 @@ console.log(getCarImages);
       <span className="tag">{car.km}</span>
       <span className="tag">{car.fuel}</span>
       <span className="tag">{car.trans || '-'}</span>
+      {car.color && <span className="tag">{car.color}</span>}
     </div>
 
     {/* Footer */}

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import "../styles/MobileCarousel.css";
+import styles from "../styles/MobileCarousel.module.css";
 
 const promoSlides = [
   {
@@ -85,9 +85,9 @@ export default function MobileCarousel() {
   };
 
   return (
-    <div className="promo-carousel">
+    <div className={styles["promo-carousel"]}>
       <div
-        className="promo-track"
+        className={styles["promo-track"]}
         style={{ transform: `translateX(calc(-${index * 100}% - ${index * 16}px))` }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -96,25 +96,25 @@ export default function MobileCarousel() {
         {promoSlides.map((s) => (
   <div
     key={s.id}
-    className="promo-slide"
+    className={styles["promo-slide"]}
     style={{ backgroundImage: `url(${s.image})` }}
   >
-    <div className="promo-overlay">
+    <div className={styles["promo-overlay"]}>
       {/* Titles now at the top */}
-      <div className="promo-titles promo-titles--top">
-        <h4 className="promo-title">{s.title}</h4>
-        <h2 className="promo-subtitle">{s.subtitle}</h2>
+      <div className={`${styles["promo-titles"]} ${styles["promo-titles--top"]}`}>
+        <h4 className={styles["promo-title"]}>{s.title}</h4>
+        <h2 className={styles["promo-subtitle"]}>{s.subtitle}</h2>
       </div>
 
       {/* Tag banner moved just above CTA */}
-      <div className="promo-bottom-content">
-        <div className="promo-tag">
+      <div className={styles["promo-bottom-content"]}>
+        <div className={styles["promo-tag"]}>
           <span>INTRODUCING</span>
-          <img src={s.logo} alt="Hot Wheels" className="promo-logo" />
+          <img src={s.logo} alt="Hot Wheels" className={styles["promo-logo"]} />
           <span>LIMITED TIME DEALS</span>
         </div>
 
-        <button className="promo-btn">View all cars</button>
+        <button className={styles["promo-btn"]}>View all cars</button>
       </div>
     </div>
   </div>
@@ -122,9 +122,9 @@ export default function MobileCarousel() {
 
       </div>
 
-      <div className="promo-dots">
+      <div className={styles["promo-dots"]}>
         {promoSlides.map((_, i) => (
-          <div key={i} className={`promo-dot ${i === index ? "active" : ""}`} />
+          <div key={i} className={`${styles["promo-dot"]} ${i === index ? styles["active"] : ""}`} />
         ))}
       </div>
     </div>
