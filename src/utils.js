@@ -132,7 +132,10 @@ export const normalizeCar = (car) => {
       featuresByCategory: Object.entries(car.features || {}).map(
         ([category, items]) => ({
           category,
-          items: items.map((f) => f.name),
+          items: items.map((f) => ({
+            name: f.name,
+            status: f.status || 'flawless', // flawless | little_flaw | damaged
+          })),
         })
       ),
 

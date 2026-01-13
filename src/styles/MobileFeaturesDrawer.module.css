@@ -1,4 +1,3 @@
-/* DRAWER overlay & panel */
 .drawerOverlay {
   position: fixed;
   inset: 0;
@@ -12,62 +11,63 @@
   right: 0;
   top: 0;
   height: 100vh;
-  width: 520px;
-  max-width: 95vw;
+  width: 100%;
+  max-width: 100vw;
   background: #fff;
   z-index: 10003;
   display: flex;
   flex-direction: column;
   box-shadow: -12px 0 40px rgba(12, 33, 58, 0.12);
-  border-left: 1px solid #eee;
 }
 
-/* header (back button + title) */
 .drawerHeader {
   display: flex;
   gap: 16px;
-  align-items: center;
+  align-items: flex-start;
   padding: 20px 24px;
   border-bottom: 1px solid #e5e7eb;
   background: #ffffff;
 }
 
 .drawerBackBtn {
-  border: none;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(12, 33, 58, 0.2);
   font-size: 20px;
   cursor: pointer;
   color: #0c213a;
-  padding: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
   transition: all 0.2s ease;
   flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.drawerBackBtn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.5;
+  color: #0c213a;
 }
 
 .drawerBackBtn:hover {
-  background: #f3f4f6;
-  transform: translateX(-2px);
-}
-
-.drawerHeaderTitle {
-  flex: 1;
+  background: #ffffff;
+  border-color: #0c213a;
+  transform: scale(1.05);
 }
 
 .drawerTitle {
   margin: 0;
-  font-size: 20px;
+  font-size: 22px;
+  color: #2d063b;
   font-weight: 700;
-  color: #0c213a;
   letter-spacing: -0.02em;
-  line-height: 1.2;
+  line-height: 1.3;
 }
 
-/* search input */
 .drawerSearch {
   padding: 16px 24px;
   position: relative;
@@ -77,7 +77,7 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
-.drawerSearchIcon {
+.searchIcon {
   position: absolute;
   left: 36px;
   color: #9ca3af;
@@ -86,7 +86,7 @@
   z-index: 1;
 }
 
-.drawerSearchInput {
+.searchInput {
   width: 100%;
   padding: 12px 16px 12px 44px;
   border-radius: 10px;
@@ -96,40 +96,29 @@
   transition: all 0.2s ease;
 }
 
-.drawerSearchInput:focus {
+.searchInput:focus {
   outline: none;
   border-color: #0c213a;
   background: #ffffff;
   box-shadow: 0 0 0 3px rgba(12, 33, 58, 0.1);
 }
 
-/* content area */
 .drawerContent {
-  overflow: hidden;
+  overflow-y: auto;
   flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* specs drawer content */
-.specsDrawerContent {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.specsDrawerLayout {
+.drawerLayout {
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 200px 1fr;
   height: 100%;
-  border-top: 1px solid #e5e7eb;
-  min-height: 0;
-  overflow: hidden;
 }
 
-/* Category navigation - Left Sidebar */
-.specsCategoryNav {
+.categoryNav {
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -139,7 +128,7 @@
   overflow-y: auto;
 }
 
-.specsCategoryBtn {
+.categoryBtn {
   padding: 14px 20px;
   border: none;
   background: transparent;
@@ -150,32 +139,27 @@
   cursor: pointer;
   transition: all 0.2s ease;
   border-left: 3px solid transparent;
-  position: relative;
 }
 
-.specsCategoryBtn:hover {
+.categoryBtn:hover {
   background: #f3f4f6;
   color: #0c213a;
 }
 
-.specsCategoryBtnActive {
+.categoryBtnActive {
   background: #ffffff;
-  color: #0c213a;
+  color: #2d063b;
   font-weight: 600;
-  border-left-color: #0c213a;
+  border-left-color: #2d063b;
 }
 
-/* Content Area - Right Side */
-.specsContentArea {
-  padding: 24px 28px;
+.featuresContent {
+  padding: 20px 24px;
   overflow-y: auto;
   background: #ffffff;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
 }
 
-.specsCategoryTitle {
+.categoryTitle {
   font-size: 14px;
   font-weight: 700;
   color: #0c213a;
@@ -186,14 +170,57 @@
   text-transform: uppercase;
 }
 
-/* specs list in drawer */
-.specsList {
+.featuresList {
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
-.specsEmpty {
+.featureRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.featureCheck {
+  width: 20px;
+  height: 20px;
+  color: #2d063b;
+  flex-shrink: 0;
+}
+
+.statusIcon {
+  width: 20px;
+  height: 20px;
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.statusIconWarning {
+  width: 20px;
+  height: 20px;
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+.statusIconError {
+  width: 20px;
+  height: 20px;
+  color: #ef4444;
+  flex-shrink: 0;
+}
+
+.featureLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #2d063b;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.emptyState {
   padding: 60px 20px;
   text-align: center;
   color: #9ca3af;
@@ -201,70 +228,6 @@
   font-weight: 500;
 }
 
-.specRow {
-  display: flex;
-  flex-direction: column;
-  padding: 18px 0;
-  border-bottom: 1px solid #f1f5f9;
-  transition: background 0.2s ease;
-  gap: 8px;
-}
-
-.specRow:hover {
-  background: #f9fafb;
-  margin: 0 -28px;
-  padding-left: 28px;
-  padding-right: 28px;
-}
-
-.specRowLeft {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  width: 100%;
-}
-
-.specRowIcon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #f7f1fb 0%, #f3f4f6 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #0c213a;
-  font-size: 18px;
-  flex-shrink: 0;
-  border: 1px solid rgba(12, 33, 58, 0.08);
-}
-
-.specRowMeta {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.specRowMeta .specLabel {
-  font-size: 14px;
-  color: #64748b;
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-.specRowValue {
-  font-weight: 700;
-  color: #0c213a;
-  font-size: 16px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  text-align: left;
-  line-height: 1.5;
-}
-
-/* footer buttons inside drawer */
 .drawerFooter {
   display: flex;
   gap: 12px;
@@ -293,10 +256,6 @@
   box-shadow: 0 6px 16px rgba(12, 33, 58, 0.3);
 }
 
-.bookBtn:active {
-  transform: translateY(0);
-}
-
 .testDriveBtn {
   flex: 1;
   background: linear-gradient(135deg, #e93b68 0%, #d12a55 100%);
@@ -316,51 +275,21 @@
   box-shadow: 0 6px 16px rgba(233, 59, 104, 0.4);
 }
 
-.testDriveBtn:active {
-  transform: translateY(0);
-}
-
-/* responsiveness */
 @media (max-width: 900px) {
-  .drawerPanel {
-    width: 100%;
-    max-width: 100vw;
+  .drawerLayout {
+    grid-template-columns: 160px 1fr;
   }
   
-  .specsDrawerLayout {
-    grid-template-columns: 180px 1fr;
-  }
-  
-  .specsCategoryNav {
+  .categoryNav {
     padding: 12px 0;
   }
   
-  .specsCategoryBtn {
+  .categoryBtn {
     padding: 12px 16px;
     font-size: 13px;
   }
   
-  .specsContentArea {
-    padding: 20px 24px;
-  }
-  
-  .specRow {
-    padding: 16px 0;
-    gap: 16px;
-  }
-  
-  .specRowLeft {
-    gap: 14px;
-  }
-  
-  .specRowIcon {
-    width: 36px;
-    height: 36px;
-    font-size: 16px;
-  }
-  
-  .specRowValue {
-    min-width: 100px;
-    font-size: 14px;
+  .featuresContent {
+    padding: 16px 20px;
   }
 }

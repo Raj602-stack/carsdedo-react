@@ -1,6 +1,8 @@
 // src/pages/CarDetails.jsx
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { FiZap, FiSettings, FiNavigation, FiPackage, FiArrowLeft, FiX, FiCheckCircle, FiAlertCircle, FiXCircle, FiChevronLeft, FiChevronRight, FiMail } from "react-icons/fi";
+import { FaInstagram, FaFacebook, FaTwitter } from "react-icons/fa";
 
 import styles from "../styles/CarDetailsWeb.module.css";
 import '../components/RightDrawer'
@@ -74,6 +76,56 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
   const navigate = useNavigate();
   // const car = carsData.find((c) => Number(c.id) === Number(id));
 
+  // Share functionality
+  const getShareUrl = () => {
+    return window.location.href;
+  };
+
+  const getShareText = () => {
+    if (!car) return 'Check out this car!';
+    return `Check out this ${car.title} - ${formatKm(car.km)} • ${car.fuel} • ${car.transmission} at Spinny!`;
+  };
+
+  const handleShare = (platform) => {
+    const url = getShareUrl();
+    const text = getShareText();
+    const encodedUrl = encodeURIComponent(url);
+    const encodedText = encodeURIComponent(text);
+
+    switch (platform) {
+      case 'facebook':
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, '_blank', 'width=600,height=400');
+        break;
+      case 'twitter':
+        window.open(`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`, '_blank', 'width=600,height=400');
+        break;
+      case 'email':
+        window.location.href = `mailto:?subject=${encodeURIComponent(`Check out this car: ${car?.title || 'Car Listing'}`)}&body=${encodedText}%0A%0A${encodedUrl}`;
+        break;
+      case 'instagram':
+        // Instagram doesn't support direct URL sharing, so we'll copy to clipboard
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(url).then(() => {
+            alert('Link copied to clipboard! You can paste it in your Instagram story or post.');
+          }).catch(() => {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = url;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Link copied to clipboard! You can paste it in your Instagram story or post.');
+          });
+        } else {
+          alert(`Share this link: ${url}`);
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
   const ignoreSpyRef = useRef(false);
 
 
@@ -120,11 +172,9 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
   };
 
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [drawerTab, setDrawerTab] = useState("features"); // 'features' or 'specs'
 
-  // open drawer and set active tab
-  function openDrawerTab(tab = "features") {
-    setDrawerTab(tab);
+  // open drawer
+  function openDrawerTab() {
     setDrawerOpen(true);
   }
 
@@ -864,7 +914,7 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
                 <div key={idx} className={styles.reportLeftItem}>
                   <div className={styles.reportLeftIcon}>
                     {getIcon(system.key)}
-      </div>
+        </div>
       <div className={styles.reportLeftText}>
                     <div className={styles.reportLeftTitle}>{system.category}</div>
                     <div className={styles.reportLeftSub}>{system.description}</div>
@@ -895,7 +945,7 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
     </div>
   </div>
 </div>
-        </div>
+  </div>
       </>
     );
   })()}
@@ -915,18 +965,18 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
         <div className={styles.reasonContent}>
           <h3 className={styles.reasonTitle}>{reason.title}</h3>
           <p className={styles.reasonDescription}>{reason.description}</p>
-        </div>
-      </div>
-    ))}
-  </div>
+                </div>
+              </div>
+            ))}
+          </div>
 </section>
 
 {/* Specs Section */}
 <section data-section="specs" ref={specsRef} className={styles.specsSection}>
   <h2 className={styles.sectionTitle}>Car Specifications</h2>
-  <p className={styles.sectionSubtitle}>Detailed technical specifications</p>
   
   {(() => {
+    // Get specs by category
     const specsByCategory = {};
     if (car?.specs && car.specs.length > 0) {
       car.specs.forEach(spec => {
@@ -936,80 +986,179 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
         specsByCategory[spec.category].push(spec);
       });
     }
-    const categories = Object.keys(specsByCategory);
     
-    return categories.length > 0 ? (
-      <div className={styles.specsCategories}>
-        {categories.map((category, catIdx) => (
-          <div key={catIdx} className={styles.specCategory}>
-            <h3 className={styles.categoryTitle}>{category}</h3>
-          <div className={styles.specsGrid}>
-              {specsByCategory[category].map((spec, specIdx) => (
-                <div key={specIdx} className={styles.specItem}>
-                  <div className={styles.specLabel}>{spec.label}</div>
-                  <div className={styles.specValue}>{spec.value}</div>
-              </div>
-            ))}
-          </div>
-              </div>
-        ))}
-            </div>
+    // Icon mapping for common specs
+    const getSpecIcon = (label) => {
+      const labelLower = label.toLowerCase();
+      if (labelLower.includes('mileage')) return <FiZap />;
+      if (labelLower.includes('displacement')) return <FiSettings />;
+      if (labelLower.includes('ground clearance')) return <FiNavigation />;
+      if (labelLower.includes('boot space')) return <FiPackage />;
+      return <FiSettings />;
+    };
+    
+    // Get preview specs (4 key specs to show)
+    const getPreviewSpecs = () => {
+      const preview = [];
+      
+      // Try to get Mileage from fuel_performance
+      const fuelPerf = specsByCategory['fuel_performance'] || [];
+      const mileage = fuelPerf.find(s => s.label.toLowerCase().includes('mileage'));
+      if (mileage) preview.push(mileage);
+      
+      // Try to get Displacement from engine_transmission
+      const engineTrans = specsByCategory['engine_transmission'] || [];
+      const displacement = engineTrans.find(s => s.label.toLowerCase().includes('displacement'));
+      if (displacement) preview.push(displacement);
+      
+      // Try to get Ground clearance from dimension_capacity
+      const dimCap = specsByCategory['dimension_capacity'] || [];
+      const groundClearance = dimCap.find(s => s.label.toLowerCase().includes('ground clearance'));
+      if (groundClearance) preview.push(groundClearance);
+      
+      // Try to get Boot space from dimension_capacity
+      const bootSpace = dimCap.find(s => s.label.toLowerCase().includes('boot space'));
+      if (bootSpace) preview.push(bootSpace);
+      
+      return preview.slice(0, 4);
+    };
+    
+    const previewSpecs = getPreviewSpecs();
+    
+    return previewSpecs.length > 0 ? (
+      <div className={styles.specsCard}>
+        <div className={styles.specsGrid}>
+          {previewSpecs.map((spec, idx) => (
+            <div key={idx} className={styles.specCell}>
+              <div className={styles.specIcon}>
+                {getSpecIcon(spec.label)}
+        </div>
+              <div className={styles.specMeta}>
+                <div className={styles.specLabel}>{spec.label}</div>
+                <div className={styles.specValue}>{spec.value}</div>
+        </div>
+        </div>
+          ))}
+      </div>
+
+        <div className={styles.specsActions}>
+          <button
+            type="button"
+            className={styles.viewAllBtn}
+            onClick={openDrawerTab}
+          >
+            VIEW ALL SPECIFICATIONS
+          </button>
+        </div>
+        </div>
     ) : null;
   })()}
-
-            <div className={styles.specsActions}>
-              <button
-                type="button"
-      className={styles.viewAllBtn}
-                onClick={() => openDrawerTab("specs")}
-              >
-                VIEW ALL SPECIFICATIONS
-              </button>
-        </div>
-      </section>
+</section>
 
 {/* Features Section */}
 <section data-section="features" className={styles.featuresSection}>
-  <h2 className={styles.sectionTitle}>Car Features</h2>
-  <p className={styles.sectionSubtitle}>All the features this car has to offer</p>
+  <h2 className={styles.featuresSectionTitle}>Top Features of this car</h2>
   
-  <div className={styles.featuresCategories}>
-    {(car?.featuresByCategory || []).slice(0, 3).map((category, catIdx) => (
-      <div key={catIdx} className={styles.featureCategory}>
-        <h3 className={styles.categoryTitle}>{category.category}</h3>
-        <div className={styles.featuresList}>
-          {category.items.slice(0, 6).map((feature, featIdx) => (
-            <div key={featIdx} className={styles.featureItem}>
-              <svg className={styles.featureCheck} width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <span className={styles.featureName}>{feature}</span>
-        </div>
-          ))}
-        </div>
-        </div>
-    ))}
+  <div className={styles.featuresCardWrapper}>
+    <div className={styles.featuresCard}>
+      <div className={styles.featuresCategoriesGrid}>
+        {(() => {
+          // Prioritize showing Safety, Exterior, and Interior/Comfort categories
+          const allCategories = car?.featuresByCategory || [];
+          const prioritized = [];
+          const categoryMap = {};
+          
+          // Create a map for quick lookup
+          allCategories.forEach(cat => {
+            const key = cat.category.toLowerCase();
+            categoryMap[key] = cat;
+          });
+          
+          // Try to get Safety first
+          if (categoryMap['safety'] && prioritized.length < 3) {
+            prioritized.push(categoryMap['safety']);
+          }
+          
+          // Try to get Exterior second
+          if (categoryMap['exterior'] && prioritized.length < 3) {
+            prioritized.push(categoryMap['exterior']);
+          }
+          
+          // Try to get Interior or Comfort & Convenience third
+          if (prioritized.length < 3) {
+            if (categoryMap['interior']) {
+              prioritized.push(categoryMap['interior']);
+            } else if (categoryMap['comfort & convenience']) {
+              prioritized.push(categoryMap['comfort & convenience']);
+            } else if (categoryMap['comfort']) {
+              prioritized.push(categoryMap['comfort']);
+            }
+          }
+          
+          // Fill remaining slots with other categories
+          const used = new Set(prioritized.map(c => c.category));
+          allCategories.forEach(cat => {
+            if (!used.has(cat.category) && prioritized.length < 3) {
+              prioritized.push(cat);
+            }
+          });
+          
+          return prioritized.slice(0, 3);
+        })().map((category, catIdx) => (
+          <div key={catIdx} className={styles.featureCategoryColumn}>
+            <div className={styles.categoryHeader}>
+              <span className={styles.categoryLabel}>{category.category.toUpperCase()}</span>
+            </div>
+            <div className={styles.featuresList}>
+              {category.items.slice(0, 6).map((feature, featIdx) => {
+                const featureName = typeof feature === 'string' ? feature : feature.name;
+                const featureStatus = typeof feature === 'object' ? (feature.status || 'flawless') : 'flawless';
+                
+                // Get status icon
+                const getStatusIcon = () => {
+                  const statusLower = (featureStatus || '').toLowerCase();
+                  if (statusLower === 'flawless') {
+                    return <FiCheckCircle className={styles.statusIcon} />;
+                  } else if (statusLower === 'little_flaw' || statusLower === 'little flaw' || statusLower === 'minor') {
+                    return <FiAlertCircle className={styles.statusIconWarning} />;
+                  } else if (statusLower === 'damaged' || statusLower === 'major') {
+                    return <FiXCircle className={styles.statusIconError} />;
+                  } else {
+                    return <FiCheckCircle className={styles.statusIcon} />;
+                  }
+                };
+                
+                return (
+                  <div key={featIdx} className={styles.featureRow}>
+                    {getStatusIcon()}
+                    <span className={styles.featureName}>{featureName}</span>
+                    {/* Optional: Add info icon or picture icon here if needed */}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
-
-  <div className={styles.featuresActions}>
-      <button
-        type="button"
-      className={styles.viewAllBtn}
-        onClick={openFeaturesDrawer}
-      >
-        VIEW ALL FEATURES
-      </button>
+      
+      <div className={styles.featuresActions}>
+        <button
+          type="button"
+          className={styles.viewAllFeaturesBtn}
+          onClick={openFeaturesDrawer}
+        >
+          VIEW ALL FEATURES
+        </button>
+      </div>
+    </div>
   </div>
 </section>
 
 {/* Right Drawer (Features + Specs) */}
 <RightDrawer
   open={drawerOpen}
-  activeTab={drawerTab}
   onClose={closeDrawer}
   specs={car?.specs || []}
-  features={car?.featuresByCategory || []}
-  onTabChange={(tab) => setDrawerTab(tab)}
 />
 
           {/* FINANCE */}
@@ -1090,7 +1239,40 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
 
               <div className={styles.share}>
                 <p>Share with a friend :</p>
-                <div className={styles.icons}>📷 • f • ✕ • ✉️</div>
+                <div className={styles.icons}>
+                  <button 
+                    type="button"
+                    onClick={() => handleShare('instagram')} 
+                    className={styles.shareIcon} 
+                    aria-label="Share on Instagram"
+                  >
+                    <FaInstagram />
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => handleShare('facebook')} 
+                    className={styles.shareIcon} 
+                    aria-label="Share on Facebook"
+                  >
+                    <FaFacebook />
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => handleShare('twitter')} 
+                    className={styles.shareIcon} 
+                    aria-label="Share on Twitter"
+                  >
+                    <FaTwitter />
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => handleShare('email')} 
+                    className={styles.shareIcon} 
+                    aria-label="Share via Email"
+                  >
+                    <FiMail />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1103,8 +1285,8 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
           <div className={styles.drawerBackdrop} onClick={closeReportDrawer} />
           <aside className={styles.reportDrawer} ref={drawerRef} role="dialog" aria-modal="true">
             <div className={styles.drawerHeader}>
-              <button type="button" className={styles.drawerClose} onClick={closeReportDrawer}>
-                ←
+              <button type="button" className={styles.drawerClose} onClick={closeReportDrawer} aria-label="Close report">
+                <FiArrowLeft />
               </button>
               <div>
                 <h3 className={styles.drawerTitle}>Car quality report</h3>
@@ -1583,10 +1765,10 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
       )}
 
 {showFeaturesDrawer && (
-  <FeaturesDrawer onClose={closeFeaturesDrawer} />
+  <FeaturesDrawer car={car} onClose={closeFeaturesDrawer} />
 )}
 
-      <ScrollToTop />
+      {!showReportDrawer && <ScrollToTop />}
     </div>
   );
 }

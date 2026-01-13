@@ -14,6 +14,8 @@ import FooterMobile from "../components/FooterMobile";
 import CarImageCarousel from "../components/CarImageCarousel";
 import MobileReportDrawer from "../components/MobileReportDrawer";
 import ScrollToTop from "../components/ScrollToTop";
+import { RightDrawer } from "../components/RightDrawer";
+import MobileFeaturesDrawer from "../components/MobileFeaturesDrawer";
 
 import { useCars } from "../context/CarsContext";
 import { normalizeCar } from "../utils";
@@ -126,6 +128,28 @@ React.useEffect(() => {
   
   const closeReportDrawer = () => {
     setShowReportDrawer(false);
+  };
+
+  // Specs drawer state
+  const [showSpecsDrawer, setShowSpecsDrawer] = useState(false);
+  
+  const openSpecsDrawer = () => {
+    setShowSpecsDrawer(true);
+  };
+  
+  const closeSpecsDrawer = () => {
+    setShowSpecsDrawer(false);
+  };
+
+  // Features drawer state
+  const [showFeaturesDrawer, setShowFeaturesDrawer] = useState(false);
+  
+  const openFeaturesDrawer = () => {
+    setShowFeaturesDrawer(true);
+  };
+  
+  const closeFeaturesDrawer = () => {
+    setShowFeaturesDrawer(false);
   };
   const [idx, setIdx] = useState(0);
 
@@ -582,8 +606,8 @@ React.useEffect(() => {
         </section> */}
         <BasicInfo ref={registerRef("basic-info")} car={car} />
         <QualityReport ref={registerRef("quality-report")} car={car} onViewFullReport={openReportDrawer} />
-        <Specifications ref={registerRef("specifications")} car={car} />
-        <Features ref={registerRef("features")} car={car} />
+        <Specifications ref={registerRef("specifications")} car={car} onViewAllSpecs={openSpecsDrawer} />
+        <Features ref={registerRef("features")} car={car} onViewAllFeatures={openFeaturesDrawer} />
 
         {/* Quality */}
         {/* <section id="quality-report" ref={registerRef("quality-report")} className="cd-section">
@@ -637,7 +661,23 @@ React.useEffect(() => {
         onClose={closeReportDrawer} 
         car={car} 
       />
-      <ScrollToTop />
+      {/* Specs Drawer */}
+      {!showReportDrawer && (
+        <RightDrawer
+          open={showSpecsDrawer}
+          onClose={closeSpecsDrawer}
+          specs={car?.specs || []}
+        />
+      )}
+      {/* Features Drawer */}
+      {!showReportDrawer && (
+        <MobileFeaturesDrawer
+          open={showFeaturesDrawer}
+          onClose={closeFeaturesDrawer}
+          car={car}
+        />
+      )}
+      {!showReportDrawer && <ScrollToTop />}
     </div>
   );
 }
