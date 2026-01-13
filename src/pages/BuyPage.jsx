@@ -12,6 +12,7 @@ import { useCars } from "../context/CarsContext";
 import Loader from "../components/Loader";
 import Sidebar from "../components/Sidebar";
 import PromotionalCarousel from "../components/PromotionalCarousel";
+import ScrollToTop from "../components/ScrollToTop";
 
 import { IoCodeSlashOutline } from "react-icons/io5";
 
@@ -1772,6 +1773,7 @@ console.log(getCarImages);
       />
 
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <ScrollToTop />
     </div>
   );
 }

@@ -16,6 +16,7 @@ import StoryCarousel from "./StoryCarousel";
 import FaqMob from "./FaqMob";
 import MobileMoreAbout from "./MobileMoreAbout";
 import FooterMobile from "./FooterMobile";
+import ScrollToTop from "./ScrollToTop";
 
 /**
  * MobileHome - mobile-specific homepage (cards list + hero + filters)
@@ -43,7 +44,7 @@ export default function MobileHome({ cars = [] }) {
   <FaqMob/>
   <MobileMoreAbout/>
   <FooterMobile/>
-  
+  <ScrollToTop />
   </>
   );
 }

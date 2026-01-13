@@ -1,0 +1,167 @@
+.scrollToTop {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #0c213a 0%, #1a2d4a 100%);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(12, 33, 58, 0.35), 
+              0 0 0 4px rgba(255, 255, 255, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10000;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  visibility: visible;
+  overflow: visible;
+}
+
+/* Road lines decoration - going upward */
+.scrollToTop::before {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 8px,
+    rgba(255, 255, 255, 0.4) 8px,
+    rgba(255, 255, 255, 0.4) 12px,
+    transparent 12px,
+    transparent 20px
+  );
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+  background-size: 2px 20px;
+}
+
+.scrollToTop:hover::before {
+  opacity: 0.7;
+  animation: roadMoveUp 0.8s linear infinite;
+}
+
+.scrollToTop:active::before {
+  animation: roadMoveUpFast 0.4s linear infinite;
+}
+
+@keyframes roadMoveUp {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 20px;
+  }
+}
+
+@keyframes roadMoveUpFast {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 20px;
+  }
+}
+
+.scrollToTop:hover {
+  transform: translateY(-4px) scale(1.08);
+  box-shadow: 0 8px 24px rgba(12, 33, 58, 0.4), 0 0 0 4px rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, #1a2d4a 0%, #2a3d5a 100%);
+}
+
+.scrollToTop:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.scrollToTopIcon {
+  color: #ffffff;
+  font-size: 20px;
+  stroke-width: 3;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.scrollToTop:hover .scrollToTopIcon {
+  transform: translateY(-4px);
+  color: #ffffff;
+}
+
+.scrollToTopShow {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+}
+
+.scrollToTop.scrollToTopShow {
+  animation: fadeInUp 0.3s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .scrollToTop {
+    bottom: 80px; /* Above bottom navigation */
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    box-shadow: 0 4px 16px rgba(12, 33, 58, 0.35), 
+                0 0 0 3px rgba(255, 255, 255, 0.08);
+  }
+
+  .scrollToTopIcon {
+    font-size: 18px;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .scrollToTop {
+    bottom: 28px;
+    right: 28px;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1025px) {
+  .scrollToTop {
+    bottom: 32px;
+    right: 32px;
+    width: 68px;
+    height: 68px;
+  }
+
+  .scrollToTopIcon {
+    font-size: 22px;
+  }
+}
+
+/* Large desktop */
+@media (min-width: 1440px) {
+  .scrollToTop {
+    bottom: 40px;
+    right: 40px;
+  }
+}

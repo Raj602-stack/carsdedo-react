@@ -11,6 +11,7 @@ import EMICalculator from "../components/EMICalculator";
 import { useCars } from "../context/CarsContext";
 import { normalizeCar } from "../utils"; // or wherever you placed it
 import Loader from "../components/Loader";
+import ScrollToTop from "../components/ScrollToTop";
 
 
 /**
@@ -1585,6 +1586,7 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
   <FeaturesDrawer onClose={closeFeaturesDrawer} />
 )}
 
+      <ScrollToTop />
     </div>
   );
 }

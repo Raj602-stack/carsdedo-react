@@ -15,6 +15,7 @@ import InsightsCards from "../components/InsightsCards";
 import StoriesSection from "../components/StoriesSection";
 import FAQ from "../components/FAQ";
 import WhyBuySection from "../components/WhyBuySection";
+import ScrollToTop from "../components/ScrollToTop";
 
 export default function Home() {
   const [mode, setMode] = useState("buy");
@@ -52,6 +53,7 @@ export default function Home() {
       <StoriesSection />
       <FAQ />
       <WhyBuySection />
+      <ScrollToTop />
     </>
   );
 }

@@ -13,6 +13,7 @@ import MobileMoreAbout from "../components/MobileMoreAbout";
 import FooterMobile from "../components/FooterMobile";
 import CarImageCarousel from "../components/CarImageCarousel";
 import MobileReportDrawer from "../components/MobileReportDrawer";
+import ScrollToTop from "../components/ScrollToTop";
 
 import { useCars } from "../context/CarsContext";
 import { normalizeCar } from "../utils";
@@ -636,6 +637,7 @@ React.useEffect(() => {
         onClose={closeReportDrawer} 
         car={car} 
       />
+      <ScrollToTop />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import PromotionalCarousel from "../components/PromotionalCarousel";
 
 import { useCars } from "../context/CarsContext";
 import Loader from "../components/Loader";
+import ScrollToTop from "../components/ScrollToTop";
 
 
 
@@ -582,6 +583,7 @@ useEffect(() => {
           </div>
         )}
       </main>
+      <ScrollToTop />
     </div>
     
   );
