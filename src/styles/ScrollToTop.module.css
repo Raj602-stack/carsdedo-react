@@ -1,9 +1,9 @@
 .scrollToTop {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 64px;
-  height: 64px;
+  bottom: 12px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
   background: linear-gradient(135deg, #0c213a 0%, #1a2d4a 100%);
   border: none;
   border-radius: 50%;
@@ -11,8 +11,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 20px rgba(12, 33, 58, 0.35), 
-              0 0 0 4px rgba(255, 255, 255, 0.08),
+  box-shadow: 0 4px 16px rgba(12, 33, 58, 0.35), 
+              0 0 0 3px rgba(255, 255, 255, 0.08),
               inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 10000;
@@ -85,7 +85,7 @@
 
 .scrollToTopIcon {
   color: #ffffff;
-  font-size: 20px;
+  font-size: 16px;
   stroke-width: 3;
   transition: transform 0.3s ease;
   position: relative;
@@ -123,45 +123,54 @@
 /* Mobile styles */
 @media (max-width: 768px) {
   .scrollToTop {
-    bottom: 80px; /* Above bottom navigation */
-    right: 20px;
-    width: 56px;
-    height: 56px;
-    box-shadow: 0 4px 16px rgba(12, 33, 58, 0.35), 
-                0 0 0 3px rgba(255, 255, 255, 0.08);
+    bottom: 120px; /* Above bottom navigation and filter button */
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    /* Different color for mobile - pink/red gradient to contrast with blue */
+    background: linear-gradient(135deg, #e93b68 0%, #d12a55 100%);
+    box-shadow: 0 4px 16px rgba(233, 59, 104, 0.4), 
+                0 0 0 2px rgba(255, 255, 255, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .scrollToTop:hover {
+    background: linear-gradient(135deg, #f04a77 0%, #e93b68 100%);
+    box-shadow: 0 6px 20px rgba(233, 59, 104, 0.5), 
+                0 0 0 3px rgba(255, 255, 255, 0.2);
   }
 
   .scrollToTopIcon {
-    font-size: 18px;
+    font-size: 14px;
   }
 }
 
 /* Tablet styles */
 @media (min-width: 769px) and (max-width: 1024px) {
   .scrollToTop {
-    bottom: 28px;
-    right: 28px;
+    bottom: 12px;
+    right: 20px;
   }
 }
 
 /* Desktop styles */
 @media (min-width: 1025px) {
   .scrollToTop {
-    bottom: 32px;
-    right: 32px;
-    width: 68px;
-    height: 68px;
+    bottom: 12px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
   }
 
   .scrollToTopIcon {
-    font-size: 22px;
+    font-size: 16px;
   }
 }
 
 /* Large desktop */
 @media (min-width: 1440px) {
   .scrollToTop {
-    bottom: 40px;
-    right: 40px;
+    bottom: 12px;
+    right: 24px;
   }
 }
