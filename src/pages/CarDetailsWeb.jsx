@@ -8,6 +8,7 @@ import { RightDrawer } from "../components/RightDrawer";
 import { FeaturesDrawer } from "../components/FeaturesDrawer";
 import EMICalculator from "../components/EMICalculator";
 import CarHero from "../components/CarHero";
+import CarImageGallery from "../components/CarImageGallery";
 import StickyTabs from "../components/StickyTabs";
 import CarOverview from "../components/CarOverview";
 import CarQualityReport from "../components/CarQualityReport";
@@ -234,10 +235,15 @@ const [showFeaturesDrawer, setShowFeaturesDrawer] = useState(false);
 
   // Update hero image when car changes
   useEffect(() => {
-    if (car?.image) {
+    if (car?.images) {
+      // Normalized format: images.exterior and images.interior are already URL strings
+      const firstExterior = car.images.exterior?.[0] || null;
+      const firstImage = firstExterior || car.image || '';
+      setHeroImage(firstImage);
+    } else if (car?.image) {
       setHeroImage(car.image);
     }
-  }, [car?.image]);
+  }, [car]);
  
 
   // Drawer functions
@@ -435,11 +441,11 @@ const [showFeaturesDrawer, setShowFeaturesDrawer] = useState(false);
       <div className={styles.carDetailsContainer} ref={containerRef}>
         {/* LEFT */}
         <main className={styles.cdLeft} ref={leftRef}>
-          {/* Hero */}
+          {/* Hero - Image Gallery */}
           <div ref={heroRef}>
-            <CarHero
+            <CarImageGallery
               car={car}
-              heroImage={heroImage}
+              currentImage={heroImage}
               onImageChange={setHeroImage}
             />
           </div>

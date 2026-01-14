@@ -14,6 +14,7 @@ import MobileHome from "./components/MobileHome";
 import MobileSellPage from "./pages/MobileSellPage";
 import BuyPageWeb from "./pages/BuyPageWeb";
 import CarDetailsWeb from "./pages/CarDetailsWeb";
+import CarGallery from "./pages/CarGallery";
 import SellPageWeb from "./pages/SellPageWeb";
 import LoginWeb from "./pages/LoginWeb";
 import Wishlist from "./pages/Wishlist";
@@ -50,6 +51,7 @@ export default function App() {
           <Route path="blog" element={<Blog/>} />
           <Route path="blog/:id" element={<BlogDetail/>} />
             <Route path="car/:id" element={<CarDetails />} />
+            <Route path="car/:id/gallery" element={<CarGallery />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="account" element={<ProtectedRoute><AccountPage/></ProtectedRoute>} />
             <Route path="/specifications" element={<SpecificationsPage/>} />
@@ -72,7 +74,6 @@ export default function App() {
             <Route path="buy" element={<BuyPageWeb/>} />
             <Route path="sell" element={<SellPageWeb/>} />
             <Route path="/car/:id" element={<CarDetailsWeb />} />
-           
             <Route path="/car/:id/book" element={<CarBooking />} />
             <Route path="/test-drive/:carId" element={<ScheduleTestDriveWeb/>}/>
             <Route path="/test-drive/confirmation/:carId" element={<TestDriveConfirmation/>}/>
