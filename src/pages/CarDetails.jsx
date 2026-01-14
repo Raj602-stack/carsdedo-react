@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "../styles/CarDetails.css";
 import ReasonsToBuy from "../components/ReasonsToBuy";
@@ -240,6 +240,7 @@ React.useEffect(() => {
   const lastActiveRef = useRef(active);
   const rafIdRef = useRef(null);
   const carouselBottomScrollRef = useRef(0); // Store scroll position when carousel bottom reaches threshold
+  const isScrollingProgrammatically = useRef(false); // Flag to prevent flickering during programmatic scroll
 
   // scroll handling: update fixedTabs, compactHeader, active tab
   useEffect(() => {
@@ -268,6 +269,11 @@ React.useEffect(() => {
     function update() {
       if (rafIdRef.current) return;
       
+      // Skip update if we're programmatically scrolling to prevent flickering
+      if (isScrollingProgrammatically.current) {
+        return;
+      }
+      
       rafIdRef.current = requestAnimationFrame(() => {
         const scrollTop = main.scrollTop;
         
@@ -294,55 +300,86 @@ React.useEffect(() => {
         setCompactHeader(scrollTop >= headerThreshold);
 
         // Active tab detection using offsetTop (more stable than getBoundingClientRect)
-        let best = lastActiveRef.current;
+        let best = null;
         let bestScrollOffset = Infinity;
         
-        for (const s of sections) {
-          const el = sectionRefs.current[s.id];
-          if (!el) continue;
-          
-          // Use offsetTop which is stable regardless of fixed tabs
-          const sectionOffsetTop = el.offsetTop;
-          const sectionScrollOffset = sectionOffsetTop - scrollTop;
-          
-          // Find the section that's closest to but above the threshold
-          if (sectionScrollOffset <= ACTIVE_TAB_THRESHOLD && sectionScrollOffset >= -20) {
-            if (sectionScrollOffset < bestScrollOffset) {
-              best = s.id;
-              bestScrollOffset = sectionScrollOffset;
-            }
+        // Special case: if at the very top of the page (< 200px), default to "overview"
+        if (scrollTop < 200) {
+          const overviewEl = sectionRefs.current["overview"];
+          if (overviewEl) {
+            best = "overview";
+            bestScrollOffset = overviewEl.offsetTop - scrollTop;
           }
         }
         
-        // Fallback: if no section found above threshold, use the one just passed
-        if (best === lastActiveRef.current) {
-      for (const s of sections) {
-        const el = sectionRefs.current[s.id];
-        if (!el) continue;
+        // If not at the top, use normal detection logic
+        if (!best || scrollTop >= 200) {
+          best = null;
+          bestScrollOffset = Infinity;
+          
+          for (const s of sections) {
+            const el = sectionRefs.current[s.id];
+            if (!el) continue;
+            
+            // Use offsetTop which is stable regardless of fixed tabs
             const sectionOffsetTop = el.offsetTop;
             const sectionScrollOffset = sectionOffsetTop - scrollTop;
             
-            if (sectionScrollOffset < 0 && Math.abs(sectionScrollOffset) < Math.abs(bestScrollOffset)) {
+            // Find the section that's closest to but above the threshold
+            if (sectionScrollOffset <= ACTIVE_TAB_THRESHOLD && sectionScrollOffset >= -20) {
+              if (sectionScrollOffset < bestScrollOffset) {
+                best = s.id;
+                bestScrollOffset = sectionScrollOffset;
+              }
+            }
+          }
+          
+          // Fallback: if no section found above threshold, use the one just passed
+          if (!best) {
+      for (const s of sections) {
+        const el = sectionRefs.current[s.id];
+        if (!el) continue;
+              const sectionOffsetTop = el.offsetTop;
+              const sectionScrollOffset = sectionOffsetTop - scrollTop;
+              
+              if (sectionScrollOffset < 0 && Math.abs(sectionScrollOffset) < Math.abs(bestScrollOffset)) {
           best = s.id;
-              bestScrollOffset = sectionScrollOffset;
+                bestScrollOffset = sectionScrollOffset;
+              }
             }
           }
         }
         
+        // Final fallback: if still no section found, default to overview
+        if (!best) {
+          best = "overview";
+        }
+        
         // Only update if different to prevent unnecessary re-renders
-        if (best !== lastActiveRef.current && best !== active) {
+        if (best !== lastActiveRef.current) {
           lastActiveRef.current = best;
           setActive(best);
-      }
+        }
         
         rafIdRef.current = null;
       });
     }
 
     main.addEventListener("scroll", update, { passive: true });
-    update(); // run once
+    
+    // Run immediately and also after a small delay to ensure sections are mounted
+    update();
+    const timeoutId = setTimeout(() => {
+      update();
+      // Ensure overview is selected if we're at the top
+      if (main.scrollTop < 200 && active !== "overview") {
+        setActive("overview");
+        lastActiveRef.current = "overview";
+      }
+    }, 100);
     
     return () => {
+      clearTimeout(timeoutId);
       main.removeEventListener("scroll", update);
       if (rafIdRef.current) {
         cancelAnimationFrame(rafIdRef.current);
@@ -351,16 +388,51 @@ React.useEffect(() => {
     };
   }, [active, sections]);
 
-  const scrollTo = (id) => {
+  const scrollTo = useCallback((id) => {
+    // Set flag to prevent scroll listener from interfering
+    isScrollingProgrammatically.current = true;
+    
+    // Immediately set active tab to prevent flickering
+    setActive(id);
+    lastActiveRef.current = id;
+    
+    // Special case: overview should scroll to top
+    if (id === "overview") {
+      const main = mainRef.current;
+      if (!main) {
+        isScrollingProgrammatically.current = false;
+        return;
+      }
+      main.scrollTo({ top: 0, behavior: "smooth" });
+      // Reset flag after scroll completes (smooth scroll typically takes 300-500ms)
+      setTimeout(() => {
+        isScrollingProgrammatically.current = false;
+        // Ensure overview is still active after scroll completes
+        if (main.scrollTop < 200) {
+          setActive("overview");
+          lastActiveRef.current = "overview";
+        }
+      }, 600);
+      return;
+    }
+    
     const el = sectionRefs.current[id];
     const main = mainRef.current;
-    if (!el || !main) return;
+    if (!el || !main) {
+      isScrollingProgrammatically.current = false;
+      return;
+    }
     const mainRect = main.getBoundingClientRect();
     const elRect = el.getBoundingClientRect();
     const delta = elRect.top - mainRect.top;
     const offset = (fixedTabs && tabsRef.current) ? tabsRef.current.offsetHeight + 12 : 12;
     main.scrollTo({ top: main.scrollTop + delta - offset, behavior: "smooth" });
-  };
+    
+    // Reset flag after scroll completes
+    setTimeout(() => {
+      isScrollingProgrammatically.current = false;
+    }, 600);
+  }, [fixedTabs]);
 
   if (loading) {
     return <Loader message="Loading car details..." fullScreen={true} />;
@@ -497,11 +569,17 @@ React.useEffect(() => {
   <button
     key={s.id}
     ref={(el) => {
-      if (active === s.id && el) {
-        el.scrollIntoView({
-          behavior: "smooth",
-          inline: "center",
-          block: "nearest",
+      // Only scroll tab into view if not programmatically scrolling to prevent flickering
+      if (active === s.id && el && !isScrollingProgrammatically.current) {
+        // Use requestAnimationFrame to avoid conflicts
+        requestAnimationFrame(() => {
+          if (!isScrollingProgrammatically.current) {
+            el.scrollIntoView({
+              behavior: "smooth",
+              inline: "center",
+              block: "nearest",
+            });
+          }
         });
       }
     }}
@@ -681,4 +759,3 @@ React.useEffect(() => {
     </div>
   );
 }
-  

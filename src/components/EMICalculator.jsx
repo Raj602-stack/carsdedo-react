@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 
-export default function EMICalculatorInline({refi}) {
+export default function EMICalculatorInline() {
   const minLoan = 100000;
   const maxLoan = 1387985;
 
@@ -83,7 +83,7 @@ export default function EMICalculatorInline({refi}) {
   // minor helper to allow styled range thumb in inline styles on Webkit we still need CSS, but most browsers will show default; it's fine as fallback
   // Render
   return (
-    <div ref={refi}  data-section="finance" style={styles.card}>
+    <div style={styles.card}>
       <div style={styles.left}>
         <div style={styles.heading}>EMI starting from</div>
         <div style={styles.value}>

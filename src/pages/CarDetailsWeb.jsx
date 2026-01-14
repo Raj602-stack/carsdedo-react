@@ -1,134 +1,64 @@
-// src/pages/CarDetails.jsx
-import React, { useEffect, useRef, useState, useCallback } from "react";
+// src/pages/CarDetailsWeb.jsx
+import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FiZap, FiSettings, FiNavigation, FiPackage, FiArrowLeft, FiX, FiCheckCircle, FiAlertCircle, FiXCircle, FiChevronLeft, FiChevronRight, FiMail } from "react-icons/fi";
-import { FaInstagram, FaFacebook, FaTwitter } from "react-icons/fa";
+import { FiArrowLeft } from "react-icons/fi";
 
 import styles from "../styles/CarDetailsWeb.module.css";
-import '../components/RightDrawer'
 import { RightDrawer } from "../components/RightDrawer";
 import { FeaturesDrawer } from "../components/FeaturesDrawer";
 import EMICalculator from "../components/EMICalculator";
+import CarHero from "../components/CarHero";
+import StickyTabs from "../components/StickyTabs";
+import CarOverview from "../components/CarOverview";
+import CarQualityReport from "../components/CarQualityReport";
+import ReasonsToBuy from "../components/ReasonsToBuy";
+import CarSpecs from "../components/CarSpecs";
+import CarFeatures from "../components/CarFeatures";
+import CarDetailsSidebar from "../components/CarDetailsSidebar";
 
 import { useCars } from "../context/CarsContext";
-import { normalizeCar } from "../utils"; // or wherever you placed it
+import { normalizeCar, formatKm } from "../utils";
+import { useShare } from "../hooks/useShare";
+import { useScrollSpy } from "../hooks/useScrollSpy";
+import { TOPBAR_HEIGHT, SECTIONS } from "../constants/carDetails";
 import Loader from "../components/Loader";
 import ScrollToTop from "../components/ScrollToTop";
 
-
 /**
- * CarDetails page
+ * CarDetailsWeb page
  * - sticky tab bar appears after hero scrolls out
  * - sticky tab bar width/left aligned to left content (not full width)
  * - scrollspy highlights active tab (IntersectionObserver + rAF fallback)
  * - right card is fixed while scrolling, but stops above footer
  * - Report summary card integrated + Full Report slide-over drawer
- *
- * Keep TOPBAR_HEIGHT in sync with CSS :root --topbar-height
  */
-const TOPBAR_HEIGHT = 68;
 
 
 
-// sample data — replace with your real data or props
-const sampleSpecs = [
-  { id: "mileage", label: "Mileage (ARAI)", value: "14 kmpl", icon: "⏱" },
-  { id: "ground_clearance", label: "Ground clearance", value: "205 mm", icon: "⬆️" },
-  { id: "boot", label: "Boot space", value: "447 litres", icon: "🧳" },
-  { id: "displacement", label: "Displacement", value: "1956 cc", icon: "🔧" },
-];
-
-const sampleFeatures = [
-  { id: "fog", group: "Exterior", label: "Fog lamps", present: true },
-  { id: "tail_led", group: "Exterior", label: "Tail lamps - LEDs", present: true },
-  { id: "xenon", group: "Exterior", label: "Xenon headlamps / hid-headlamps", present: false },
-  // ...more features
-];
-
-export default function CarDetails() {
+export default function CarDetailsWeb() {
   const { cars, loading } = useCars();
   const { id } = useParams();
-  const rawCar = cars.find((c) => String(c.id) === String(id));
-  const car = rawCar ? normalizeCar(rawCar) : null;
-
-  // Debug: Log RTO value
-  useEffect(() => {
-    if (car && process.env.NODE_ENV === 'development') {
-      console.log('CarDetailsWeb - RTO Debug:', {
-        rawCarRto: rawCar?.rto,
-        carLocationRto: car?.locationRto,
-        rawCarLocationRto: rawCar?.location_rto,
-      });
-    }
-  }, [car, rawCar]);
-  console.log(car);
-
-
-
-
-  // at top of component
-const [showFeaturesDrawer, setShowFeaturesDrawer] = useState(false);
-
-const openFeaturesDrawer = () => setShowFeaturesDrawer(true);
-const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
-
- 
   const navigate = useNavigate();
-  // const car = carsData.find((c) => Number(c.id) === Number(id));
+
+  const rawCar = useMemo(() => 
+    cars.find((c) => String(c.id) === String(id)),
+    [cars, id]
+  );
+
+  const car = useMemo(() => 
+    rawCar ? normalizeCar(rawCar) : null,
+    [rawCar]
+  );
 
   // Share functionality
-  const getShareUrl = () => {
-    return window.location.href;
-  };
+  const handleShare = useShare(car, formatKm);
 
-  const getShareText = () => {
-    if (!car) return 'Check out this car!';
-    return `Check out this ${car.title} - ${formatKm(car.km)} • ${car.fuel} • ${car.transmission} at Spinny!`;
-  };
+  // Features drawer state
+const [showFeaturesDrawer, setShowFeaturesDrawer] = useState(false);
+  const openFeaturesDrawer = useCallback(() => setShowFeaturesDrawer(true), []);
+  const closeFeaturesDrawer = useCallback(() => setShowFeaturesDrawer(false), []);
 
-  const handleShare = (platform) => {
-    const url = getShareUrl();
-    const text = getShareText();
-    const encodedUrl = encodeURIComponent(url);
-    const encodedText = encodeURIComponent(text);
-
-    switch (platform) {
-      case 'facebook':
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, '_blank', 'width=600,height=400');
-        break;
-      case 'twitter':
-        window.open(`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`, '_blank', 'width=600,height=400');
-        break;
-      case 'email':
-        window.location.href = `mailto:?subject=${encodeURIComponent(`Check out this car: ${car?.title || 'Car Listing'}`)}&body=${encodedText}%0A%0A${encodedUrl}`;
-        break;
-      case 'instagram':
-        // Instagram doesn't support direct URL sharing, so we'll copy to clipboard
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(url).then(() => {
-            alert('Link copied to clipboard! You can paste it in your Instagram story or post.');
-          }).catch(() => {
-            // Fallback for older browsers
-            const textArea = document.createElement('textarea');
-            textArea.value = url;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            alert('Link copied to clipboard! You can paste it in your Instagram story or post.');
-          });
-        } else {
-          alert(`Share this link: ${url}`);
-        }
-        break;
-      default:
-        break;
-    }
-  };
-
-  const ignoreSpyRef = useRef(false);
-
-
+  // Refs
   const containerRef = useRef(null);
   const leftRef = useRef(null);
   const heroRef = useRef(null);
@@ -140,11 +70,7 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
   const rightRef = useRef(null);
   const rightCardRef = useRef(null);
 
-  // main observers / raf refs
-  const observerRef = useRef(null);
-  const rafRef = useRef(null);
-
-  // drawer refs
+  // Drawer refs
   const drawerRef = useRef(null);
   const drawerContentRef = useRef(null);
   const rdCoreRef = useRef(null);
@@ -153,15 +79,16 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
   const rdExteriorsRef = useRef(null);
   const rdWearRef = useRef(null);
 
+  // State
   const [showStickyTabs, setShowStickyTabs] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview");
-  const [heroImage, setHeroImage] = useState(car ? car.image : "");
+  const [heroImage, setHeroImage] = useState(car?.image || "");
   const [stickyStyle, setStickyStyle] = useState({ left: 0, width: 720 });
   const [isStopped, setIsStopped] = useState(false);
 
-  // drawer UI state
+  // Drawer state
   const [showReportDrawer, setShowReportDrawer] = useState(false);
   const [drawerActive, setDrawerActive] = useState("core");
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerTabsInnerRef = useRef(null);
   const tabRefs = {
     core: useRef(null),
@@ -171,172 +98,62 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
     wear: useRef(null),
   };
 
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  // Drawer functions
+  const openDrawerTab = useCallback(() => setDrawerOpen(true), []);
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
 
-  // open drawer
-  function openDrawerTab() {
-    setDrawerOpen(true);
-  }
-
-  // close drawer
-  function closeDrawer() {
-    setDrawerOpen(false);
-  }
-
-  // close on ESC
-  useEffect(() => {
-    function onKey(e) {
-      if (e.key === "Escape") closeDrawer();
-    }
-    if (drawerOpen) window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [drawerOpen]);
-
-  const sections = [
+  // Sections for scroll spy - refs are stable, so no need for dependencies
+  const sections = useMemo(() => [
     { id: "overview", ref: overviewRef },
     { id: "report", ref: reportRef },
     { id: "specs", ref: specsRef },
     { id: "finance", ref: financeRef },
-  ];
+  ], []);
 
-  // ---------- HERO observer for sticky tabs ----------
+  // Scroll spy hook
+  const { activeTab, setActiveTab, scrollToRef } = useScrollSpy(sections);
+
+  // Hero observer for sticky tabs - improved to prevent flickering
   useEffect(() => {
     if (!heroRef.current) return;
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => setShowStickyTabs(!e.isIntersecting)),
-      { threshold: 0.04 }
-    );
-    io.observe(heroRef.current);
-    return () => io.disconnect();
-  }, []);
-
-  // ---------- IntersectionObserver scrollspy (main page) ----------
-  // useEffect(() => {
-  //   if (observerRef.current) {
-  //     observerRef.current.disconnect();
-  //     observerRef.current = null;
-  //   }
-  //   const rootMargin = `-${TOPBAR_HEIGHT + 8}px 0px -40% 0px`;
-  //   const io = new IntersectionObserver(
-  //     (entries) => {
-  //       const visible = entries.filter((e) => e.isIntersecting);
-  //       if (!visible.length) return;
-  //       visible.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-  //       const id = visible[0].target.dataset.section;
-  //       if (id) setActiveTab((prev) => (prev === id ? prev : id));
-  //     },
-  //     { threshold: [0.0, 0.1, 0.25, 0.5, 0.75], rootMargin }
-  //   );
-
-  //   sections.forEach((s) => {
-  //     if (s.ref.current) io.observe(s.ref.current);
-  //   });
-
-  //   observerRef.current = io;
-  //   return () => {
-  //     io.disconnect();
-  //     observerRef.current = null;
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [overviewRef.current, reportRef.current, specsRef.current, financeRef.current]);
-
-  useEffect(() => {
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-      observerRef.current = null;
-    }
     
-    // Wait for all refs to be available
-    const allRefsReady = sections.every(s => s.ref.current);
-    if (!allRefsReady) return;
+    let rafId = null;
+    let lastState = false;
     
-    const rootMargin = `-${TOPBAR_HEIGHT + 8}px 0px -40% 0px`;
     const io = new IntersectionObserver(
       (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting);
-        if (!visible.length) return;
-        
-        // Find the section with the highest intersection ratio
-        let maxRatio = -1;
-        let maxEntry = null;
-        
-        visible.forEach(entry => {
-          if (entry.intersectionRatio > maxRatio) {
-            maxRatio = entry.intersectionRatio;
-            maxEntry = entry;
+        entries.forEach((e) => {
+          // Cancel any pending animation frame
+          if (rafId) {
+            cancelAnimationFrame(rafId);
           }
+          
+          // Use requestAnimationFrame for smooth state updates
+          rafId = requestAnimationFrame(() => {
+            const shouldShow = !e.isIntersecting;
+            // Only update if state actually changed to prevent flickering
+            if (shouldShow !== lastState) {
+              lastState = shouldShow;
+              setShowStickyTabs(shouldShow);
+            }
+          });
         });
-        
-        if (maxEntry) {
-          const id = maxEntry.target.dataset.section;
-          if (id) {
-            // Use functional update to ensure we get the latest state
-            setActiveTab(prev => {
-              // Only update if different to avoid unnecessary re-renders
-              return prev === id ? prev : id;
-            });
-          }
-        }
       },
       { 
-        threshold: [0.0, 0.1, 0.25, 0.5, 0.75], 
-        rootMargin 
+        threshold: [0, 0.1, 0.2], // Multiple thresholds for smoother detection
+        rootMargin: '-20px 0px 0px 0px' // Add small margin to trigger slightly before
       }
     );
-  
-    // Observe all sections
-    sections.forEach((s) => {
-      if (s.ref.current) {
-        // Ensure each element has the data-section attribute
-        if (!s.ref.current.dataset.section) {
-          s.ref.current.dataset.section = s.id;
-        }
-        io.observe(s.ref.current);
-      }
-    });
-  
-    observerRef.current = io;
+    
+    io.observe(heroRef.current);
     
     return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-        observerRef.current = null;
-      }
+      if (rafId) cancelAnimationFrame(rafId);
+      io.disconnect();
     };
-  }, [sections]); // Use sections array instead of individual refs
+  }, []);
 
-  // ---------- rAF fallback scrollspy ----------
-  // useEffect(() => {
-  //   const offset = TOPBAR_HEIGHT + 8;
-  //   function computeByScroll() {
-  //     const scrollPos = window.scrollY + offset + 6;
-  //     let current = sections[0].id;
-  //     for (let s of sections) {
-  //       const el = s.ref.current;
-  //       if (!el) continue;
-  //       const top = el.getBoundingClientRect().top + window.scrollY;
-  //       if (top <= scrollPos) current = s.id;
-  //     }
-  //     setActiveTab((prev) => (prev !== current ? current : prev));
-  //     rafRef.current = null;
-  //   }
-  //   function onScroll() {
-  //     if (rafRef.current !== null) return;
-  //     rafRef.current = requestAnimationFrame(computeByScroll);
-  //   }
-  //   window.addEventListener("scroll", onScroll, { passive: true });
-  //   window.addEventListener("resize", onScroll);
-  //   onScroll();
-  //   return () => {
-  //     window.removeEventListener("scroll", onScroll);
-  //     window.removeEventListener("resize", onScroll);
-  //     if (rafRef.current) cancelAnimationFrame(rafRef.current);
-  //     rafRef.current = null;
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
-  // ---------- sticky tab position updater ----------
+  // Sticky tab position updater
   const updateStickyPosition = useCallback(() => {
     if (!leftRef.current || !containerRef.current) return;
     const leftRect = leftRef.current.getBoundingClientRect();
@@ -359,23 +176,55 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
     };
   }, [updateStickyPosition]);
 
-  // ---------- right sticky card stop logic ----------
+  // Right sticky card stop logic - stops when reaching footer
   useEffect(() => {
     function computeStop() {
       const footer = document.querySelector("footer");
       const right = rightRef.current;
       const card = rightCardRef.current;
       if (!right || !card || !footer) return;
+      
       const footerRect = footer.getBoundingClientRect();
+      const rightRect = right.getBoundingClientRect();
       const cardRect = card.getBoundingClientRect();
-      const wouldOverlap = cardRect.bottom >= footerRect.top - 12;
+      
+      // Check if card bottom would overlap footer top (with 12px margin)
+      const wouldOverlap = rightRect.bottom >= footerRect.top - 12;
+      
       setIsStopped(wouldOverlap);
+      
+      // If stopped, position card absolutely at bottom of container
+      if (wouldOverlap) {
+        const containerRect = right.getBoundingClientRect();
+        const footerTop = footerRect.top;
+        const maxBottom = footerTop - 12; // 12px margin above footer
+        const cardHeight = cardRect.height;
+        const availableTop = maxBottom - containerRect.top - cardHeight;
+        
+        // Set card position to stay above footer
+        if (availableTop >= 0) {
+          card.style.position = 'absolute';
+          card.style.bottom = `${containerRect.bottom - maxBottom}px`;
+          card.style.top = 'auto';
+        } else {
+          card.style.position = 'absolute';
+          card.style.top = '0';
+          card.style.bottom = 'auto';
+        }
+      } else {
+        // Reset to default sticky behavior
+        card.style.position = '';
+        card.style.top = '';
+        card.style.bottom = '';
+      }
     }
+    
     computeStop();
     window.addEventListener("scroll", computeStop, { passive: true });
     window.addEventListener("resize", computeStop);
     const mo = new MutationObserver(computeStop);
     mo.observe(document.body, { childList: true, subtree: true });
+    
     return () => {
       window.removeEventListener("scroll", computeStop);
       window.removeEventListener("resize", computeStop);
@@ -383,92 +232,39 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
     };
   }, []);
 
-  // ---------- helper: scroll to page ref ----------
-  // function scrollToRef(ref) {
-  //   if (!ref?.current) return;
-  //   const offset = TOPBAR_HEIGHT + 8;
-  //   const top = ref.current.getBoundingClientRect().top + window.scrollY - offset;
-  //   window.scrollTo({ top, behavior: "smooth" });
-  //   const sec = ref.current.dataset?.section || null;
-  //   console.log(sec);
-  //   if (sec) setActiveTab(sec);
-  //   setTimeout(() => window.dispatchEvent(new Event("scroll")), 350);
-  // }
-
-
-  function scrollToRef(ref) {
-    if (!ref || !ref.current) return;
-    
-    const element = ref.current;
-    // const offset = TOPBAR_HEIGHT + 8;
-    const offset = TOPBAR_HEIGHT + 80;
-    element.style.scrollMarginTop = `${offset}px`;
-
-    const sec = element.dataset.section || element.getAttribute("data-section");
-      console.log("Section found:", sec);
-      
-      if (sec && typeof setActiveTab === "function") {
-        setActiveTab(sec);
-      }
-
-    
-    
-    // Method 1: Using scrollIntoView (simpler)
-    element.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-      inline: "nearest"
-    });
-    
-    // Method 2: Your approach but with better error handling
-    try {
-      // const elementTop = element.getBoundingClientRect().top + window.scrollY;
-      // const offsetPosition = elementTop - offset;
-      
-      // window.scrollTo({
-      //   top: offsetPosition,
-      //   behavior: "smooth"
-      // });
-      
-      // const sec = element.dataset.section || element.getAttribute("data-section");
-      // console.log("Section found:", sec);
-      
-      // if (sec && typeof setActiveTab === "function") {
-      //   setActiveTab(sec);
-      // }
-      
-      // Wait for scroll to complete
-      setTimeout(() => {
-        window.dispatchEvent(new Event("scroll"));
-      }, 500); // Increased timeout for longer animations
-      
-    } catch (error) {
-      console.error("Scroll error:", error);
+  // Update hero image when car changes
+  useEffect(() => {
+    if (car?.image) {
+      setHeroImage(car.image);
     }
-  }
+  }, [car?.image]);
  
 
-  // ---------- DRAWER: open/close & keyboard close ----------
-  useEffect(() => {
-    function onKey(e) {
-      if (e.key === "Escape") setShowReportDrawer(false);
-    }
-    if (showReportDrawer) document.addEventListener("keydown", onKey);
-    else document.removeEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [showReportDrawer]);
-
-  function openReportDrawer() {
+  // Drawer functions
+  const openReportDrawer = useCallback(() => {
     setShowReportDrawer(true);
     setDrawerActive("core");
-    // small scroll reset after mount
-    setTimeout(() => {
+      setTimeout(() => {
       if (drawerContentRef.current) drawerContentRef.current.scrollTop = 0;
     }, 60);
-  }
-  function closeReportDrawer() {
+  }, []);
+
+  const closeReportDrawer = useCallback(() => {
     setShowReportDrawer(false);
-  }
+  }, []);
+
+  // Close drawer on ESC
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key === "Escape") {
+        if (showReportDrawer) closeReportDrawer();
+        if (drawerOpen) closeDrawer();
+        if (showFeaturesDrawer) closeFeaturesDrawer();
+    }
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [showReportDrawer, drawerOpen, showFeaturesDrawer, closeReportDrawer, closeDrawer, closeFeaturesDrawer]);
 
   // ---------- DRAWER: scroll to a drawer section ----------
   function scrollDrawerTo(ref) {
@@ -613,670 +409,139 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
     );
   }
 
-  const thumbs = car.images && car.images.length ? car.images : [car.image];
   
 
 
   return (
     <div className={styles.carDetailsPageWrapper}>
-      {/* sticky tabs */}
-      <div
-        className={`${styles.cdStickyTabs} ${showStickyTabs ? styles.visible : ""}`}
-        style={{
-          top: `${TOPBAR_HEIGHT + 8}px`,
-          left: `${stickyStyle.left}px`,
-          width: `${stickyStyle.width}px`,
+      {/* Sticky tabs */}
+      <StickyTabs
+        showStickyTabs={showStickyTabs}
+        activeTab={activeTab}
+        onTabClick={(tabId) => {
+          // Immediately update active tab for visual feedback
+          setActiveTab(tabId);
+          
+          // Find section and scroll to it
+          const section = sections.find(s => s.id === tabId);
+          if (section && section.ref?.current) {
+            scrollToRef(section.ref);
+          }
         }}
-      >
-        <div className={styles.cdStickyInner}>
-          <button type="button" className={`${styles.cdTab} ${activeTab === "overview" ? styles.cdTabActive : ""}`} onClick={() => scrollToRef(overviewRef)}>
-            Overview
-          </button>
-          <button type="button" className={`${styles.cdTab} ${activeTab === "report" ? styles.cdTabActive : ""}`} onClick={() => scrollToRef(reportRef)}>
-            Report
-          </button>
-          <button type="button" className={`${styles.cdTab} ${activeTab === "specs" ? styles.cdTabActive : ""}`} onClick={() => scrollToRef(specsRef)}>
-            Feature & Specs
-          </button>
-          <button type="button" className={`${styles.cdTab} ${activeTab === "finance" ? styles.cdTabActive : ""}`} onClick={() => scrollToRef(financeRef)}>
-            Finance
-          </button>
-        </div>
-      </div>
+        stickyStyle={stickyStyle}
+      />
 
       {/* main container */}
       <div className={styles.carDetailsContainer} ref={containerRef}>
         {/* LEFT */}
         <main className={styles.cdLeft} ref={leftRef}>
-          {/* HERO */}
-          <div className={styles.cdHero} ref={heroRef}>
-            <div className={styles.cdHeroInner}>
-              <div className={styles.cdHeroImage}>
-                <img src={heroImage} alt={car.title} />
-                <div className={styles.cdHeroControls}>
-                  <button type="button" className={styles.cdBack} onClick={() => navigate(-1)}>
-                    ← Back
-                  </button>
-                </div>
-              </div>
-
-              <div className={styles.cdThumbs}>
-                {thumbs.map((t, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    className={`${styles.cdThumb} ${t === heroImage ? styles.cdThumbSelected : ""}`}
-                    onClick={() => setHeroImage(t)}
-                    aria-label={`Show image ${i + 1}`}
-                  >
-                    <img src={t} alt={`thumb ${i + 1}`} />
-                  </button>
-                ))}
-              </div>
-            </div>
+          {/* Hero */}
+          <div ref={heroRef}>
+            <CarHero
+              car={car}
+              heroImage={heroImage}
+              onImageChange={setHeroImage}
+            />
           </div>
 
           {/* hero inline tabs */}
           <nav className={styles.cdHeroTabs} aria-label="Car sections">
-            <button type="button" className={`${styles.heroTab} ${activeTab === "overview" ? styles.heroTabActive : ""}`} onClick={() => scrollToRef(overviewRef)}>
+            <button 
+              type="button" 
+              className={`${styles.heroTab} ${activeTab === "overview" ? styles.heroTabActive : ""}`} 
+              onClick={() => {
+                setActiveTab("overview");
+                if (overviewRef?.current) {
+                  scrollToRef(overviewRef);
+                }
+              }}
+            >
               Overview
             </button>
-            <button type="button" className={`${styles.heroTab} ${activeTab === "report" ? styles.heroTabActive : ""}`} onClick={() => scrollToRef(reportRef)}>
+            <button 
+              type="button" 
+              className={`${styles.heroTab} ${activeTab === "report" ? styles.heroTabActive : ""}`} 
+              onClick={() => {
+                setActiveTab("report");
+                if (reportRef?.current) {
+                  scrollToRef(reportRef);
+                }
+              }}
+            >
               Report
             </button>
-            <button type="button" className={`${styles.heroTab} ${activeTab === "specs" ? styles.heroTabActive : ""}`} onClick={() => scrollToRef(specsRef)}>
+            <button 
+              type="button" 
+              className={`${styles.heroTab} ${activeTab === "specs" ? styles.heroTabActive : ""}`} 
+              onClick={() => {
+                setActiveTab("specs");
+                if (specsRef?.current) {
+                  scrollToRef(specsRef);
+                }
+              }}
+            >
               Feature & Specs
             </button>
-            <button type="button" className={`${styles.heroTab} ${activeTab === "finance" ? styles.heroTabActive : ""}`} onClick={() => scrollToRef(financeRef)}>
+            <button 
+              type="button" 
+              className={`${styles.heroTab} ${activeTab === "finance" ? styles.heroTabActive : ""}`} 
+              onClick={() => {
+                setActiveTab("finance");
+                if (financeRef?.current) {
+                  scrollToRef(financeRef);
+                }
+              }}
+            >
               Finance
             </button>
           </nav>
 
           {/* Overview */}
-          <section id="overview" ref={overviewRef} data-section="overview" className={styles.cdSection}>
-            <h2 className={styles.pageTitle}>Car Overview</h2>
-
-            <div className={styles.overviewCard}>
-              {/* Row 1 */}
-              <div className={styles.overviewRow}>
-                <div className={styles.overviewField}>
-                  <div className={styles.fieldLabel}>Make Year</div>
-                  <div className={styles.fieldValue}>
-                    {car.makeYear ? (typeof car.makeYear === 'string' && car.makeYear.includes('-') ? car.makeYear : car.makeYear.toString()) : (car.year ? car.year.toString() : "-")}
-                  </div>
+          <div ref={overviewRef} data-section="overview">
+            <CarOverview car={car} />
                 </div>
 
-                <div className={styles.overviewField}>
-                  <div className={styles.fieldLabel}>Registration Year</div>
-                  <div className={styles.fieldValue}>
-                    {car.regYear ? (typeof car.regYear === 'string' && car.regYear.includes('-') ? car.regYear : car.regYear.toString()) : (car.year ? car.year.toString() : "-")}
-                  </div>
+          {/* Quality Report */}
+          <div ref={reportRef} data-section="report">
+            <CarQualityReport car={car} onViewFullReport={openReportDrawer} />
                 </div>
 
-                <div className={styles.overviewField}>
-                  <div className={styles.fieldLabel}>Fuel Type</div>
-                  <div className={styles.fieldValue}>{car.fuel || "-"}</div>
-                </div>
+          {/* Reasons to Buy */}
+          <div ref={reasonsRef} data-section="reasons">
+            <ReasonsToBuy reasons={car?.reasonsToBuy || []} />
               </div>
 
-              {/* Row 2 */}
-              <div className={styles.overviewRow}>
-                <div className={styles.overviewField}>
-                  <div className={styles.fieldLabel}>Km driven</div>
-                  <div className={styles.fieldValueLarge}>{formatKm(car.km)}</div>
+          {/* Specs */}
+          <div ref={specsRef} data-section="specs">
+            <CarSpecs car={car} onViewAll={openDrawerTab} />
                 </div>
 
-                <div className={styles.overviewField}>
-                  <div className={styles.fieldLabel}>Transmission</div>
-                  <div className={styles.fieldValue}>{car.transmission || "-"}</div>
+          {/* Features */}
+          <div data-section="features">
+            <CarFeatures car={car} onViewAll={openFeaturesDrawer} />
                 </div>
 
-                <div className={styles.overviewField}>
-                  <div className={styles.fieldLabel}>No. of Owner</div>
-                  <div className={styles.fieldValue}>{car.owner || "1st Owner"}</div>
-                </div>
-              </div>
-
-              {/* Row 3 */}
-              <div className={styles.overviewRow}>
-                <div className={styles.overviewField}>
-                  <div className={styles.fieldLabel}>Insurance Validity</div>
-                  <div className={styles.fieldValue}>
-                    {(() => {
-                      if (!car.insuranceValid) return "-";
-                      try {
-                        // Format date like "2026-08-10" to "Aug 2026"
-                        if (typeof car.insuranceValid === 'string' && car.insuranceValid.includes('-')) {
-                          const date = new Date(car.insuranceValid);
-                          if (!isNaN(date.getTime())) {
-                            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                            return `${months[date.getMonth()]} ${date.getFullYear()}`;
-                          }
-                        }
-                        return car.insuranceValid;
-                      } catch (e) {
-                        return car.insuranceValid;
-                      }
-                    })()}
-                  </div>
-                </div>
-
-                <div className={styles.overviewField}>
-                  <div className={styles.fieldLabel}>Insurance Type</div>
-                  <div className={styles.fieldValue}>
-                    {car.insuranceType 
-                      ? (typeof car.insuranceType === 'string' 
-                          ? car.insuranceType.charAt(0).toUpperCase() + car.insuranceType.slice(1).toLowerCase()
-                          : car.insuranceType)
-                      : "-"}
-                  </div>
-                </div>
-
-                <div className={styles.overviewField}>
-                  <div className={styles.fieldLabel}>RTO</div>
-                  <div className={styles.fieldValue}>{ car?.locationRto
- || "-"}</div>
-                </div>
-              </div>
-
-              {/* Row 4: Car Location spans full width */}
-              <div className={`${styles.overviewRow} ${styles.locationRow}`}>
-                <div>
-                  <div className={styles.locationLabel}>Car Location</div>
-                  <div className={styles.locationValue}>{car.locationFull || car.city || "-"}</div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* REPORT - using actual inspection data */}
-<section id="report" ref={reportRef} data-section="report" className={`${styles.cdSection} ${styles.reportSection}`}>
-  <h2 className={styles.cdSectionTitle}>Quality Report</h2>
-  {(() => {
-    // Debug: Log inspection data
-    if (process.env.NODE_ENV === 'development' && car?.inspections) {
-      console.log('=== Quality Report Debug ===');
-      console.log('Inspections:', car.inspections);
-      console.log('Number of inspections:', car.inspections.length);
-      car.inspections.forEach((insp, idx) => {
-        console.log(`Inspection ${idx}:`, {
-          key: insp.key,
-          title: insp.title,
-          score: insp.score,
-          rating: insp.rating,
-          subsections: insp.subsections?.length || 0
-        });
-      });
-      console.log('===========================');
-    }
-    
-    // Calculate total parts
-    const totalParts = car?.inspections 
-      ? car.inspections.reduce((total, insp) => 
-          total + (insp.subsections || []).reduce((subTotal, sub) => subTotal + (sub.items || []).length, 0), 0
-        )
-      : 0;
-    
-    // Helper to calculate score
-    const calculateScore = (items) => {
-      if (!items || items.length === 0) return 0;
-      const statusValues = { flawless: 10, minor: 7, major: 4 };
-      const total = items.reduce((sum, item) => sum + (statusValues[item.status] || 5), 0);
-      return (total / items.length).toFixed(1);
-    };
-    
-    // Helper to get rating
-    const getRating = (score) => {
-      const num = parseFloat(score);
-      if (num >= 9) return "Excellent";
-      if (num >= 7) return "Good";
-      if (num >= 5) return "Average";
-      return "Fair";
-    };
-    
-    // Get systems from inspections - use API score if available, otherwise calculate
-    const systems = car?.inspections?.length > 0
-      ? car.inspections.map((inspection) => {
-          // Use API score if available, otherwise calculate from items
-          const apiScore = inspection.score;
-          const allItems = (inspection.subsections || []).flatMap(sub => (sub.items || []));
-          const calculatedScore = allItems.length > 0 ? calculateScore(allItems) : (apiScore || 0);
-          const finalScore = apiScore || parseFloat(calculatedScore);
-          const apiRating = inspection.rating ? inspection.rating.charAt(0).toUpperCase() + inspection.rating.slice(1) : null;
-          return {
-            category: inspection.title,
-            description: inspection.description || inspection.subsections?.[0]?.title || "",
-            score: finalScore,
-            rating: apiRating || getRating(finalScore.toString()),
-            key: inspection.key,
-          };
-        })
-      : [];
-    
-    // Extract positive findings
-    const findings = car?.inspections
-      ? car.inspections
-          .flatMap(inspection => 
-            (inspection.subsections || []).flatMap(sub => 
-              (sub.items || [])
-                .filter(item => item.status === 'flawless')
-                .slice(0, 3)
-                .map(item => item.name)
-            )
-          )
-          .slice(0, 3)
-      : [];
-    
-    if (!car?.inspections || car.inspections.length === 0) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('No inspections data found');
-      }
-      return null;
-    }
-    
-    if (systems.length === 0) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Systems array is empty');
-      }
-      return null;
-    }
-    
-    return (
-      <>
-        <p className={styles.meta}>{totalParts} parts evaluated by automotive experts</p>
-
-  <div className={styles.reportSummaryCard}>
-    {/* top badges */}
-          {findings.length > 0 && (
-    <div className={styles.badgesRow}>
-              {findings.map((finding, idx) => (
-                <span key={idx} className={styles.badge}>✓ {finding}</span>
-              ))}
-    </div>
-          )}
-
-   {/* main two-column inside the card */}
-<div className={styles.reportGridTwoCol}>
-  {/* LEFT: stacked list with icons, descriptions and their individual ratings */}
-  <div className={styles.reportLeftList}>
-              {systems.map((system, idx) => {
-                // Get appropriate icon based on system key
-                const getIcon = (key) => {
-                  if (key?.includes('core')) return '🛠️';
-                  if (key?.includes('supporting')) return '🎧';
-                  if (key?.includes('interior')) return '⚙️';
-                  if (key?.includes('exterior')) return '⚙️';
-                  if (key?.includes('wear')) return '⚙️';
-                  return '⚙️';
-                };
-                
-                return (
-                <div key={idx} className={styles.reportLeftItem}>
-                  <div className={styles.reportLeftIcon}>
-                    {getIcon(system.key)}
-        </div>
-      <div className={styles.reportLeftText}>
-                    <div className={styles.reportLeftTitle}>{system.category}</div>
-                    <div className={styles.reportLeftSub}>{system.description}</div>
-      </div>
-
-                  {/* rating */}
-      <div className={styles.itemRatingWrap}>
-        <div className={styles.scorePillLarge}>
-                      <div className={styles.scoreNumLarge}>{system.score}</div>
-                      <div className={styles.scoreLabelSmall}>{system.rating}</div>
-        </div>
-      </div>
-    </div>
-                );
-              })}
-      </div>
-
-            {/* RIGHT: CTA */}
-  <div className={styles.reportRightCol}>
-    <div className={styles.reportRightBottom}>
-      <div className={styles.nextServiceWithExtra}>
-        <div className={styles.nextServiceText}>No immediate servicing required</div>
-      </div>
-
-      <button type="button" className={styles.viewReportBtn} onClick={openReportDrawer}>
-        View full report
-      </button>
-    </div>
-  </div>
-</div>
-  </div>
-      </>
-    );
-  })()}
-</section>
-
-{/* Reasons to Buy Section */}
-<section data-section="reasons" ref={reasonsRef} className={styles.reasonsSection}>
-  <h2 className={styles.sectionTitle}>Why Choose This Car?</h2>
-  <div className={styles.reasonsGrid}>
-    {(car?.reasonsToBuy || []).map((reason, idx) => (
-      <div key={idx} className={styles.reasonCard}>
-        <div className={styles.reasonIcon}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </div>
-        <div className={styles.reasonContent}>
-          <h3 className={styles.reasonTitle}>{reason.title}</h3>
-          <p className={styles.reasonDescription}>{reason.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-</section>
-
-{/* Specs Section */}
-<section data-section="specs" ref={specsRef} className={styles.specsSection}>
-  <h2 className={styles.sectionTitle}>Car Specifications</h2>
-  
-  {(() => {
-    // Get specs by category
-    const specsByCategory = {};
-    if (car?.specs && car.specs.length > 0) {
-      car.specs.forEach(spec => {
-        if (!specsByCategory[spec.category]) {
-          specsByCategory[spec.category] = [];
-        }
-        specsByCategory[spec.category].push(spec);
-      });
-    }
-    
-    // Icon mapping for common specs
-    const getSpecIcon = (label) => {
-      const labelLower = label.toLowerCase();
-      if (labelLower.includes('mileage')) return <FiZap />;
-      if (labelLower.includes('displacement')) return <FiSettings />;
-      if (labelLower.includes('ground clearance')) return <FiNavigation />;
-      if (labelLower.includes('boot space')) return <FiPackage />;
-      return <FiSettings />;
-    };
-    
-    // Get preview specs (4 key specs to show)
-    const getPreviewSpecs = () => {
-      const preview = [];
-      
-      // Try to get Mileage from fuel_performance
-      const fuelPerf = specsByCategory['fuel_performance'] || [];
-      const mileage = fuelPerf.find(s => s.label.toLowerCase().includes('mileage'));
-      if (mileage) preview.push(mileage);
-      
-      // Try to get Displacement from engine_transmission
-      const engineTrans = specsByCategory['engine_transmission'] || [];
-      const displacement = engineTrans.find(s => s.label.toLowerCase().includes('displacement'));
-      if (displacement) preview.push(displacement);
-      
-      // Try to get Ground clearance from dimension_capacity
-      const dimCap = specsByCategory['dimension_capacity'] || [];
-      const groundClearance = dimCap.find(s => s.label.toLowerCase().includes('ground clearance'));
-      if (groundClearance) preview.push(groundClearance);
-      
-      // Try to get Boot space from dimension_capacity
-      const bootSpace = dimCap.find(s => s.label.toLowerCase().includes('boot space'));
-      if (bootSpace) preview.push(bootSpace);
-      
-      return preview.slice(0, 4);
-    };
-    
-    const previewSpecs = getPreviewSpecs();
-    
-    return previewSpecs.length > 0 ? (
-      <div className={styles.specsCard}>
-        <div className={styles.specsGrid}>
-          {previewSpecs.map((spec, idx) => (
-            <div key={idx} className={styles.specCell}>
-              <div className={styles.specIcon}>
-                {getSpecIcon(spec.label)}
-        </div>
-              <div className={styles.specMeta}>
-                <div className={styles.specLabel}>{spec.label}</div>
-                <div className={styles.specValue}>{spec.value}</div>
-        </div>
-        </div>
-          ))}
-      </div>
-
-        <div className={styles.specsActions}>
-          <button
-            type="button"
-            className={styles.viewAllBtn}
-            onClick={openDrawerTab}
-          >
-            VIEW ALL SPECIFICATIONS
-          </button>
-        </div>
-        </div>
-    ) : null;
-  })()}
-</section>
-
-{/* Features Section */}
-<section data-section="features" className={styles.featuresSection}>
-  <h2 className={styles.featuresSectionTitle}>Top Features of this car</h2>
-  
-  <div className={styles.featuresCardWrapper}>
-    <div className={styles.featuresCard}>
-      <div className={styles.featuresCategoriesGrid}>
-        {(() => {
-          // Prioritize showing Safety, Exterior, and Interior/Comfort categories
-          const allCategories = car?.featuresByCategory || [];
-          const prioritized = [];
-          const categoryMap = {};
-          
-          // Create a map for quick lookup
-          allCategories.forEach(cat => {
-            const key = cat.category.toLowerCase();
-            categoryMap[key] = cat;
-          });
-          
-          // Try to get Safety first
-          if (categoryMap['safety'] && prioritized.length < 3) {
-            prioritized.push(categoryMap['safety']);
-          }
-          
-          // Try to get Exterior second
-          if (categoryMap['exterior'] && prioritized.length < 3) {
-            prioritized.push(categoryMap['exterior']);
-          }
-          
-          // Try to get Interior or Comfort & Convenience third
-          if (prioritized.length < 3) {
-            if (categoryMap['interior']) {
-              prioritized.push(categoryMap['interior']);
-            } else if (categoryMap['comfort & convenience']) {
-              prioritized.push(categoryMap['comfort & convenience']);
-            } else if (categoryMap['comfort']) {
-              prioritized.push(categoryMap['comfort']);
-            }
-          }
-          
-          // Fill remaining slots with other categories
-          const used = new Set(prioritized.map(c => c.category));
-          allCategories.forEach(cat => {
-            if (!used.has(cat.category) && prioritized.length < 3) {
-              prioritized.push(cat);
-            }
-          });
-          
-          return prioritized.slice(0, 3);
-        })().map((category, catIdx) => (
-          <div key={catIdx} className={styles.featureCategoryColumn}>
-            <div className={styles.categoryHeader}>
-              <span className={styles.categoryLabel}>{category.category.toUpperCase()}</span>
-            </div>
-            <div className={styles.featuresList}>
-              {category.items.slice(0, 6).map((feature, featIdx) => {
-                const featureName = typeof feature === 'string' ? feature : feature.name;
-                const featureStatus = typeof feature === 'object' ? (feature.status || 'flawless') : 'flawless';
-                
-                // Get status icon
-                const getStatusIcon = () => {
-                  const statusLower = (featureStatus || '').toLowerCase();
-                  if (statusLower === 'flawless') {
-                    return <FiCheckCircle className={styles.statusIcon} />;
-                  } else if (statusLower === 'little_flaw' || statusLower === 'little flaw' || statusLower === 'minor') {
-                    return <FiAlertCircle className={styles.statusIconWarning} />;
-                  } else if (statusLower === 'damaged' || statusLower === 'major') {
-                    return <FiXCircle className={styles.statusIconError} />;
-                  } else {
-                    return <FiCheckCircle className={styles.statusIcon} />;
-                  }
-                };
-                
-                return (
-                  <div key={featIdx} className={styles.featureRow}>
-                    {getStatusIcon()}
-                    <span className={styles.featureName}>{featureName}</span>
-                    {/* Optional: Add info icon or picture icon here if needed */}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </div>
-      
-      <div className={styles.featuresActions}>
-        <button
-          type="button"
-          className={styles.viewAllFeaturesBtn}
-          onClick={openFeaturesDrawer}
-        >
-          VIEW ALL FEATURES
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
-
-{/* Right Drawer (Features + Specs) */}
-<RightDrawer
-  open={drawerOpen}
-  onClose={closeDrawer}
+      {/* Right Drawer (Features + Specs) */}
+      <RightDrawer
+           open={drawerOpen}
+           onClose={closeDrawer}
   specs={car?.specs || []}
 />
 
           {/* FINANCE */}
-          {/* <section id="finance" ref={financeRef} data-section="finance" className={styles.cdSection}>
-            <h2 className={styles.cdSectionTitle}>Finance</h2>
-
-            <div className={styles.cdCard}>
-              <div className={styles.financeCardEmi}>
-                <div className={styles.emiLeft}>
-                  <div className={styles.emiNumber}>₹9,400</div>
-                  <div className={styles.meta}>per month (approx)</div>
-                </div>
-                <div className={styles.emiRight}>
-                  <div className={styles.meta}>Loan Amount</div>
-                  <div className={styles.value}>₹{(car.price - 110400).toLocaleString()}</div>
-                  <div className={styles.meta}>Duration</div>
-                  <div className={styles.value}>66 Months</div>
-                </div>
-              </div>
-
-              <div className={styles.financeCta}>
-                <button type="button" className={`${styles.btn} ${styles.btnPrimary}`}>
-                  Check eligibility
-                </button>
-              </div>
-            </div>
-          </section> */}
-          <EMICalculator refi={financeRef}/>
+          <div ref={financeRef} data-section="finance">
+            <EMICalculator />
+          </div>
 
           <div style={{ height: 48 }} />
         </main>
 
-        {/* RIGHT sticky card (keeps original styling) */}
-        <aside className={styles.cdRight} ref={rightRef}>
-          <div
-            className={`${styles.cdRightCard}`}
-            ref={rightCardRef}
-           
-          >
-            <div className={styles.rightInner}>
-              <div className={styles.titleRow}>
-                <h3 className={styles.carTitle}>{car.title}</h3>
-                <button type="button" className={styles.like} aria-label="save">
-                  ♡
-                </button>
-              </div>
-
-              <div className={styles.meta}>
-                <div>
-                  {car.km.toLocaleString()} km • {car.fuel} • {car.transmission}
-                </div>
-                <div className={styles.hub}>Spinny Car Hub, {car.city}</div>
-              </div>
-
-              <div className={styles.priceBlock}>
-                <div className={styles.priceBlockLabel}>Fixed on road price</div>
-                <div className={styles.priceBlockPrice}>₹{(car.price / 100000).toFixed(2)} L</div>
-                <div className={styles.priceBlockSmall}>Includes RC transfer, insurance & more</div>
-              </div>
-
-              <div className={styles.cta}>
-                <button onClick={() =>
-  navigate(`/car/${car.id}/book`, {
-    state: { car }
-  })
-}
- type="button" className={styles.btnBook}>
-                  BOOK NOW
-                </button>
-                <button 
-                  type="button" 
-                  className={styles.btnTest}
-                  onClick={() => navigate(`/test-drive/${car.id}`)}
-                >
-                  FREE TEST DRIVE
-                </button>
-              </div>
-
-              <div className={styles.share}>
-                <p>Share with a friend :</p>
-                <div className={styles.icons}>
-                  <button 
-                    type="button"
-                    onClick={() => handleShare('instagram')} 
-                    className={styles.shareIcon} 
-                    aria-label="Share on Instagram"
-                  >
-                    <FaInstagram />
-                  </button>
-                  <button 
-                    type="button"
-                    onClick={() => handleShare('facebook')} 
-                    className={styles.shareIcon} 
-                    aria-label="Share on Facebook"
-                  >
-                    <FaFacebook />
-                  </button>
-                  <button 
-                    type="button"
-                    onClick={() => handleShare('twitter')} 
-                    className={styles.shareIcon} 
-                    aria-label="Share on Twitter"
-                  >
-                    <FaTwitter />
-                  </button>
-                  <button 
-                    type="button"
-                    onClick={() => handleShare('email')} 
-                    className={styles.shareIcon} 
-                    aria-label="Share via Email"
-                  >
-                    <FiMail />
-                  </button>
-                </div>
-              </div>
-            </div>
+        {/* Right sidebar */}
+        <div ref={rightRef} className={styles.cdRight}>
+          <div className={`${styles.cdRightCard} ${isStopped ? styles.cdRightCardStopped : ""}`} ref={rightCardRef}>
+            <CarDetailsSidebar car={car} onShare={handleShare} />
           </div>
-        </aside>
+        </div>
       </div>
 
       {/* ---------- DRAWER (slide-over) ---------- */}
@@ -1773,9 +1038,3 @@ const closeFeaturesDrawer = () => setShowFeaturesDrawer(false);
   );
 }
 
-// helper
-function formatKm(n) {
-  if (n == null) return "";
-  if (n >= 1000 && n < 100000) return `${Math.round(n / 1000)}K km`;
-  return `${n.toLocaleString()} km`;
-}

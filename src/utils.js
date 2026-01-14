@@ -1,44 +1,72 @@
-export const normalizeCar = (car) => {
-    // Debug: Log the raw car object to see actual field names
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Raw car data from API:', car);
-      // Check all possible insurance field variations
-      const insuranceFields = Object.keys(car || {}).filter(key => 
-        key.toLowerCase().includes('insurance') || key.toLowerCase().includes('rto') || key.toLowerCase().includes('location')
-      );
-      console.log('Insurance/RTO/Location related fields:', insuranceFields);
-      insuranceFields.forEach(field => {
-        console.log(`  ${field}:`, car[field]);
-      });
-      // Specifically check the exact field names we're looking for
-      console.log('Direct field checks:', {
-        'insurance_valid_till': car.insurance_valid_till,
-        'insurance_type': car.insurance_type,
-        'typeof insurance_valid_till': typeof car.insurance_valid_till,
-        'typeof insurance_type': typeof car.insurance_type,
-        'hasOwnProperty insurance_valid_till': car.hasOwnProperty ? car.hasOwnProperty('insurance_valid_till') : 'N/A',
-        'hasOwnProperty insurance_type': car.hasOwnProperty ? car.hasOwnProperty('insurance_type') : 'N/A',
-      });
-      
-      // Calculate what will be assigned BEFORE creating the result object
-      const insuranceValidValue = car.insurance_valid_till || car.insurance_valid || car.insuranceValid || 
-                                   car.insurance_validity || car.insurance_validity_date || car.insurance_valid_until || 
-                                   car.insurance_expiry || car.insurance_expiry_date ||
-                                   (car.insurance && (car.insurance.validity || car.insurance.valid || car.insurance.valid_until || car.insurance.expiry || car.insurance.expiry_date)) ||
-                                   undefined;
-      const insuranceTypeValue = car.insurance_type || car.insuranceType || car.insurance_category || 
-                                 (typeof car.insurance === 'object' && car.insurance.type) ||
-                                 (typeof car.insurance === 'object' && car.insurance.category) ||
-                                 (typeof car.insurance === 'string' ? car.insurance : undefined) ||
-                                 undefined;
-      
-      console.log('normalizeCar - Values BEFORE assignment:', {
-        insuranceValid: insuranceValidValue,
-        insuranceType: insuranceTypeValue,
-        'insuranceValid === undefined': insuranceValidValue === undefined,
-        'insuranceType === undefined': insuranceTypeValue === undefined,
-      });
+/**
+ * Format kilometer value for display
+ * @param {number} n - Kilometer value
+ * @returns {string} Formatted string (e.g., "15K km" or "1,234 km")
+ */
+export const formatKm = (n) => {
+  if (n == null) return "";
+  if (n >= 1000 && n < 100000) return `${Math.round(n / 1000)}K km`;
+  return `${n.toLocaleString()} km`;
+};
+
+/**
+ * Format price for display
+ * @param {number} price - Price in rupees
+ * @returns {string} Formatted price (e.g., "₹12.50 L")
+ */
+export const formatPrice = (price) => {
+  if (!price) return "—";
+  return `₹${(price / 100000).toFixed(2)} L`;
+};
+
+/**
+ * Format date string to "Month Year" format
+ * @param {string|Date} date - Date string or Date object
+ * @returns {string} Formatted date (e.g., "Aug 2026")
+ */
+export const formatDate = (date) => {
+  if (!date) return "-";
+  try {
+    if (typeof date === 'string' && date.includes('-')) {
+      const dateObj = new Date(date);
+      if (!isNaN(dateObj.getTime())) {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        return `${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+      }
     }
+    return date;
+  } catch (e) {
+    return date;
+  }
+};
+
+/**
+ * Format insurance type (capitalize first letter)
+ * @param {string} type - Insurance type
+ * @returns {string} Formatted insurance type
+ */
+export const formatInsuranceType = (type) => {
+  if (!type) return "-";
+  if (typeof type === 'string') {
+    return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+  }
+  return type;
+};
+
+/**
+ * Format year value (handle ranges)
+ * @param {string|number} year - Year value
+ * @returns {string} Formatted year
+ */
+export const formatYear = (year) => {
+  if (!year) return "-";
+  if (typeof year === 'string' && year.includes('-')) {
+    return year;
+  }
+  return year.toString();
+};
+
+export const normalizeCar = (car) => {
     
     // Calculate insurance values BEFORE creating result object
     const insuranceValidValue = car.insurance_valid_till || car.insurance_valid || car.insuranceValid || 
@@ -168,14 +196,6 @@ export const normalizeCar = (car) => {
         })),
       })),
     };
-    
-    // Debug: Log the normalized result
-    if (process.env.NODE_ENV === 'development') {
-      console.log('normalizeCar - normalized result:', {
-        insuranceValid: result.insuranceValid,
-        insuranceType: result.insuranceType,
-      });
-    }
     
     return result;
   };

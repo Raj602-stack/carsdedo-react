@@ -65,17 +65,17 @@ const Features = forwardRef(({ car, onViewAllFeatures }, ref) => {
                   );
                 })}
               </div>
-            </div>
-          ))}
-          
+        </div>
+      ))}
+
           <div className="features-actions-preview">
-            <button
+      <button
               type="button"
               className="view-all-features-btn"
               onClick={onViewAllFeatures}
-            >
-              View all features
-            </button>
+      >
+        View all features
+      </button>
           </div>
         </div>
       </div>
