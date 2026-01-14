@@ -7,12 +7,20 @@ import Sidebar from "../components/Sidebar";
 import CitySelectorModal from "../components/CitySelectorModal";
 import BottomNav from "../components/BottomNav";
 
+const ROW2_HEIGHT = 70; // Height of the search/location row
+
 export default function MobileLayout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState("Lucknow");
-  const [collapsed, setCollapsed] = useState(false);
+  const [row2Offset, setRow2Offset] = useState(0); // How much row2 is translated up
+
+  // Use refs to track scroll state without causing re-renders
+  const lastScrollYRef = useRef(0);
+  const currentOffsetRef = useRef(0);
+  const tickingRef = useRef(false);
+  const mainRef = useRef(null); // Ref to the main scrolling container
 
   const [cityOpen, setCityOpen] = useState(false);
   const handleSelect = (city) => {
@@ -28,41 +36,83 @@ export default function MobileLayout({ children }) {
     return () => document.body.classList.remove("no-scroll");
   }, [open]);
 
-  // Handle scroll to collapse/expand search row
+  // Handle scroll to slide row2 up/down
   useEffect(() => {
-    let lastY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-
-    const onScroll = () => {
-      const currentY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-      const diff = currentY - lastY;
-
-      // At top → expanded
-      if (currentY <= 5) {
-        setCollapsed(false);
-      }
-      // Scroll down → collapse
-      else if (diff > 4) {
-        setCollapsed(true);
-      }
-      // Small scroll up → expand
-      else if (diff < -4) {
-        setCollapsed(false);
+    // Small delay to ensure ref is attached
+    const setupScroll = () => {
+      const mainElement = mainRef.current;
+      if (!mainElement) {
+        return null;
       }
 
-      lastY = currentY;
+      const updateRow2 = () => {
+        // Get scroll position from the main element
+        const scrollY = mainElement.scrollTop || 0;
+        const scrollDiff = scrollY - lastScrollYRef.current;
+
+        // At the very top, always show row2
+        if (scrollY <= 5) {
+          currentOffsetRef.current = 0;
+        } else {
+          // Adjust offset based on scroll direction
+          currentOffsetRef.current = Math.max(0, Math.min(ROW2_HEIGHT, currentOffsetRef.current + scrollDiff));
+        }
+
+        setRow2Offset(currentOffsetRef.current);
+        lastScrollYRef.current = scrollY;
+        tickingRef.current = false;
+      };
+
+      const onScroll = () => {
+        if (!tickingRef.current) {
+          window.requestAnimationFrame(updateRow2);
+          tickingRef.current = true;
+        }
+      };
+
+      // Initialize
+      const initialScrollY = mainElement.scrollTop || 0;
+      
+      if (initialScrollY > 5) {
+        currentOffsetRef.current = Math.min(ROW2_HEIGHT, initialScrollY);
+        setRow2Offset(currentOffsetRef.current);
+      }
+      lastScrollYRef.current = initialScrollY;
+
+      // Listen to scroll on the main element
+      mainElement.addEventListener("scroll", onScroll, { passive: true });
+      
+      // Return cleanup function
+      return () => {
+        mainElement.removeEventListener("scroll", onScroll);
+      };
     };
 
-    // Check initial state
-    const initialY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    setCollapsed(initialY > 5);
-    lastY = initialY;
-
-    window.addEventListener("scroll", onScroll, { passive: true });
+    // Use setTimeout to ensure DOM is ready
+    const timer = setTimeout(() => {
+      const cleanup = setupScroll();
+      // Store cleanup for later
+      if (cleanup) {
+        timer.cleanup = cleanup;
+      }
+    }, 100); // 100ms delay to ensure DOM is rendered
     
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      clearTimeout(timer);
+      if (timer.cleanup) {
+        timer.cleanup();
+      }
     };
   }, []);
+
+  // Calculate styles based on offset
+  const row2Style = {
+    transform: `translateY(-${row2Offset}px)`,
+    opacity: Math.max(0, 1 - (row2Offset / ROW2_HEIGHT)),
+  };
+
+  const isCollapsed = row2Offset > ROW2_HEIGHT * 0.9; // Show compact view when 90% hidden (almost fully)
+  const mainPaddingTop = 64 + Math.max(0, ROW2_HEIGHT - row2Offset);
 
   return (
     <div className="ml-root">
@@ -75,8 +125,8 @@ export default function MobileLayout({ children }) {
             </div>
           </div>
 
-          {/* Compact search/location - appears only when collapsed */}
-          <div className={`ml-row1-compact ${collapsed ? "show" : ""}`}>
+          {/* Compact search/location - appears when row2 is mostly hidden */}
+          <div className={`ml-row1-compact ${isCollapsed ? "show" : ""}`}>
             <div onClick={() => setCityOpen(true)} className="ml-location-compact">{selectedCity} ▾</div>
             <div 
               onClick={() => navigate("/search")}
@@ -114,8 +164,8 @@ export default function MobileLayout({ children }) {
           </div>
         </div>
 
-        {/* Expanded search/location - hidden when collapsed */}
-        <div className={`ml-topbar-row2 ${collapsed ? "hidden" : ""}`} data-collapsed={collapsed}>
+        {/* Expanded search/location - slides up behind row1 on scroll */}
+        <div className="ml-topbar-row2" style={row2Style}>
           <div onClick={() => setCityOpen(true)} className="ml-location"> {selectedCity} ▾</div>
 
           <div 
@@ -143,7 +193,7 @@ export default function MobileLayout({ children }) {
         </div>
       </header>
 
-      <main className="ml-main" style={{ paddingTop: collapsed ? '60px' : '130px', transition: 'padding-top 0.3s ease' }}>
+      <main ref={mainRef} className="ml-main" style={{ paddingTop: `${mainPaddingTop}px` }}>
         {children ?? <Outlet />}
       </main>
 
