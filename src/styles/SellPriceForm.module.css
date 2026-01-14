@@ -50,7 +50,7 @@
   .title {
     margin: 0;
     font-size: 18px;
-    color: #2b0f57;
+  color: #0c213a;
     font-weight: 900;
   }
   .subtitle {
@@ -127,7 +127,7 @@
   }
   
   .btnPrimary {
-    background: linear-gradient(180deg,#6f1e9c,#5a127f);
+  background: linear-gradient(180deg,#0c213a,#1f4c73);
     color: #fff;
     padding: 10px 14px;
     border-radius: 10px;

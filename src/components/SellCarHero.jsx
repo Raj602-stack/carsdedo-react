@@ -1,10 +1,9 @@
 // src/components/SellCarHero.jsx
 import React, { useState } from "react";
 import styles from "../styles/SellCarHero.module.css";
-import SellPriceForm from "./SellPriceForm";
 
-export default function SellCarHero() {
-  const [formOpen, setFormOpen] = useState(false);
+export default function SellCarHero({ onOpenForm }) {
+  const [registrationNumber, setRegistrationNumber] = useState("");
 
   const BRANDS = [
     { id: "maruti", label: "Maruti Suzuki", logo: process.env.PUBLIC_URL + "/maruti-suzuki.avif"},
@@ -20,17 +19,11 @@ export default function SellCarHero() {
     { id: "mercedes", label: "Mercedes-Benz", logo: process.env.PUBLIC_URL + "/merc.avif" },
   ];
 
-  function handleOpenForm() {
-    setFormOpen(true);
-  }
-  function handleCloseForm() {
-    setFormOpen(false);
-  }
-
-  function handleFormSubmit(data) {
-    // example: forward to API or show toast
-    console.log("Received form data:", data);
-    // TODO: call API to request evaluation
+  function handleOpenForm(brand) {
+    onOpenForm?.({
+      registrationNumber,
+      brand,
+    });
   }
 
   return (
@@ -44,8 +37,8 @@ export default function SellCarHero() {
       >
         <defs>
           <linearGradient id="g2" x1="0" x2="1">
-            <stop offset="0%" stopColor="#3b0f4f" />
-            <stop offset="100%" stopColor="#2b0a3b" />
+            <stop offset="0%" stopColor="#0c213a" />
+            <stop offset="100%" stopColor="#0a1726" />
           </linearGradient>
         </defs>
 
@@ -89,10 +82,18 @@ export default function SellCarHero() {
                 <input
                   className={styles.input}
                   placeholder="(e.g. DL34AC4564)"
+                  value={registrationNumber}
+                  onChange={(e) => setRegistrationNumber(e.target.value)}
                 />
               </div>
 
-              <button className={styles.ctaBtn} onClick={handleOpenForm}>GET YOUR CAR PRICE</button>
+              <button
+                className={styles.ctaBtn}
+                type="button"
+                onClick={() => handleOpenForm()}
+              >
+                GET YOUR CAR PRICE
+              </button>
             </div>
 
             <div className={styles.or}>Or</div>
@@ -104,9 +105,16 @@ export default function SellCarHero() {
 
               <div className={styles.brandsGrid}>
                 {BRANDS.map((b) => (
-                  <div key={b.id} className={styles.brandBox} title={b.label}>
+                  <button
+                    key={b.id}
+                    type="button"
+                    className={styles.brandBox}
+                    title={b.label}
+                    onClick={() => handleOpenForm(b.label)}
+                    aria-label={`Select ${b.label}`}
+                  >
                     <img src={b.logo} alt={b.label} className={styles.brandImg} />
-                  </div>
+                  </button>
                 ))}
               </div>
 
@@ -131,7 +139,12 @@ export default function SellCarHero() {
           <div className={styles.bottomText}>Instant Payment</div>
         </div>
         <div className={styles.bottomItem}>
-          <div className={styles.bottomIcon}>🔍</div>
+          <div className={styles.bottomIcon}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
           <div className={styles.bottomText}>Free Car Evaluation</div>
         </div>
         <div className={styles.bottomItem}>
@@ -140,8 +153,6 @@ export default function SellCarHero() {
         </div>
       </div>
 
-      {/* Slide-in price form */}
-      <SellPriceForm open={formOpen} onClose={handleCloseForm} onSubmit={handleFormSubmit} />
     </section>
   );
 }

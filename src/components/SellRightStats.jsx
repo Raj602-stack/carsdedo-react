@@ -30,7 +30,7 @@ export default function SellRightStats({
           {stats.map((s) => (
             <div className="sr-card" key={s.key}>
               <div className="sr-card-icon" aria-hidden>
-                <span>{s.icon}</span>
+                {s.icon}
               </div>
 
               <div className="sr-card-body">

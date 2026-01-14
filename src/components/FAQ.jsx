@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import "../styles/FAQ.css";
 
-const FAQ_DATA = [
+const DEFAULT_FAQ_DATA = [
   {
     q: "When and where can I take a test drive?",
     a:
@@ -24,14 +24,21 @@ const FAQ_DATA = [
   },
 ];
 
-export default function FAQ() {
+export default function FAQ({ items }) {
+  const data = items && items.length ? items : DEFAULT_FAQ_DATA;
   const [openIndex, setOpenIndex] = useState(0); // open first by default or -1 for none
   const refs = useRef([]);
 
   useEffect(() => {
     // ensure array length matches data
-    refs.current = refs.current.slice(0, FAQ_DATA.length);
-  }, []);
+    refs.current = refs.current.slice(0, data.length);
+  }, [data.length]);
+
+  useEffect(() => {
+    if (openIndex >= data.length) {
+      setOpenIndex(data.length ? 0 : -1);
+    }
+  }, [data.length, openIndex]);
 
   const toggle = (i) => {
     setOpenIndex((prev) => (prev === i ? -1 : i));
@@ -54,7 +61,7 @@ export default function FAQ() {
         </h2>
 
         <div className="faq-list" role="list" aria-label="Frequently asked questions">
-          {FAQ_DATA.map((item, i) => (
+          {data.map((item, i) => (
             <article
               key={i}
               className={`faq-item ${openIndex === i ? "open" : ""}`}

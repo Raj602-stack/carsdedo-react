@@ -30,9 +30,9 @@ export default function Layout() {
     // keep other patterns as needed
   ];
 
-  // Routes where Topbar should be hidden (only sell for now)
+  // Routes where Topbar should be hidden (none for now)
   const hideTopbarFor = [
-    /^\/sell(\/|$)/,
+    // /^\/sell(\/|$)/,
   ];
 
   const shouldHideSubnav = hideSubnavFor.some((rx) => rx.test(pathname));

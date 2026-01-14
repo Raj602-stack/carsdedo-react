@@ -1,6 +1,6 @@
 .section {
     position: relative;
-    background: linear-gradient(180deg, #3b0f4f, #2b0a3b);
+    background: linear-gradient(180deg, #0c213a, #0a1726);
     color: white;
     overflow: visible;       /* changed from hidden -> visible */
     padding-bottom: 48px;    /* give space for bottom row if needed */
@@ -38,8 +38,8 @@
   }
   
   /* Promo */
-  .promoBox {
-    background: #3b0f4f;
+.promoBox {
+    background: #10253f;
     padding: 20px 16px;
     border-radius: 12px;
     text-align: center;
@@ -58,8 +58,8 @@
   }
   
   /* Beat Box */
-  .beatBox {
-    background: #4a0f66;
+.beatBox {
+    background: #16324f;
     padding: 16px 12px;
     border-radius: 12px;
     text-align: center;
@@ -85,15 +85,15 @@
     z-index: 2;
   }
   
-  .centerCard {
+.centerCard {
     background: #fff;
-    color: #2b0f57;
+    color: #0c213a;
     border-radius: 20px;
     margin-top: 40px;
     padding: 28px;
     width: 100%;
     max-width: 760px;
-    box-shadow: 0 24px 80px rgba(10, 8, 20, 0.28);
+    box-shadow: 0 24px 80px rgba(10, 18, 30, 0.28);
   }
   
   .heading {
@@ -115,11 +115,11 @@
     gap: 16px;
   }
   
-  .label {
+.label {
     display: block;
     font-size: 13px;
     font-weight: 800;
-    color: #7c6a88;
+    color: #6b7786;
     margin-bottom: 8px;
   }
   
@@ -144,19 +144,19 @@
   }
   
   /* OR */
-  .or {
-    border-top: 1px solid #f1eef3;
+.or {
+    border-top: 1px solid #e7ebf1;
     padding-top: 18px;
     margin: 20px 0;
     font-size: 14px;
-    color: #7c6a88;
+    color: #6b7786;
     text-align: center;
   }
   
   /* Brands */
-  .brandTitle {
+.brandTitle {
     font-weight: 800;
-    color: #5a526e;
+    color: #4f5d6d;
     margin-bottom: 12px;
   }
   
@@ -166,16 +166,16 @@
     gap: 12px;
   }
   
-  .brandBox {
-    background: #faf8fb;
+.brandBox {
+    background: #f7f9fb;
     border-radius: 10px;
-    border: 1px solid #f1eef3;
+    border: 1px solid #e7ebf1;
     height: 56px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: 700;
-    color: #6f6b80;
+    color: #5f6b7a;
     cursor: pointer;
   }
   
@@ -250,7 +250,7 @@
   .brandBox {
     background: #ffffff;
     border-radius: 12px;
-    border: 1px solid #e9e6f0;
+    border: 1px solid #e2e8f0;
     height: 60px;
     display: flex;
     justify-content: center;
@@ -258,6 +258,8 @@
     padding: 8px 10px;
     cursor: pointer;
     transition: box-shadow .2s ease;
+    appearance: none;
+    font: inherit;
   }
   
   .brandBox:hover {

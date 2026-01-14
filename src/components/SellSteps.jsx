@@ -8,7 +8,7 @@ import "../styles/SellSteps.css";
  *
  * Update the image/icon paths if you move them into public/ folder.
  */
-export default function SellSteps() {
+export default function SellSteps({ onCtaClick, onWatchClick, onLearnMoreClick }) {
   const steps = [
     {
       id: 1,
@@ -63,10 +63,7 @@ export default function SellSteps() {
 
               <button
                 className="ss-link"
-                onClick={() => {
-                  /* Replace with navigation if needed */
-                  console.log("CTA clicked:", s.cta);
-                }}
+                onClick={() => onCtaClick?.(s)}
                 aria-label={s.cta}
               >
                 {s.cta} <span className="ss-arrow">›</span>
@@ -82,7 +79,7 @@ export default function SellSteps() {
               Our seller protection policy ensures that you're protected from any liabilities until your RC transfer is completed
             </p>
 
-            <button className="ss-link" onClick={() => console.log("Sell car clicked")}>
+            <button className="ss-link" onClick={() => onCtaClick?.({ id: "final", cta: "Sell car" })}>
               Sell car <span className="ss-arrow">›</span>
             </button>
           </div>
@@ -97,11 +94,18 @@ export default function SellSteps() {
         </div>
 
         <div className="ss-cta-row">
-          <button className="ss-watch" onClick={() => console.log("Watch how it works")}>
+          <button className="ss-watch" onClick={() => onWatchClick?.()}>
             Watch how it works <span className="ss-play">▶</span>
           </button>
 
-          <a className="ss-learn" href="/learn-more" onClick={(e) => e.preventDefault()}>
+          <a
+            className="ss-learn"
+            href="#sell-guide"
+            onClick={(e) => {
+              e.preventDefault();
+              onLearnMoreClick?.();
+            }}
+          >
             Learn More ›
           </a>
         </div>

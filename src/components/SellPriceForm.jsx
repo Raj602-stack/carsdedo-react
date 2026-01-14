@@ -1,38 +1,62 @@
 // src/components/SellPriceForm.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import styles from "../styles/SellPriceForm.module.css";
 
-export default function SellPriceForm({ open, onClose, onSubmit, initialBrand }) {
+const DEFAULT_FORM = {
+  registrationNumber: "",
+  brand: "",
+  rtoLocation: "",
+  manufacturingYear: "",
+  model: "",
+  fuelType: "petrol",
+  transmission: "manual",
+  ownerships: "1",
+  kmsDriven: "",
+  sellWhen: "",
+  address: "",
+  mobile: "",
+};
+
+export default function SellPriceForm({
+  open,
+  onClose,
+  onSubmit,
+  initialBrand = "",
+  initialValues = {},
+}) {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const [form, setForm] = useState({
-    brand: initialBrand || "",
-    rtoLocation: "",
-    manufacturingYear: "",
-    model: "",
-    fuelType: "petrol",
-    transmission: "manual",
-    ownerships: "1",
-    kmsDriven: "",
-    sellWhen: "",
-    address: "",
-    mobile: "",
-  });
+  const initialForm = useMemo(
+    () => ({
+      ...DEFAULT_FORM,
+      ...initialValues,
+      brand: initialValues.brand || initialBrand || DEFAULT_FORM.brand,
+    }),
+    [initialValues, initialBrand]
+  );
+
+  const [form, setForm] = useState(initialForm);
 
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (!open) {
-      // reset when closed
+    if (open) {
       setStep(1);
       setSubmitting(false);
       setSuccess(false);
-      setForm((f) => ({ ...f, brand: initialBrand || "" }));
+      setForm(initialForm);
       setErrors({});
+      return;
     }
-  }, [open, initialBrand]);
+    // reset when closed
+    setStep(1);
+    setSubmitting(false);
+    setSuccess(false);
+    setForm(initialForm);
+    setErrors({});
+  }, [open, initialForm]);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -104,6 +128,15 @@ export default function SellPriceForm({ open, onClose, onSubmit, initialBrand })
         <form className={styles.form} onSubmit={handleSubmit}>
           {/* Step 1: car basics */}
           <div className={styles.formSection}>
+            <label className={styles.label}>Registration number (optional)</label>
+            <input
+              className={styles.input}
+              name="registrationNumber"
+              value={form.registrationNumber}
+              onChange={handleChange}
+              placeholder="e.g. DL34AC4564"
+            />
+
             <label className={styles.label}>Brand</label>
             <input className={styles.input} name="brand" value={form.brand} onChange={handleChange} placeholder="e.g. Maruti Suzuki" />
 

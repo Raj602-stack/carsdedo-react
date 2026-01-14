@@ -4,7 +4,7 @@ import "../styles/MobileFAQ.css";
 // Replace with your uploaded image path (the system will transform it to a URL).
 const HEADER_IMG = "/mnt/data/a7f96920-0a53-47ca-bd6a-bcd114b125a7.png";
 
-const FAQ_DATA = [
+const DEFAULT_FAQ_DATA = [
   {
     id: "q1",
     q: "Q. How can I sell car online in Noida at Spinny?",
@@ -38,7 +38,8 @@ const FAQ_DATA = [
   // add more items as needed
 ];
 
-export default function MobileFAQ({ singleOpen = true, headerImage = HEADER_IMG }) {
+export default function MobileFAQ({ singleOpen = true, headerImage = HEADER_IMG, items }) {
+  const data = items && items.length ? items : DEFAULT_FAQ_DATA;
   const [openId, setOpenId] = useState(null);
 
   // Refs map to measure content height for smooth animation
@@ -51,6 +52,12 @@ export default function MobileFAQ({ singleOpen = true, headerImage = HEADER_IMG 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  useEffect(() => {
+    if (openId && !data.some((item) => item.id === openId)) {
+      setOpenId(null);
+    }
+  }, [data, openId]);
 
   const toggle = (id) => {
     setOpenId((prev) => (prev === id ? null : (singleOpen ? id : id)));
@@ -75,7 +82,7 @@ export default function MobileFAQ({ singleOpen = true, headerImage = HEADER_IMG 
         <h2 id="faq-heading" className="faq-title">Frequently asked questions</h2>
 
         <div className="faq-list" role="list">
-          {FAQ_DATA.map((item) => {
+          {data.map((item) => {
             const isOpen = openId === item.id;
             return (
               <div className="faq-item" key={item.id}>

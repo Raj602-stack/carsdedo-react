@@ -2,9 +2,9 @@
 import React from "react";
 import styles from "../styles/SellGuide.module.css";
 
-export default function SellGuide() {
+export default function SellGuide({ sectionId = "sell-guide", onGetQuote, onLearnMore }) {
   return (
-    <section className={styles.wrapper} aria-labelledby="sell-guide-title">
+    <section className={styles.wrapper} aria-labelledby="sell-guide-title" id={sectionId}>
       <div className={styles.container}>
         <h1 id="sell-guide-title" className={styles.h1}>
           Sell Your Used Car Online Quickly & Easily — Step-by-Step Guide
@@ -199,8 +199,19 @@ export default function SellGuide() {
         </ul>
 
         <div className={styles.ctaWrap}>
-          <button className={styles.primaryBtn}>Get Instant Quote</button>
-          <a className={styles.learnMore} href="#contact">Learn more</a>
+          <button className={styles.primaryBtn} onClick={() => onGetQuote?.()}>
+            Get Instant Quote
+          </button>
+          <a
+            className={styles.learnMore}
+            href="#sell-faq"
+            onClick={(e) => {
+              e.preventDefault();
+              onLearnMore?.();
+            }}
+          >
+            Learn more
+          </a>
         </div>
       </div>
     </section>

@@ -30,13 +30,13 @@ function DeliveryIcon({ className, style }) {
     >
       <path
         d="M3 13l2-5h14l2 5v5H3v-5z"
-        stroke="#f04438"
+        stroke="#ffffff"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle cx="7" cy="18" r="1.2" fill="#f04438" />
-      <circle cx="17" cy="18" r="1.2" fill="#f04438" />
+      <circle cx="7" cy="18" r="1.2" fill="#ffffff" />
+      <circle cx="17" cy="18" r="1.2" fill="#ffffff" />
     </svg>
   );
 }
@@ -160,7 +160,7 @@ export default function StoryCarousel() {
 
         <div className="sc-bottom">
           <div className="sc-meta">
-            <div className="sc-meta-left" style={{ alignItems: "center" }}>
+            <div className="sc-meta-left">
               {/* Delivery icon shown before the name */}
               <DeliveryIcon style={{ marginRight: 8 }} />
 

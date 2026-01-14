@@ -80,7 +80,12 @@ const QualityReport = forwardRef(({ car, onViewFullReport }, ref) => {
                 title: item.name,
                 description: item.remarks,
                 impact: item.remarks.includes('price') ? item.remarks : `Comes with lower price tag because of it`,
-                icon: item.status === 'major' ? "⚠️" : "🔍",
+                icon: item.status === 'major' ? "⚠️" : (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                ),
                 status: item.status
               }))
           )

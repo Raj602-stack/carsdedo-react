@@ -36,15 +36,6 @@ const CarImageGallery = ({ car, currentImage, onImageChange }) => {
       images = [car.image];
     }
 
-    // TEST IMAGES - Remove when carousel/gallery is confirmed working
-    const testImages = [
-      'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop'
-    ];
-    images = [...images, ...testImages];
-    // END TEST IMAGES
-
     return images;
   }, [car]);
 

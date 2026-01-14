@@ -25,7 +25,7 @@
     border-radius: 12px;
     font-size: 20px;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin: 0 auto 20px;
   }
   
   .mr-stars {
@@ -86,10 +86,74 @@
   /* Review text */
   .mr-text {
     margin-top: 10px;
-    font-size: 15px;
-    line-height: 1.45;
+    font-size: 16.5px;
+    line-height: 1.6;
     color: #3b2f44;
   }
+
+/* Modal */
+.mr-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 18, 0.55);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+}
+
+.mr-modal {
+  background: #ffffff;
+  color: #1a0a2a;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 520px;
+  padding: 18px 18px 22px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.mr-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mr-modal-name {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.mr-modal-close {
+  border: none;
+  background: #f2eef9;
+  color: #2c1c3b;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.mr-modal-meta {
+  margin-top: 4px;
+  color: #7c6b8a;
+  font-size: 13px;
+}
+
+.mr-modal-stars {
+  margin-top: 8px;
+  color: #ffcc00;
+  font-size: 18px;
+}
+
+.mr-modal-text {
+  margin-top: 12px;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #2b1f35;
+}
   
   /* Read more */
   .mr-readmore {
