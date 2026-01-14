@@ -34,7 +34,18 @@ export default function CarGallery() {
     const exterior = car.images.exterior || [];
     const interior = car.images.interior || [];
     
-    return [...exterior, ...interior].filter(Boolean);
+    let images = [...exterior, ...interior].filter(Boolean);
+
+    // TEST IMAGES - Remove when gallery is confirmed working
+    const testImages = [
+      'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop'
+    ];
+    images = [...images, ...testImages];
+    // END TEST IMAGES
+
+    return images;
   }, [car]);
 
   // Initialize with first image

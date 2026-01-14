@@ -75,6 +75,7 @@ export default function App() {
             <Route path="sell" element={<SellPageWeb/>} />
             <Route path="/car/:id" element={<CarDetailsWeb />} />
             <Route path="/car/:id/book" element={<CarBooking />} />
+            <Route path="/car/:id/gallery" element={<CarGallery />} />
             <Route path="/test-drive/:carId" element={<ScheduleTestDriveWeb/>}/>
             <Route path="/test-drive/confirmation/:carId" element={<TestDriveConfirmation/>}/>
 
