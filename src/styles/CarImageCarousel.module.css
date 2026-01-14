@@ -1,60 +1,67 @@
-.carousel {
-    position: relative;
-    width: 100%;
-    height: 260px;
-    overflow: hidden;
-    cursor: pointer;
-    touch-action: pan-y; 
-  }
-  
-  .carousel img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    user-select: none;
-    -webkit-user-drag: none;
-  }
-  
-  .dots {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    display: flex;
-    gap: 6px;
-    transform: translateX(-50%);
-  }
-  
-  .dots span {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.6);
-  }
-  
-  .dots .active {
-    background: #6a1b9a;
-  }
-  
-  .badge {
-    position: absolute;
-    bottom: 12px;
-    left: 12px;
-    background: white;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 12px;
-  }
+.carouselWrapper {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  background: #f8f9fa;
+  touch-action: pan-x pan-y pinch-zoom;
+}
 
-  
-  /* .carousel {
-    touch-action: pan-y; 
-  }
-  
-  .carousel img {
-    user-select: none;
-    -webkit-user-drag: none;
-  }
-   */
+.carouselContainer {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  overscroll-behavior-x: contain;
+}
+
+.carouselContainer::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.carouselSlide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.carouselSlide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  display: block;
+}
+
+/* Progress bar - only visible element */
+.progressBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #0c213a 0%, #1a3452 100%);
+  transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(12, 33, 58, 0.4);
+}
+
 
  

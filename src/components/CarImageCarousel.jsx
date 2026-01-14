@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/CarImageCarousel.module.css";
 import { useCars } from "../context/CarsContext";
@@ -9,9 +9,12 @@ export default function CarImageCarousel({ carId }) {
   const navigate = useNavigate();
   const { cars, loading } = useCars();
 
-  const [index, setIndex] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const startX = useRef(0);
-  const isDragging = useRef(false);
+  const scrollLeft = useRef(0);
+  const carouselRef = useRef(null);
+  const containerRef = useRef(null);
 
   /* -------------------------------
      1️⃣ Find car from context
@@ -35,74 +38,115 @@ export default function CarImageCarousel({ carId }) {
       .map((img) => `http://localhost:8000${img.image}`);
   }, [car]);
 
-  console.log(images);
+  /* -------------------------------
+     Scroll detection for smooth progress bar update
+     MUST be called before any early returns
+  -------------------------------- */
+  const handleScroll = React.useCallback(() => {
+    if (!containerRef.current) return;
+    
+    const container = containerRef.current;
+    const scrollWidth = container.scrollWidth - container.offsetWidth;
+    const scrollLeft = container.scrollLeft;
+    
+    if (scrollWidth > 0) {
+      const progress = (scrollLeft / scrollWidth) * 100;
+      setScrollProgress(Math.min(100, Math.max(0, progress)));
+    }
+  }, []);
 
   /* -------------------------------
-     Guards
+     Initialize scroll progress
+     MUST be called before any early returns
+  -------------------------------- */
+  useEffect(() => {
+    if (containerRef.current && images.length > 0) {
+      handleScroll();
+    }
+  }, [images.length, handleScroll]);
+
+  /* -------------------------------
+     Guards (after all hooks)
   -------------------------------- */
   if (loading || !car || images.length === 0) return null;
 
-  const safeIndex =
-    ((index % images.length) + images.length) % images.length;
-
   /* -------------------------------
-     Swipe handlers
+     Touch/Mouse handlers for smooth swipe
   -------------------------------- */
-  function handleStart(e) {
-    isDragging.current = true;
-    startX.current = e.touches
-      ? e.touches[0].clientX
-      : e.clientX;
-  }
-
-  function handleEnd(e) {
-    if (!isDragging.current) return;
-
-    const endX = e.changedTouches
-      ? e.changedTouches[0].clientX
-      : e.clientX;
-
-    const diff = startX.current - endX;
-
-    if (Math.abs(diff) > 50) {
-      setIndex((prev) => (diff > 0 ? prev + 1 : prev - 1));
+  const handleStart = (e) => {
+    setIsDragging(true);
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    startX.current = clientX;
+    if (containerRef.current) {
+      scrollLeft.current = containerRef.current.scrollLeft;
+      containerRef.current.style.scrollBehavior = 'auto';
     }
+  };
 
-    isDragging.current = false;
-  }
+  const handleMove = (e) => {
+    if (!isDragging) return;
+    
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const diff = clientX - startX.current;
+    
+    if (containerRef.current) {
+      // Smooth manual scrolling during drag
+      containerRef.current.scrollLeft = scrollLeft.current - diff;
+    }
+  };
+
+  const handleEnd = (e) => {
+    if (!isDragging) return;
+    setIsDragging(false);
+
+    if (!containerRef.current) return;
+
+    const container = containerRef.current;
+    container.style.scrollBehavior = 'smooth';
+    
+    // Let the scroll continue naturally - no snapping
+    // The progress bar will update via the scroll handler
+  };
 
   /* -------------------------------
      Render
   -------------------------------- */
   return (
-    <div
-      className={styles.carousel}
-      onTouchStart={handleStart}
-      onTouchEnd={handleEnd}
-      onMouseDown={handleStart}
-      onMouseUp={handleEnd}
-      onClick={() => navigate(`/car/${car.id}/gallery`)}
-    >
-      <img
-        src={images[safeIndex]}
-        alt={car.title}
-        loading="lazy"
-        onError={(e) => {
-          e.target.src = "/placeholder-car.png";
-        }}
-      />
-
-      <div className={styles.dots}>
-        {images.map((_, i) => (
-          <span
-            key={i}
-            className={i === safeIndex ? styles.active : ""}
-          />
+    <div className={styles.carouselWrapper}>
+      <div
+        ref={containerRef}
+        className={styles.carouselContainer}
+        onTouchStart={handleStart}
+        onTouchMove={handleMove}
+        onTouchEnd={handleEnd}
+        onMouseDown={handleStart}
+        onMouseMove={handleMove}
+        onMouseUp={handleEnd}
+        onMouseLeave={handleEnd}
+        onScroll={handleScroll}
+      >
+        {images.map((img, index) => (
+          <div key={index} className={styles.carouselSlide}>
+            <img
+              src={img}
+              alt={`${car.title} - ${index + 1}`}
+              loading={index === 0 ? "eager" : "lazy"}
+              onError={(e) => {
+                e.target.src = "/placeholder-car.png";
+              }}
+            />
+          </div>
         ))}
       </div>
 
+      {/* Progress indicator - only thing visible on image */}
       {images.length > 1 && (
-        <div className={styles.badge}>360°</div>
+        <div className={styles.progressBar}>
+          <div 
+            className={styles.progressFill}
+            style={{ width: `${scrollProgress}%` }}
+          />
+        </div>
       )}
     </div>
   );
