@@ -1,5 +1,6 @@
 // src/components/Filters.jsx
 import React, { useMemo, useState } from "react";
+import { FiSearch } from "react-icons/fi";
 import styles from  "../styles/BuyPageweb.module.css";
 /**
  * Filters.jsx
@@ -120,12 +121,15 @@ return (
       {/* SEARCH */}
       <div className={styles["filter-block"]}>
         <label className={styles["filter-label"]}>Search</label>
-        <input
-          className={styles["filter-search"]}
-          placeholder="Search title, model..."
-          value={filters.q}
-          onChange={(e) => setFilters((s) => ({ ...s, q: e.target.value }))}
-        />
+        <div className={styles["search-wrapper"]}>
+          <FiSearch className={styles["search-icon"]} />
+          <input
+            className={styles["filter-search"]}
+            placeholder="Search title, model..."
+            value={filters.q}
+            onChange={(e) => setFilters((s) => ({ ...s, q: e.target.value }))}
+          />
+        </div>
       </div>
 
       {/* PRICE */}
