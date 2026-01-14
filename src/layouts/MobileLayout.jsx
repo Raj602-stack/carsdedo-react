@@ -38,11 +38,13 @@ export default function MobileLayout({ children }) {
 
   // Handle scroll to slide row2 up/down
   useEffect(() => {
+    let cleanupFn = null;
+
     // Small delay to ensure ref is attached
-    const setupScroll = () => {
+    const timer = setTimeout(() => {
       const mainElement = mainRef.current;
       if (!mainElement) {
-        return null;
+        return;
       }
 
       const updateRow2 = () => {
@@ -82,25 +84,16 @@ export default function MobileLayout({ children }) {
       // Listen to scroll on the main element
       mainElement.addEventListener("scroll", onScroll, { passive: true });
       
-      // Return cleanup function
-      return () => {
+      // Store cleanup function
+      cleanupFn = () => {
         mainElement.removeEventListener("scroll", onScroll);
       };
-    };
-
-    // Use setTimeout to ensure DOM is ready
-    const timer = setTimeout(() => {
-      const cleanup = setupScroll();
-      // Store cleanup for later
-      if (cleanup) {
-        timer.cleanup = cleanup;
-      }
     }, 100); // 100ms delay to ensure DOM is rendered
     
     return () => {
       clearTimeout(timer);
-      if (timer.cleanup) {
-        timer.cleanup();
+      if (cleanupFn) {
+        cleanupFn();
       }
     };
   }, []);
@@ -111,7 +104,6 @@ export default function MobileLayout({ children }) {
     opacity: Math.max(0, 1 - (row2Offset / ROW2_HEIGHT)),
   };
 
-  const isCollapsed = row2Offset > ROW2_HEIGHT * 0.9; // Show compact view when 90% hidden (almost fully)
   const mainPaddingTop = 64 + Math.max(0, ROW2_HEIGHT - row2Offset);
 
   return (
@@ -122,29 +114,6 @@ export default function MobileLayout({ children }) {
             <button className="ml-hamburger ml-btn" onClick={() => setOpen(true)} aria-label="Open menu">☰</button>
             <div className="ml-brand">
               <img src={process.env.PUBLIC_URL + "/carsdedo-background.png"} alt="CarsDedo" className="ml-logo" />
-            </div>
-          </div>
-
-          {/* Compact search/location - appears when row2 is mostly hidden */}
-          <div className={`ml-row1-compact ${isCollapsed ? "show" : ""}`}>
-            <div onClick={() => setCityOpen(true)} className="ml-location-compact">{selectedCity} ▾</div>
-            <div 
-              onClick={() => navigate("/search")}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  navigate("/search");
-                }
-              }} 
-              className="ml-search-wrap-compact" 
-              role="search"
-            >
-              <span className="ml-search-placeholder">Search cars</span>
-              <button className="ml-search-icon" aria-label="Open search">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-              </button>
             </div>
           </div>
 
