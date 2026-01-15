@@ -1,7 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/ExploreMore.css";
 
 export default function ExploreMore() {
+  const navigate = useNavigate();
+
   return (
     <section className="explore-more-section">
       <div className="explore-more-inner">
@@ -18,7 +21,7 @@ export default function ExploreMore() {
             cta="Check eligibility"
             imagePath={process.env.PUBLIC_URL + "/paisa.png"}
             variant="loan"
-            onClick={() => console.log("Open Loan eligibility")}
+            onClick={() => navigate("/buy")}
           />
 
           <PromoCard
@@ -27,7 +30,7 @@ export default function ExploreMore() {
             cta="Explore buyback"
             imagePath={process.env.PUBLIC_URL + "/buyback.png"}
             variant="buyback"
-            onClick={() => console.log("Open Buyback")}
+            onClick={() => navigate("/buy")}
           />
         </div>
       </div>

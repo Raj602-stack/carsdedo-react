@@ -3,10 +3,10 @@
 /* CSS Variables - using :global for root variables */
 :global(:root) {
   --mobile-carousel-primary-navy: #0c213a;
-  --mobile-carousel-deep-purple: #2d063b;
+  --mobile-carousel-deep-navy: #0c213a;
   --mobile-carousel-accent-pink: #e93b68;
   --mobile-carousel-accent-red: #e15367;
-  --mobile-carousel-accent-purple: #6f1e9c;
+  --mobile-carousel-accent-blue: #1a3452;
   --mobile-carousel-bg-white: #ffffff;
   --mobile-carousel-bg-light: #f8f9fa;
 }

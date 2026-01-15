@@ -1,6 +1,6 @@
 /* AccountPage.css - compact mobile account UI */
 :root{
-    --brand-purple:#5b1de6;
+    --brand-blue:#0c213a;
     --muted:#8c7f8f;
     --bg:#fff;
   }
@@ -10,23 +10,23 @@
   .acc-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #f2eef6;position:sticky;top:0;background:#fff;z-index:90}
   .acc-hamburger{border:0;background:transparent;font-size:20px;cursor:pointer}
   .acc-brand{font-weight:900;color:#2b1140}
-  .acc-logout{border:0;background:transparent;color:var(--brand-purple);font-weight:900;cursor:pointer}
+  .acc-logout{border:0;background:transparent;color:var(--brand-blue);font-weight:900;cursor:pointer}
   
   .acc-main{padding:18px;flex:1 1 auto;overflow:auto}
   
   .acc-card{background:#fff;border-radius:12px;padding:18px;border:1px solid #f2eef6;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
   .acc-number{font-size:18px;font-weight:800;color:#2b1140}
-  .acc-settings{border:0;background:transparent;color:var(--brand-purple);font-weight:800;cursor:pointer}
+  .acc-settings{border:0;background:transparent;color:var(--brand-blue);font-weight:800;cursor:pointer}
   
   .acc-tabs{display:flex;gap:12px;justify-content:center;margin:10px 0 18px}
   .tab{background:#fff;border-radius:30px;padding:12px 22px;border:1px solid rgba(43,17,64,0.06);font-weight:800;cursor:pointer}
-  .tab.active{background:var(--brand-purple);color:#fff;border:0;box-shadow:0 8px 24px rgba(91,29,230,0.10)}
+  .tab.active{background:var(--brand-blue);color:#fff;border:0;box-shadow:0 8px 24px rgba(91,29,230,0.10)}
   
   .section-title{font-weight:900;color:#2b1140;margin:16px 0}
   
   .order-card{background:#fff;border-radius:12px;padding:18px;border:1px solid #f2eef6;display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
   .order-empty{color:#6e5a6e}
-  .order-cta{background:var(--brand-purple);color:#fff;border:0;padding:12px;border-radius:8px;font-weight:900;cursor:pointer}
+  .order-cta{background:var(--brand-blue);color:#fff;border:0;padding:12px;border-radius:8px;font-weight:900;cursor:pointer}
   
   .promo-card{background:linear-gradient(90deg,#4812b0,#6b2be6);color:#fff;border-radius:12px;padding:18px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px}
   .promo-btn{background:#fff;color:#4812b0;border:0;padding:10px;border-radius:8px;font-weight:800;cursor:pointer;align-self:flex-start}
@@ -35,5 +35,5 @@
   
   .acc-bottom-nav{position:sticky;bottom:0;display:flex;gap:4px;background:#fff;padding:10px;justify-content:space-around;border-top:1px solid #f2eef6}
   .acc-bottom-nav button{background:transparent;border:0;padding:8px 6px;font-weight:800;color:#6e5a6e;cursor:pointer}
-  .acc-bottom-nav button.active{color:var(--brand-purple)}
+  .acc-bottom-nav button.active{color:var(--brand-blue)}
   

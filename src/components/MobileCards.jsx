@@ -1,10 +1,13 @@
 // components/MobileCards.jsx
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import FindMyCarCard from "./FindMyCarCard";
 import ServicesGrid from "./ServicesGrid";
 import "../styles/MobileCards.css";
 
 export default function MobileCards() {
+  const navigate = useNavigate();
+
   const services = [
     { id: "s1", title: "Periodic Services", icon: process.env.PUBLIC_URL + "/periodicservice.png" },
     { id: "s2", title: "Car Wash & Detailing", icon: process.env.PUBLIC_URL + "/carwash.png" },
@@ -17,10 +20,10 @@ export default function MobileCards() {
         title={"Find the perfect\ncar for you!"}
         desc={"Answer a few questions to find a car that fits your needs."}
         img={process.env.PUBLIC_URL + "/options.jpeg"}
-        onClick={() => console.log("Find my car clicked")}
+        onClick={() => navigate("/buy")}
       />
 
-      <ServicesGrid services={services} onSeeAll={() => console.log("See all services")} />
+      <ServicesGrid services={services} onSeeAll={() => navigate("/buy")} />
     </div>
   );
 }

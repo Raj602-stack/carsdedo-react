@@ -14,7 +14,6 @@ import MobileHome from "./components/MobileHome";
 import MobileSellPage from "./pages/MobileSellPage";
 import BuyPageWeb from "./pages/BuyPageWeb";
 import CarDetailsWeb from "./pages/CarDetailsWeb";
-import CarGallery from "./pages/CarGallery";
 import SellPageWeb from "./pages/SellPageWeb";
 import LoginWeb from "./pages/LoginWeb";
 import Wishlist from "./pages/Wishlist";
@@ -30,6 +29,7 @@ import TestDriveConfirmation from "./components/TestDriveConfirmation";
 import CarFilterMobile from "./pages/CarFilterMobile";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
+import CarGallery from "./pages/CarGallery";
 import { CarsProvider } from "./context/CarsContext";
 
 
@@ -74,8 +74,8 @@ export default function App() {
             <Route path="buy" element={<BuyPageWeb/>} />
             <Route path="sell" element={<SellPageWeb/>} />
             <Route path="/car/:id" element={<CarDetailsWeb />} />
-            <Route path="/car/:id/book" element={<CarBooking />} />
             <Route path="/car/:id/gallery" element={<CarGallery />} />
+            <Route path="/car/:id/book" element={<CarBooking />} />
             <Route path="/test-drive/:carId" element={<ScheduleTestDriveWeb/>}/>
             <Route path="/test-drive/confirmation/:carId" element={<TestDriveConfirmation/>}/>
 

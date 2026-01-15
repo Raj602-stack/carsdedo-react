@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/BrandsGrid.css";
 
 /**
@@ -24,6 +25,24 @@ const BRANDS = [
 ];
 
 export default function BrandsGrid({ brands = BRANDS, onViewAll, onBrandClick }) {
+  const navigate = useNavigate();
+
+  const handleBrandClick = (brand) => {
+    if (onBrandClick) {
+      onBrandClick(brand);
+    } else {
+      navigate(`/buy?brand=${encodeURIComponent(brand.name)}`);
+    }
+  };
+
+  const handleViewAll = () => {
+    if (onViewAll) {
+      onViewAll();
+    } else {
+      navigate("/buy");
+    }
+  };
+
   return (
     <section className="bg-section" aria-labelledby="bg-title">
       <div className="bg-inner">
@@ -38,7 +57,7 @@ export default function BrandsGrid({ brands = BRANDS, onViewAll, onBrandClick })
             <button
               key={b.key}
               className="bg-card"
-              onClick={() => onBrandClick?.(b)}
+              onClick={() => handleBrandClick(b)}
               type="button"
               role="listitem"
               aria-label={`View ${b.name} cars`}
@@ -56,7 +75,7 @@ export default function BrandsGrid({ brands = BRANDS, onViewAll, onBrandClick })
         </div>
 
         <div className="bg-cta">
-          <button className="bg-view-all" onClick={() => onViewAll?.()}>
+          <button className="bg-view-all" onClick={handleViewAll}>
             View all cars
           </button>
         </div>

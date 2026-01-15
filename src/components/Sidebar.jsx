@@ -109,7 +109,7 @@ export default function Sidebar({ open, onClose }) {
             <div className="ml-categories">
               <button 
                 className="ml-cat"
-                onClick={() => handleNavigation("/buy?price=20+")}
+                onClick={() => handleNavigation("/buy?tags=luxury,premium")}
               >
                 <img src={process.env.PUBLIC_URL + "/lux.png"} alt="Luxury" />
                 <div className="ml-cat-label">Luxury cars</div>

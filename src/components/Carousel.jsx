@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const slides = [
   {
@@ -22,6 +23,7 @@ const slides = [
 ];
 
 export default function Carousel() {
+  const navigate = useNavigate();
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -41,7 +43,7 @@ export default function Carousel() {
             <div className="hero-text">
               <h1>{s.title}</h1>
               <p>{s.subtitle}</p>
-              <button className="primary">Check eligibility</button>
+              <button className="primary" onClick={() => navigate("/buy")}>Check eligibility</button>
             </div>
           </div>
         ))}

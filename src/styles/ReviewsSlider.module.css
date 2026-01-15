@@ -1,5 +1,5 @@
 :root {
-    --purple: #3a0f57;
+    --navy: #0c213a;
     --muted: #7c6a88;
     --accent: #f1c40f;
     --card-bg: #fff;
@@ -10,7 +10,7 @@
   .section {
     padding: 36px 18px;
     background: white;
-    color: var(--purple);
+    color: var(--navy);
   }
   
   /* Header */
@@ -35,7 +35,7 @@
   .navBtn {
     border: 1px solid rgba(60, 40, 80, 0.06);
     background: white;
-    color: var(--purple);
+    color: var(--navy);
     width: 40px;
     height: 40px;
     border-radius: 8px;
@@ -91,7 +91,7 @@
   .name {
     font-weight: 800;
     font-size: 16px;
-    color: var(--purple);
+    color: var(--navy);
   }
   .meta {
     color: var(--muted);
@@ -125,28 +125,48 @@
   .viewMore {
     background: none;
     border: none;
-    color: var(--purple);
+    color: var(--navy);
     font-weight: 800;
     cursor: pointer;
     text-decoration: underline;
     padding: 0;
-    margin-left: 6px;
+    margin-left: 0;
+    display: inline;
+    line-height: inherit;
   }
   
-  /* footer */
-  .cardFooter {
-    display: flex;
-    justify-content: flex-end;
-  }
-  .readBtn {
-    background: transparent;
-    border: none;
-    color: var(--muted);
-    font-weight: 700;
-    cursor: pointer;
-  }
-  
-  /* modal */
+/* View All Reviews Button */
+.viewAllWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+  padding: 0 12px;
+}
+
+.viewAllBtn {
+  background: var(--navy);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 32px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(12, 33, 58, 0.15);
+}
+
+.viewAllBtn:hover {
+  background: #1a3452;
+  box-shadow: 0 6px 16px rgba(12, 33, 58, 0.25);
+  transform: translateY(-2px);
+}
+
+.viewAllBtn:active {
+  transform: translateY(0);
+}
+
+/* modal */
   .modalWrap {
     position: fixed;
     inset: 0;
@@ -190,7 +210,7 @@
     background: transparent;
     font-size: 20px;
     cursor: pointer;
-    color: var(--purple);
+    color: var(--navy);
   }
   
   /* modal content */
@@ -208,7 +228,7 @@
   .modalName {
     font-weight: 800;
     font-size: 16px;
-    color: var(--purple);
+    color: var(--navy);
   }
   .modalSub {
     color: var(--muted);

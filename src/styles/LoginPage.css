@@ -1,7 +1,7 @@
 /* LoginPage.css — Mobile-first Spinny style login screen */
 
 :root {
-    --brand-purple: #5b1de6;
+    --brand-blue: #0c213a;
     --muted-text: #7e6d8f;
     --border-light: #ece7f2;
     --header-h: 56px;
@@ -121,7 +121,7 @@
   }
   
   .tos a {
-    color: var(--brand-purple);
+    color: var(--brand-blue);
     text-decoration: none;
     font-weight: 600;
   }
@@ -130,7 +130,7 @@
   .verify-btn {
     margin-top: 10px;
     width: 100%;
-    background: var(--brand-purple);
+    background: var(--brand-blue);
     color: white;
     font-size: 17px;
     font-weight: 800;

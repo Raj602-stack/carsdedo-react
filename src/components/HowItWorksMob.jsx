@@ -1,5 +1,6 @@
 // src/components/HowItWorks.jsx
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/HowItWorksMob.css";
 
 /**
@@ -34,12 +35,14 @@ const defaultSteps = [
 ];
 
 export default function HowItWorksMob({ steps = defaultSteps }) {
+  const navigate = useNavigate();
+
   return (
     <section className="hiw-section" aria-label="How it works">
       <div className="hiw-inner">
         <h2 className="hiw-heading">How it works</h2>
         <p className="hiw-lead">
-          You won’t just love our cars, you’ll love the way you buy them.
+          You won't just love our cars, you'll love the way you buy them.
         </p>
 
         <div className="hiw-steps">
@@ -65,15 +68,12 @@ export default function HowItWorksMob({ steps = defaultSteps }) {
         <div className="hiw-cta-row">
           <button
             className="hiw-watch"
-            onClick={() => {
-              // replace with modal/open video
-              window.alert("Play How it works video");
-            }}
+            onClick={() => window.open('https://www.youtube.com', '_blank')}
           >
             <span className="hiw-play">▶</span> Watch how it works
           </button>
 
-          <a className="hiw-more" href="#learn">
+          <a className="hiw-more" href="#learn" onClick={(e) => { e.preventDefault(); navigate("/buy"); }}>
             Learn more
           </a>
         </div>

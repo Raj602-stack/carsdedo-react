@@ -1,176 +1,235 @@
-.mr-root {
-    padding: 16px;
-    background: #ffffff;
-    color: #1a0a2a;
-    margin-bottom: 30px;
-    font-family: system-ui, sans-serif;
-  }
-  
-  /* Title */
-  .mr-title {
-    text-align: center;
-    font-size: 22px;
-    font-weight: 800;
-    margin-bottom: 18px;
-    color: #240b36;
-  }
-  
-  /* Rating Box */
-  .mr-rating-box {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: #f8f4ff;
-    padding: 10px 16px;
-    border-radius: 12px;
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0 auto 20px;
-  }
-  
-  .mr-stars {
-    color: #ffcc00;
-    font-size: 20px;
-  }
-  
-  /* Review item */
-  .mr-item {
-    padding: 12px 0;
-  }
-  
-  /* Top row */
-  .mr-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  
-  /* Avatar */
-  .mr-avatar {
-    min-width: 46px;
-    height: 46px;
-    background: #f4efff;
-    color: #5e3ecf;
-    font-weight: 800;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 17px;
-  }
-  
-  /* Name + meta */
-  .mr-info {
-    flex: 1;
-  }
-  
-  .mr-name {
-    font-size: 17px;
-    font-weight: 800;
-  }
-  
-  .mr-meta {
-    font-size: 13px;
-    color: #7c6b8a;
-    margin-top: 2px;
-  }
-  
-  /* Stars right */
-  .mr-stars-right {
-    color: #ffcc00;
-    font-size: 18px;
-    white-space: nowrap;
-  }
-  
-  /* Review text */
-  .mr-text {
-    margin-top: 10px;
-    font-size: 16.5px;
-    line-height: 1.6;
-    color: #3b2f44;
-  }
+:root {
+  --navy: #0c213a;
+  --muted: #7c6a88;
+  --accent: #f1c40f;
+  --card-bg: #fff;
+}
 
-/* Modal */
+.mr-root {
+  padding: 24px 16px;
+  background: white;
+  color: var(--navy);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Title */
+.mr-title {
+  margin: 0 0 20px 0;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--navy);
+}
+
+/* Rating Box - removed, not in web design */
+.mr-rating-box {
+  display: none;
+}
+
+.mr-stars {
+  color: #ffcc00;
+  font-size: 20px;
+}
+
+/* Review item - now a card like web */
+.mr-item {
+  border-radius: 12px;
+  border: 1px solid rgba(230, 230, 235, 0.9);
+  background: var(--card-bg);
+  box-shadow: 0 6px 20px rgba(10, 10, 14, 0.02);
+  padding: 18px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Top row */
+.mr-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Avatar - removed for cleaner look like web */
+.mr-avatar {
+  display: none;
+}
+
+/* Name + meta */
+.mr-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.mr-name {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--navy);
+  margin: 0;
+}
+
+.mr-meta {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* Stars right */
+.mr-stars-right {
+  color: var(--accent);
+  font-size: 18px;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Review text */
+.mr-text {
+  margin: 0;
+  color: #3f2b4e;
+  font-size: 14px;
+  line-height: 1.45;
+  min-height: 60px;
+}
+
+/* Read more button - matching web style, inline with text */
+.mr-readmore {
+  background: none;
+  border: none;
+  color: var(--navy);
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+  display: inline;
+  line-height: inherit;
+}
+
+/* Divider - removed for card design */
+.mr-divider {
+  display: none;
+}
+
+/* View All Reviews Button */
+.mr-view-all-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+.mr-view-all-btn {
+  background: var(--navy);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(12, 33, 58, 0.15);
+}
+
+.mr-view-all-btn:hover {
+  background: #1a3452;
+  box-shadow: 0 6px 16px rgba(12, 33, 58, 0.25);
+  transform: translateY(-2px);
+}
+
+.mr-view-all-btn:active {
+  transform: translateY(0);
+}
+
+/* Modal - matching web style */
 .mr-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10, 12, 18, 0.55);
+  z-index: 2200;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  z-index: 9999;
-  padding: 16px;
+  background: rgba(10, 10, 12, 0.5);
+  backdrop-filter: blur(2px);
 }
 
 .mr-modal {
-  background: #ffffff;
-  color: #1a0a2a;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 520px;
-  padding: 18px 18px 22px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  position: relative;
+  width: min(550px, 92vw);
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 40px 120px rgba(10, 10, 20, 0.5);
+  z-index: 10;
+  max-height: 86vh;
+  overflow: auto;
 }
 
 .mr-modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  border-bottom: 1px solid rgba(240, 240, 245, 1);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
 }
 
 .mr-modal-name {
+  margin: 0;
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 900;
+  color: var(--navy);
 }
 
 .mr-modal-close {
   border: none;
-  background: #f2eef9;
-  color: #2c1c3b;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--navy);
   width: 32px;
   height: 32px;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.mr-modal-close:hover {
+  background: rgba(230, 230, 235, 0.5);
+}
+
+.mr-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .mr-modal-meta {
-  margin-top: 4px;
-  color: #7c6b8a;
+  color: var(--muted);
   font-size: 13px;
 }
 
 .mr-modal-stars {
-  margin-top: 8px;
-  color: #ffcc00;
+  display: flex;
+  gap: 6px;
+}
+
+.mr-modal-stars::before {
+  content: '★★★★★';
+  color: var(--accent);
   font-size: 18px;
+  line-height: 1;
 }
 
 .mr-modal-text {
-  margin-top: 12px;
-  font-size: 17px;
-  line-height: 1.7;
-  color: #2b1f35;
+  color: #3f2b4e;
+  line-height: 1.6;
+  font-size: 15px;
+  margin: 0;
 }
-  
-  /* Read more */
-  .mr-readmore {
-    margin-top: 8px;
-    background: transparent;
-    border: 0;
-    color: #673de6;
-    font-weight: 700;
-    font-size: 15px;
-    cursor: pointer;
-    padding: 0;
-  }
-  
-  /* Divider */
-  .mr-divider {
-    height: 1px;
-    background: #eee5f9;
-    margin-top: 14px;
-  }
   

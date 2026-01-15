@@ -26,6 +26,8 @@ export default function ReviewsSlider({ reviews = [], truncateWords = 30 }) {
   const [modal, setModal] = useState({ open: false, review: null });
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+  const INITIAL_DISPLAY = 6;
 
   useEffect(() => {
     checkScroll();
@@ -79,6 +81,8 @@ export default function ReviewsSlider({ reviews = [], truncateWords = 30 }) {
     scrollBy(Math.round(w * 0.8));
   }
 
+  const displayedReviews = showAll ? reviews : reviews.slice(0, INITIAL_DISPLAY);
+
   return (
     <section className={styles.section} aria-labelledby="reviews-title">
       <div className={styles.headerRow}>
@@ -113,7 +117,7 @@ export default function ReviewsSlider({ reviews = [], truncateWords = 30 }) {
         role="list"
         aria-label="Customer reviews"
       >
-        {reviews.map((r) => {
+        {displayedReviews.map((r) => {
           const { truncated, isTruncated } = truncateByWords(r.text, truncateWords);
           return (
             <article key={r.id} className={styles.card} role="listitem">
@@ -154,17 +158,28 @@ export default function ReviewsSlider({ reviews = [], truncateWords = 30 }) {
                     )}
                   </p>
                 </div>
-
-                <div className={styles.cardFooter}>
-                  <button className={styles.readBtn} onClick={() => openModal(r)}>
-                    Read more
-                  </button>
-                </div>
               </div>
             </article>
           );
         })}
       </div>
+
+      {/* View More Reviews Button */}
+      {!showAll && reviews.length > INITIAL_DISPLAY && (
+        <div className={styles.viewAllWrap}>
+          <button
+            className={styles.viewAllBtn}
+            onClick={() => {
+              setShowAll(true);
+              setTimeout(() => {
+                checkScroll();
+              }, 100);
+            }}
+          >
+            View more reviews
+          </button>
+        </div>
+      )}
 
       {/* Modal */}
       {modal.open && (

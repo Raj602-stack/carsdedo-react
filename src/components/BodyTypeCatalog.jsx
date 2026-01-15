@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/BodyTypeCatalog.css";
 
 /* ---------------- SAMPLE DATA (replace images with real /public paths) ---------------- */
@@ -46,8 +47,10 @@ const getVisibleCount = (width) => {
 
 /* ---------------- CAR CARD ---------------- */
 function Card({ car }) {
+  const navigate = useNavigate();
+
   return (
-    <div className="btc-card">
+    <div className="btc-card" onClick={() => navigate("/buy")} style={{ cursor: 'pointer' }}>
       <div className="btc-card-media">
         <img src={car.image} alt={car.title} loading="lazy" />
       </div>
@@ -61,6 +64,7 @@ function Card({ car }) {
 
 /* ---------------- MAIN COMPONENT ---------------- */
 export default function BodyTypeCatalog() {
+  const navigate = useNavigate();
   const [active, setActive] = useState("hatchback");
   const cars = useMemo(() => CARS_BY_BODY[active] || [], [active]);
 
@@ -142,7 +146,7 @@ export default function BodyTypeCatalog() {
 
       {/* Bottom CTA */}
       <div className="btc-cta">
-        <button className="btc-view-all">{bottomButtonText}</button>
+        <button className="btc-view-all" onClick={() => navigate(`/buy?body=${active}`)}>{bottomButtonText}</button>
       </div>
     </section>
   );

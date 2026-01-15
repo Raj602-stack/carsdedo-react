@@ -1,5 +1,6 @@
 // src/components/FeaturedCars.jsx
 import React, { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/FeaturedCars.css";
 
 /* Example data - replace image paths with real files in your public folder */
@@ -65,6 +66,7 @@ const BODY_SETS = {
 };
 
 export default function FeaturedCars() {
+  const navigate = useNavigate();
   // default to hatchback
   const [activeTab, setActiveTab] = useState("hatchback");
   const containerRef = useRef(null);
@@ -141,7 +143,7 @@ export default function FeaturedCars() {
           <div className="fc-viewport" ref={containerRef}>
             <div className="fc-track">
               {items.map((c) => (
-                <article key={c.id} className="fc-card" role="group" aria-label={c.title}>
+                <article key={c.id} className="fc-card" role="group" aria-label={c.title} onClick={() => navigate("/buy")} style={{ cursor: 'pointer' }}>
                   <div className="fc-image" style={{ backgroundImage: `url(${c.image})` }} />
                   <div className="fc-body">
                     <div className="fc-row">
@@ -173,7 +175,7 @@ export default function FeaturedCars() {
         </div>
 
         <div className="fc-action">
-          <button className="fc-view-all">View all CarsDedo cars</button>
+          <button className="fc-view-all" onClick={() => navigate("/buy")}>View all CarsDedo cars</button>
         </div>
       </div>
     </section>

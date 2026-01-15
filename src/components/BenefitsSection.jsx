@@ -1,8 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Play, ShieldCheck, Wrench, IndianRupee, RotateCcw } from "lucide-react"; // modern icons
 import "../styles/BenefitSection.css"
 
 export default function BenefitsSection() {
+  const navigate = useNavigate();
   const benefits = [
     {
       id: 1,
@@ -55,11 +57,11 @@ export default function BenefitsSection() {
         </div>
 
         <div className="benefit-footer">
-          <button className="watch-film">
+          <button className="watch-film" onClick={() => window.open('https://www.youtube.com', '_blank')}>
             <Play size={18} fill="#e93b68" /> Watch the film
           </button>
-          <button className="browse-cars">Browse cars</button>
-          <button className="learn-more">Learn more →</button>
+          <button className="browse-cars" onClick={() => navigate("/buy")}>Browse cars</button>
+          <button className="learn-more" onClick={() => navigate("/buy")}>Learn more →</button>
         </div>
       </div>
     </section>

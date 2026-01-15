@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/BrandsGridMob.css";
 
 /**
@@ -19,6 +20,20 @@ const brands = [
 ];
 
 export default function BrandsGridMob({ onViewAll }) {
+  const navigate = useNavigate();
+
+  const handleBrandClick = (brand) => {
+    navigate(`/buy?brand=${encodeURIComponent(brand.name)}`);
+  };
+
+  const handleViewAll = () => {
+    if (onViewAll) {
+      onViewAll();
+    } else {
+      navigate("/buy");
+    }
+  };
+
   return (
     <section className="brands-section" aria-label="Explore popular brands">
       <div className="brands-inner">
@@ -30,7 +45,7 @@ export default function BrandsGridMob({ onViewAll }) {
               key={b.id}
               className="brand-card"
               role="listitem"
-              onClick={() => console.log("clicked brand", b.name)}
+              onClick={() => handleBrandClick(b)}
               aria-label={`View ${b.name}`}
             >
               <div className="brand-logo-wrap">
@@ -62,7 +77,7 @@ export default function BrandsGridMob({ onViewAll }) {
           {/* bottom-right view-all */}
           <button
             className="brand-card view-all"
-            onClick={() => (onViewAll ? onViewAll() : console.log("View all brands"))}
+            onClick={handleViewAll}
             aria-label="View all brands"
           >
             <div className="view-all-inner">

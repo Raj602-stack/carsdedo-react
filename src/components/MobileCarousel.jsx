@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "../styles/MobileCarousel.module.css";
 
 const promoSlides = [
@@ -29,6 +30,7 @@ const promoSlides = [
 ];
 
 export default function MobileCarousel() {
+  const navigate = useNavigate();
   const [index, setIndex] = useState(0);
   const startX = useRef(0);
   const translateX = useRef(0);
@@ -114,7 +116,7 @@ export default function MobileCarousel() {
           <span>LIMITED TIME DEALS</span>
         </div>
 
-        <button className={styles["promo-btn"]}>View all cars</button>
+        <button className={styles["promo-btn"]} onClick={() => navigate("/buy")}>View all cars</button>
       </div>
     </div>
   </div>

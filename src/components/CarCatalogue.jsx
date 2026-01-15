@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/carscatalogue.css";
 
 /* ---------------- SAMPLE DATA ---------------- */
@@ -116,8 +117,10 @@ const getVisibleCount = (width) => {
 
 /* ---------------- CARD COMPONENT ---------------- */
 function CarCard({ car }) {
+  const navigate = useNavigate();
+
   return (
-    <div className="card">
+    <div className="card" onClick={() => navigate("/buy")} style={{ cursor: 'pointer' }}>
       <div className="card-media">
         <div className="price-tag">{car.tag}</div>
         <img src={car.image} alt={car.title} />
@@ -125,7 +128,7 @@ function CarCard({ car }) {
       <div className="card-body">
         <div className="card-title">
           <h4>{car.title}</h4>
-          <button className="fav-btn" aria-label="save car">♡</button>
+          <button className="fav-btn" aria-label="save car" onClick={(e) => { e.stopPropagation(); }}>♡</button>
         </div>
         <div className="meta">
           <span>{car.km}</span> <span>· {car.fuel}</span> <span>· {car.trans}</span>
@@ -145,6 +148,7 @@ function CarCard({ car }) {
 
 /* ---------------- MAIN COMPONENT ---------------- */
 export default function CarCatalog() {
+  const navigate = useNavigate();
   const [mode, setMode] = useState("best");
   const items = useMemo(() => (mode === "best" ? BEST_BUYS : NEWLY_ADDED), [mode]);
 
@@ -245,7 +249,7 @@ export default function CarCatalog() {
 
       {/* Footer CTA */}
       <div className="catalog-cta">
-        <button className="view-all">View all carsdedo.com cars</button>
+        <button className="view-all" onClick={() => navigate("/buy")}>View all carsdedo.com cars</button>
       </div>
     </section>
   );

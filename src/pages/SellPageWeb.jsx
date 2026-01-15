@@ -1,5 +1,5 @@
 // src/pages/SellPageWeb.jsx
-import React, { useCallback, useState } from "react";
+import React from "react";
 import SellCarHero from "../components/SellCarHero";
 import styles from "../styles/SellPageWeb.module.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,12 +9,8 @@ import SellStats from "../components/SellStats";
 import StoriesSection from "../components/StoriesSection";
 import FAQ from "../components/FAQ";
 import SellGuide from "../components/SellGuide";
-import { SELL_FAQ_ITEMS } from "../constants/sellFaq";
-import SellPriceForm from "../components/SellPriceForm";
-import Topbar from "../components/Topbar";
 
 const REVIEWS = [
-// ... (keep REVIEWS)
     {
       id: 1,
       name: "Aftab Alam",
@@ -49,140 +45,86 @@ const REVIEWS = [
       },
     // ...more
   ];
-
-const VALUE_PROPS = [
-  {
-    title: "Instant price clarity",
-    desc: "Get a transparent quote online, with no hidden deductions later.",
-  },
-  {
-    title: "Free doorstep inspection",
-    desc: "Pick a time that suits you. We inspect and make the final offer.",
-  },
-  {
-    title: "Same-day payment",
-    desc: "Complete paperwork and get paid on the same day of sale.",
-  },
-  {
-    title: "RC transfer handled",
-    desc: "We take care of the transfer process end-to-end.",
-  },
-];
   
 
 export default function SellPageWeb() {
     const navigate = useNavigate();
     const logoPath = process.env.PUBLIC_URL + "/carsdedo-background.png";
-    const [priceFormOpen, setPriceFormOpen] = useState(false);
-    const [initialValues, setInitialValues] = useState({});
-
-    const openPriceForm = useCallback((values = {}) => {
-      setInitialValues(values);
-      setPriceFormOpen(true);
-    }, []);
-
-    const closePriceForm = useCallback(() => setPriceFormOpen(false), []);
-
-    const handlePriceSubmit = useCallback((payload) => {
-      try {
-        localStorage.setItem("sellLead", JSON.stringify(payload));
-      } catch (err) {
-        console.error("Failed to store sell lead", err);
-      }
-    }, []);
-
-    const scrollToId = useCallback((id) => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }, []);
-
-    const handleHowItWorksCta = useCallback(
-      (id) => {
-        if (id === "watch") {
-          scrollToId("sell-guide");
-          return;
-        }
-        openPriceForm();
-      },
-      [openPriceForm, scrollToId]
-    );
   return (
     <div className={styles.page}>
+      <header className={styles.header}>
+        <div className={styles.headerInner}>
+          <div className={styles.logo}>
+            <Link to="/">SellRight</Link>
+          </div>
+
+          <nav className={styles.nav}>
+            <Link to="/buy" className={styles.navItem}>Buy</Link>
+            <Link to="/sell" className={`${styles.navItem} ${styles.active}`}>Sell</Link>
+            <Link to="/account" className={styles.navItem}>Account</Link>
+          </nav>
+
+          <div className={styles.headerCtas}>
+            <button className={styles.btnOutline}>Login</button>
+            <button 
+              className={styles.btnPrimary}
+              onClick={() => navigate("/sell")}
+            >
+              Sell Your Car
+            </button>
+          </div>
+        </div>
+      </header>
+
       <main className={styles.main}>
-        <section className={styles.heroSection} id="quote">
-          <SellCarHero onOpenForm={openPriceForm} />
+        {/* HERO */}
+        <section className={styles.heroWrap}>
+          <SellCarHero />
         </section>
 
-        <section className={styles.section}>
-          <div className={styles.container}>
-            <div className={styles.sectionHeader}>
-              <p className={styles.kicker}>Why sellers choose us</p>
-              <h2 className={styles.sectionTitle}>A premium, transparent selling experience</h2>
-              <p className={styles.sectionSubtitle}>
-                Designed for comfort and clarity, from first quote to payout.
-              </p>
-            </div>
-
-            <div className={styles.valueGrid}>
-              {VALUE_PROPS.map((item, idx) => (
-                <div key={item.title} className={styles.valueCard}>
-                  <div className={styles.valueIndex}>{String(idx + 1).padStart(2, "0")}</div>
-                  <div className={styles.valueTitle}>{item.title}</div>
-                  <p className={styles.valueDesc}>{item.desc}</p>
-                </div>
-              ))}
-            </div>
+        {/* BENEFIT STRIP */}
+        {/* <section className={styles.benefits}>
+          <div className={styles.benefitItem}>
+            <div className={styles.benefitIcon}>💸</div>
+            <div className={styles.benefitTitle}>Instant Payment</div>
+            <div className={styles.benefitSub}>Get paid quickly after sale</div>
           </div>
-        </section>
 
-        <section className={styles.sectionAlt}>
-          <SellHowItWorks onCtaClick={handleHowItWorksCta} />
-        </section>
-
-        <section className={styles.sectionMuted}>
-          <div className={styles.container}>
-            <SellStats logo={logoPath} />
+          <div className={styles.benefitItem}>
+            <div className={styles.benefitIcon}>🔍</div>
+            <div className={styles.benefitTitle}>Free Evaluation</div>
+            <div className={styles.benefitSub}>Comprehensive car inspection</div>
           </div>
-        </section>
 
-        <section className={styles.section}>
-          <div className={styles.container}>
-            <div className={styles.sectionHeader}>
-              <p className={styles.kicker}>Trusted by sellers</p>
-              <h2 className={styles.sectionTitle}>Stories of smooth, stress-free selling</h2>
-              <p className={styles.sectionSubtitle}>
-                Real experiences from people who sold with confidence.
-              </p>
-            </div>
-            <ReviewsSlider reviews={REVIEWS} truncateWords={28} />
+          <div className={styles.benefitItem}>
+            <div className={styles.benefitIcon}>📄</div>
+            <div className={styles.benefitTitle}>RC Transfer & Support</div>
+            <div className={styles.benefitSub}>End-to-end paperwork assistance</div>
           </div>
-        </section>
+        </section> */}
 
-        <section className={styles.sectionAlt}>
-          <StoriesSection />
-        </section>
-
-        <section className={styles.section}>
-          <SellGuide
-            sectionId="sell-guide"
-            onGetQuote={() => openPriceForm()}
-            onLearnMore={() => scrollToId("sell-faq")}
-          />
-        </section>
-
-        <section className={styles.sectionMuted} id="sell-faq">
-          <FAQ items={SELL_FAQ_ITEMS} />
-        </section>
+     
       </main>
 
-      <SellPriceForm
-        open={priceFormOpen}
-        onClose={closePriceForm}
-        onSubmit={handlePriceSubmit}
-        initialValues={initialValues}
-      />
+      <footer className={styles.footer}>
+        <div className={styles.footerInner}>
+          <div>© {new Date().getFullYear()} SellRight — All rights reserved</div>
+          <div className={styles.footerLinks}>
+            <a href="/terms">Terms</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/contact">Contact</a>
+          </div>
+        </div>
+      </footer>
+
+      <SellHowItWorks/>
+      <ReviewsSlider reviews={REVIEWS} truncateWords={28} />
+      
+
+<SellStats logo={logoPath} />
+<StoriesSection/>
+<FAQ/>
+<SellGuide/>
     </div>
   );
 }

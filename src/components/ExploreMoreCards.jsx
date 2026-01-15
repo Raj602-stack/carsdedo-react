@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/ExploreMoreCards.css";
 
 /**
@@ -35,6 +36,8 @@ const DEFAULT_ITEMS = [
 ];
 
 export default function ExploreMoreCards({ items = DEFAULT_ITEMS }) {
+  const navigate = useNavigate();
+
   return (
     <section className="em-section" aria-label="Explore more services">
       <div className="em-inner">
@@ -61,7 +64,7 @@ export default function ExploreMoreCards({ items = DEFAULT_ITEMS }) {
               </div>
 
               <div className="em-card-cta-wrap">
-                <button className="em-card-cta" type="button">
+                <button className="em-card-cta" type="button" onClick={() => navigate("/buy")}>
                   {it.cta}
                 </button>
               </div>

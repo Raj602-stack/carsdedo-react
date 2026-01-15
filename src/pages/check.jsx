@@ -931,8 +931,18 @@ export default function BuyPage() {
   const filtered = applySort(cars.filter((c) => matchesFilters(c, appliedFilters)));
 
   const sampleSlides = [
-    { title: "Why CarsDedo?", text: "Verified listings · Easy EMI options · 7-day test drive" },
-    { title: "Tips", text: "Check service history and insurance papers before buying." },
+    { 
+      title: "Why CarsDedo?", 
+      text: "Verified listings · Easy EMI options · 7-day test drive · Free RC transfer" 
+    },
+    { 
+      title: "Quality Assured", 
+      text: "200-point inspection · 1-year warranty · Money-back guarantee" 
+    },
+    { 
+      title: "Smart Buying Tips", 
+      text: "Check service history · Verify insurance papers · Take a test drive first" 
+    },
   ];
 
   return (

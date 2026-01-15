@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/LuxurySlider.css";
 
 const SAMPLE = [
@@ -29,6 +30,7 @@ const SAMPLE = [
 ];
 
 export default function LuxurySlider({ cars = SAMPLE }) {
+  const navigate = useNavigate();
   const viewportRef = useRef(null);
   const cardRef = useRef(null);
   const [cardWidth, setCardWidth] = useState(320); // initial guess
@@ -85,6 +87,8 @@ export default function LuxurySlider({ cars = SAMPLE }) {
                   key={c.id}
                   className="lux-card"
                   ref={i === 0 ? cardRef : null}
+                  onClick={() => navigate("/buy?tags=luxury,premium")}
+                  style={{ cursor: 'pointer' }}
                 >
                   <div
                     className="lux-card-img"
@@ -114,7 +118,7 @@ export default function LuxurySlider({ cars = SAMPLE }) {
               <article className="lux-card lux-card-more">
                 <div className="lux-more-inner">
                   <div className="lux-more-text">View more luxury cars</div>
-                  <button className="lux-explore-btn">Explore</button>
+                  <button className="lux-explore-btn" onClick={() => navigate("/buy?tags=luxury,premium")}>Explore</button>
                 </div>
               </article>
             </div>
@@ -130,7 +134,7 @@ export default function LuxurySlider({ cars = SAMPLE }) {
         </div>
 
         <div className="lux-cta-wrap">
-          <button className="lux-cta">Explore</button>
+          <button className="lux-cta" onClick={() => navigate("/buy?tags=luxury,premium")}>Explore</button>
         </div>
       </div>
     </section>

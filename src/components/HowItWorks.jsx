@@ -1,7 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/howitworks.css";
 
 export default function HowItWorks() {
+  const navigate = useNavigate();
   return (
     <section className="howitworks">
       <h2>How CarsDedo Works</h2>
@@ -34,8 +36,8 @@ export default function HowItWorks() {
       </div>
 
       <div className="actions">
-        <button className="primary-btn">Watch how it works ▶</button>
-        <a href="#" className="learn-more">Learn more</a>
+        <button className="primary-btn" onClick={() => window.open('https://www.youtube.com', '_blank')}>Watch how it works ▶</button>
+        <a href="#" className="learn-more" onClick={(e) => { e.preventDefault(); navigate("/buy"); }}>Learn more</a>
       </div>
     </section>
   );
