@@ -87,18 +87,27 @@ export function FeaturesDrawer({ car, onClose }) {
           <div className={styles.drawerBody}>
             {/* left nav */}
             <nav className={styles.drawerNav}>
-              {featuresByCategory.map((category) => (
-                <button
-                  key={category.category}
-                  type="button"
-                  onClick={() => setSelectedCategory(category.category)}
-                  className={`${styles.drawerNavItem} ${
-                    selectedCategory === category.category ? styles.drawerNavItemActive : ""
-                  }`}
-                >
-                  {category.category}
-                </button>
-              ))}
+              {featuresByCategory.map((category) => {
+                // Format category name: replace underscores with spaces and capitalize
+                const formatCategoryName = (name) => {
+                  return name
+                    .replace(/_/g, ' ')
+                    .replace(/\b\w/g, (char) => char.toUpperCase());
+                };
+                
+                return (
+                  <button
+                    key={category.category}
+                    type="button"
+                    onClick={() => setSelectedCategory(category.category)}
+                    className={`${styles.drawerNavItem} ${
+                      selectedCategory === category.category ? styles.drawerNavItemActive : ""
+                    }`}
+                  >
+                    {formatCategoryName(category.category)}
+                  </button>
+                );
+              })}
             </nav>
   
             {/* right list */}

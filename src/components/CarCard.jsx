@@ -114,7 +114,7 @@ export default function CarCard({ car }) {
         <div className={styles["car-bottom"]}>
           <div className={styles["car-city"]}>
             <FiMapPin className={styles["city-icon"]} />
-            {car.city}
+            HUB • {car.city}
           </div>
           <div className={styles["bottom-right"]}>
             <div className={styles["emi-text"]}>

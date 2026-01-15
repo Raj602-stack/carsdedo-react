@@ -239,6 +239,7 @@
   width: 100%;
   overflow: hidden;
   border-radius: 12px;
+  touch-action: pan-y;
 }
 
 .promo-slide-wrapper {

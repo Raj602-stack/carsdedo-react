@@ -133,9 +133,10 @@
 .car-meta {
   display: flex;
   gap: 6px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   margin-bottom: 4px;
+  overflow-x: auto;
 }
 
 .meta-badge {

@@ -546,10 +546,6 @@ useEffect(() => {
         ))}
 
         <div className={styles["results-header"]}>
-          <div className={styles["breadcrumbs"]}>
-            Home › Used Cars › Used Cars in {selectedCity}
-          </div>
-    
           <div className={styles["results-controls"]}>
             <div className={styles["results-count"]}>
               {filtered.length} results

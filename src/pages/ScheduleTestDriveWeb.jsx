@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { FiHome } from "react-icons/fi";
 import styles from "../styles/ScheduleTestDriveWeb.module.css";
 import { useCars } from "../context/CarsContext";
 import Loader from "../components/Loader";
@@ -144,7 +145,7 @@ export default function ScheduleTestDriveWeb() {
                 className={`${styles.toggleBtn} ${locationType === "home" ? styles.active : ""}`}
                 onClick={() => setLocationType("home")}
               >
-                <span className={styles.toggleIcon}>🏠</span>
+                <span className={styles.toggleIcon}><FiHome /></span>
                 <div className={styles.toggleContent}>
                   <strong>MY LOCATION</strong>
                   <p>We come to you within 48 hours</p>

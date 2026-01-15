@@ -1,4 +1,5 @@
 import React from "react";
+import { FiTrendingUp, FiStar, FiMapPin } from "react-icons/fi";
 import "../styles/SellRightStats.css";
 
 // NOTE: the image file you uploaded is referenced below.
@@ -8,9 +9,9 @@ const LOGO_SRC = "/mnt/data/3b5846bf-7b01-4100-a592-b0d1af7a696b.png";
 export default function SellRightStats({
   heading = "Recommended by 2 Lakh+ sellers across India",
   stats = [
-    { key: "cars", value: "2 Lakh+", label: "cars purchased", icon: "📈" },
-    { key: "rating", value: "4.9", label: "average rating", icon: "⭐" },
-    { key: "cities", value: "80+", label: "cities in India", icon: "📍" },
+    { key: "cars", value: "2 Lakh+", label: "cars purchased", icon: <FiTrendingUp /> },
+    { key: "rating", value: "4.9", label: "average rating", icon: <FiStar /> },
+    { key: "cities", value: "80+", label: "cities in India", icon: <FiMapPin /> },
   ],
 }) {
   return (

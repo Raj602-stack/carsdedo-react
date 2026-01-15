@@ -64,6 +64,7 @@ export default function PromotionalCarousel({ isMobile = false }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const intervalRef = useRef(null);
+  const touchStartXRef = useRef(null);
 
   useEffect(() => {
     if (isAutoPlaying) {
@@ -97,12 +98,32 @@ export default function PromotionalCarousel({ isMobile = false }) {
     setTimeout(() => setIsAutoPlaying(true), 10000);
   };
 
+  const handleTouchStart = (e) => {
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartXRef.current == null) return;
+    const endX = e.changedTouches[0].clientX;
+    const diff = endX - touchStartXRef.current;
+    if (diff > 40) {
+      goToPrevious();
+    } else if (diff < -40) {
+      goToNext();
+    }
+    touchStartXRef.current = null;
+  };
+
     if (isMobile) {
       const mobileGap = 12; // gap in px between slides
     // Mobile: Single slide at a time, simpler layout
     return (
       <div className="promo-carousel promo-carousel-mobile">
-        <div className="promo-carousel-container">
+        <div
+          className="promo-carousel-container"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <div 
             className="promo-slide-wrapper"
             style={{
@@ -137,22 +158,6 @@ export default function PromotionalCarousel({ isMobile = false }) {
             ))}
           </div>
         </div>
-
-        {/* Navigation */}
-        <button 
-          className="promo-nav-btn promo-nav-left"
-          onClick={goToPrevious}
-          aria-label="Previous slide"
-        >
-          ‹
-        </button>
-        <button 
-          className="promo-nav-btn promo-nav-right"
-          onClick={goToNext}
-          aria-label="Next slide"
-        >
-          ›
-        </button>
 
         {/* Dots */}
         <div className="promo-dots">

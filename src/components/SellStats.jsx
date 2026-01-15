@@ -1,4 +1,5 @@
 import React from "react";
+import { FiTrendingUp, FiStar, FiMapPin } from "react-icons/fi";
 import styles from "../styles/SellStats.module.css";
 
 /**
@@ -10,9 +11,9 @@ import styles from "../styles/SellStats.module.css";
  * - logo: src string for right-side logo
  */
 const DEFAULT_STATS = [
-  { id: "sold", icon: "📈", number: "2 Lakh+", label: "cars purchased" },
-  { id: "rating", icon: "⭐", number: "4.9", label: "average rating" },
-  { id: "cities", icon: "📍", number: "80+", label: "cities in India" },
+  { id: "sold", icon: <FiTrendingUp />, number: "2 Lakh+", label: "cars purchased" },
+  { id: "rating", icon: <FiStar />, number: "4.9", label: "average rating" },
+  { id: "cities", icon: <FiMapPin />, number: "80+", label: "cities in India" },
 ];
 
 export default function SellStats({ stats = DEFAULT_STATS, title = "Recommended by 2 Lakh+ sellers across India", logo }) {

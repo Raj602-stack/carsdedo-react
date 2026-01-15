@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaInstagram, FaFacebook, FaTwitter } from 'react-icons/fa';
-import { FiMail } from 'react-icons/fi';
+import { FiMail, FiMapPin } from 'react-icons/fi';
 import styles from '../styles/CarDetailsWeb.module.css';
 import { formatKm, formatPrice } from '../utils';
 
@@ -12,6 +12,12 @@ const CarDetailsSidebar = React.memo(({ car, onShare }) => {
   const navigate = useNavigate();
 
   if (!car) return null;
+
+  const hubTextRaw = car.locationFull || car.city || '';
+  const hubText = hubTextRaw.replace(/^[^A-Za-z0-9]+/, '').trim();
+  const hubLabel = hubText.toLowerCase().startsWith('hub')
+    ? hubText
+    : `HUB • ${hubText || car.city}`;
 
   return (
     <div className={styles.rightInner}>
@@ -26,7 +32,10 @@ const CarDetailsSidebar = React.memo(({ car, onShare }) => {
             <div>
               {car.km.toLocaleString()} km • {car.fuel} • {car.transmission}
             </div>
-            <div className={styles.hub}>Spinny Car Hub, {car.city}</div>
+            <div className={styles.hub}>
+              <FiMapPin className={styles.cityIcon} />
+              {hubLabel}
+            </div>
           </div>
 
           <div className={styles.priceBlock}>

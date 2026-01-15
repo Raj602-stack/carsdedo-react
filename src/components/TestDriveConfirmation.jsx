@@ -8,6 +8,7 @@ import {
     FaTimes,
     FaRegClock
   } from "react-icons/fa";
+  import { FiMapPin } from "react-icons/fi";
   
 
 
@@ -59,7 +60,7 @@ console.log(images);
         </p>
 
         <button className={styles.link}>
-          📍 Get Directions
+          <FiMapPin /> Get Directions
         </button>
       </div>
 

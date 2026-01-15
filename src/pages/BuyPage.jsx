@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import { FiSearch } from "react-icons/fi";
+import { FiMapPin, FiSearch } from "react-icons/fi";
 import { useLocation } from "react-router-dom";
 
 
@@ -876,14 +876,15 @@ function SwipableInfo({ slides = [] }) {
   return (
     <div className="swipe-root" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} aria-roledescription="carousel">
       <div className="swipe-card">
+        <div className="swipe-card-header">
+          <div className="swipe-icon">✦</div>
+        </div>
         <div className="swipe-card-inner">
           <h4 className="swipe-title">{current.title ?? `Info ${idx + 1}`}</h4>
           <p className="swipe-text">{current.text ?? current}</p>
         </div>
         <div className="swipe-controls">
-          <button aria-label="Previous" onClick={prev} className="swipe-btn">‹</button>
           <div className="swipe-dots">{slides.map((_, i) => <button key={i} onClick={() => setIdx(i)} className={`swipe-dot ${i === idx ? "active" : ""}`} aria-label={`Go to slide ${i + 1}`} />)}</div>
-          <button aria-label="Next" onClick={next} className="swipe-btn">›</button>
         </div>
       </div>
     </div>
@@ -1699,7 +1700,10 @@ console.log(getCarImages);
 
     {/* Footer */}
     <div className="car-footer">
-      <div className="hub">HUB · Trillium Avenue, Gurgaon</div>
+      <div className="hub">
+        <FiMapPin className="hub-icon" />
+        HUB · Trillium Avenue, Gurgaon
+      </div>
       <button 
         className="fav" 
         aria-label="Add to wishlist"
