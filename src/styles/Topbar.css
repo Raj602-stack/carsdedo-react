@@ -30,7 +30,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 12px;
     padding: 12px 18px;
     background: var(--bg);
     border-bottom: 1px solid var(--border);
@@ -38,21 +38,25 @@
     top: 0;
     left: 0;
     right: 0;
-    height: var(--topbar-height);
+    min-height: var(--topbar-height);
+    height: auto;
     z-index: 1100;
     box-sizing: border-box;
+    flex-wrap: nowrap;
   }
   
   .topbar-left {
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-shrink: 0;
   }
   
   .logo-img {
     width: 140px;
     height: auto;
     object-fit: contain;
+    flex-shrink: 0;
   }
   
   /* .location-btn,
@@ -78,6 +82,16 @@
   .caret {
     font-size: 12px;
     opacity: 0.7;
+  }
+  
+  .location,
+  .location-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
   }
   
   .topbar-center {
@@ -108,10 +122,44 @@
     display: flex;
     align-items: center;
     gap: 18px;
+    flex-shrink: 0;
   }
   
   .call {
     font-size: 14px;
+    white-space: nowrap;
+  }
+  
+  .top-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .action {
+    white-space: nowrap;
+    font-size: 14px;
+  }
+  
+  .topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .shortlist,
+  .account-trigger {
+    white-space: nowrap;
+  }
+  
+  .shortlist-icon,
+  .account-icon {
+    font-size: 20px;
+  }
+  
+  .shortlist .label,
+  .account .action {
+    font-size: 12px;
   }
   
   /* MODAL OVERLAY */
@@ -363,5 +411,326 @@
     margin-top: 4px;
     font-size: 11px;
     color: #f27c7c;
+  }
+  
+  /* ==================== TOPBAR RESPONSIVE BREAKPOINTS ==================== */
+  
+  /* Large Desktop (1400px+) - Everything visible */
+  @media (min-width: 1400px) {
+    .topbar {
+      padding: 12px 32px;
+      gap: 20px;
+    }
+    
+    .topbar-center {
+      padding: 0 24px;
+    }
+  }
+  
+  /* Standard Desktop (1200px - 1400px) */
+  @media (max-width: 1400px) {
+    .logo-img {
+      width: 120px;
+    }
+    
+    .topbar-right {
+      gap: 14px;
+    }
+    
+    .topbar-user {
+      gap: 12px;
+    }
+  }
+  
+  /* Medium Desktop (1024px - 1200px) - Reduce spacing */
+  @media (max-width: 1200px) {
+    .topbar {
+      gap: 10px;
+      padding: 12px 16px;
+    }
+    
+    .logo-img {
+      width: 110px;
+    }
+    
+    .topbar-center {
+      padding: 0 12px;
+    }
+    
+    .topbar-right {
+      gap: 12px;
+    }
+    
+    .top-actions {
+      gap: 6px;
+    }
+    
+    .action {
+      font-size: 13px;
+      padding: 6px 10px;
+    }
+    
+    .call {
+      font-size: 13px;
+    }
+    
+    .topbar-user {
+      gap: 10px;
+    }
+    
+    .shortlist .label,
+    .account .action {
+      font-size: 11px;
+    }
+  }
+  
+  /* Tablet Landscape (900px - 1024px) - Hide some text, keep icons */
+  @media (max-width: 1024px) {
+    .logo-img {
+      width: 100px;
+    }
+    
+    .topbar-center {
+      padding: 0 10px;
+    }
+    
+    .top-search {
+      font-size: 13px;
+      padding: 8px 12px;
+    }
+    
+    .call {
+      display: none; /* Hide call number on smaller screens */
+    }
+    
+    .shortlist .label {
+      display: none; /* Hide "Shortlisted" text, keep icon */
+    }
+    
+    .account .action {
+      display: none; /* Hide "Account" text, keep icon */
+    }
+    
+    .shortlist-icon,
+    .account-icon {
+      font-size: 22px;
+    }
+  }
+  
+  /* Tablet Portrait (768px - 900px) - More compact */
+  @media (max-width: 900px) {
+    .topbar {
+      gap: 8px;
+      padding: 10px 14px;
+    }
+    
+    .logo-img {
+      width: 90px;
+    }
+    
+    .topbar-left {
+      gap: 8px;
+    }
+    
+    .location-btn,
+    .location {
+      font-size: 12px;
+      padding: 5px 10px;
+      gap: 4px;
+    }
+    
+    .caret {
+      font-size: 11px;
+    }
+    
+    .topbar-center {
+      padding: 0 8px;
+      min-width: 0;
+    }
+    
+    .top-search {
+      font-size: 12px;
+      padding: 7px 10px;
+    }
+    
+    .topbar-right {
+      gap: 10px;
+    }
+    
+    .top-actions {
+      gap: 4px;
+    }
+    
+    .action {
+      font-size: 12px;
+      padding: 5px 8px;
+    }
+    
+    .topbar-user {
+      gap: 8px;
+    }
+    
+    .dropdown-menu {
+      min-width: 180px;
+    }
+  }
+  
+  /* Small Tablet (650px - 768px) - Minimal text */
+  @media (max-width: 768px) {
+    .logo-img {
+      width: 80px;
+    }
+    
+    .location-btn,
+    .location {
+      font-size: 11px;
+      padding: 4px 8px;
+      gap: 3px;
+    }
+    
+    .caret {
+      font-size: 10px;
+    }
+    
+    .top-search {
+      font-size: 11px;
+      padding: 6px 8px;
+    }
+    
+    .top-search::placeholder {
+      font-size: 11px;
+    }
+    
+    .action {
+      font-size: 11px;
+      padding: 4px 6px;
+    }
+    
+    /* Simplify dropdown text */
+    .dropdown .action::after {
+      content: attr(data-short); /* Use data-short attribute if provided */
+    }
+  }
+  
+  /* Mobile Large (480px - 650px) - Very compact */
+  @media (max-width: 650px) {
+    .topbar {
+      gap: 6px;
+      padding: 8px 10px;
+      height: auto;
+      min-height: 56px;
+    }
+    
+    .logo-img {
+      width: 70px;
+    }
+    
+    .topbar-left {
+      gap: 6px;
+    }
+    
+    .location-btn,
+    .location {
+      font-size: 10px;
+      padding: 3px 7px;
+      gap: 3px;
+      min-width: 80px;
+    }
+    
+    .caret {
+      font-size: 9px;
+    }
+    
+    .topbar-center {
+      padding: 0 6px;
+      flex: 1;
+      min-width: 100px; /* Minimum search bar width */
+    }
+    
+    .top-search {
+      font-size: 10px;
+      padding: 5px 6px;
+    }
+    
+    .topbar-right {
+      gap: 6px;
+    }
+    
+    .top-actions .dropdown:nth-child(3) {
+      display: none; /* Hide "More" dropdown on very small screens */
+    }
+    
+    .action {
+      font-size: 10px;
+      padding: 3px 5px;
+    }
+    
+    .topbar-user {
+      gap: 6px;
+    }
+    
+    .shortlist-icon,
+    .account-icon {
+      font-size: 18px;
+    }
+    
+    .badge {
+      font-size: 9px;
+      padding: 1px 4px;
+    }
+  }
+  
+  /* Mobile Small (< 480px) - Ultra compact */
+  @media (max-width: 480px) {
+    .topbar {
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 6px 8px;
+      min-height: auto;
+    }
+    
+    .logo-img {
+      width: 60px;
+    }
+    
+    .topbar-left {
+      gap: 4px;
+      flex: 0 0 auto;
+    }
+    
+    .topbar-right {
+      gap: 4px;
+      flex: 0 0 auto;
+    }
+    
+    .topbar-center {
+      order: 3;
+      flex: 1 1 100%;
+      width: 100%;
+      padding: 4px 0 0 0;
+      margin-top: 4px;
+    }
+    
+    .top-search {
+      width: 100%;
+      font-size: 11px;
+      padding: 6px 8px;
+    }
+    
+    /* Hide less critical items */
+    .top-actions .dropdown:nth-child(2),
+    .top-actions .dropdown:nth-child(3) {
+      display: none;
+    }
+    
+    .action {
+      font-size: 11px;
+      padding: 4px 6px;
+    }
+    
+    .shortlist-icon,
+    .account-icon {
+      font-size: 20px;
+    }
   }
   
