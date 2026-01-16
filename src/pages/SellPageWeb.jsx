@@ -52,7 +52,7 @@ export default function SellPageWeb() {
     const logoPath = process.env.PUBLIC_URL + "/carsdedo-background.png";
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
+      {/* <header className={styles.header}>
         <div className={styles.headerInner}>
           <div className={styles.logo}>
             <Link to="/">SellRight</Link>
@@ -74,7 +74,7 @@ export default function SellPageWeb() {
             </button>
           </div>
         </div>
-      </header>
+      </header> */}
 
       <main className={styles.main}>
         {/* HERO */}

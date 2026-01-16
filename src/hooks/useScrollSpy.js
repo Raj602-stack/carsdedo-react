@@ -20,7 +20,7 @@ export const useScrollSpy = (sections) => {
     ignoreSpyRef.current = true;
     
     const element = ref.current;
-    const offset = TOPBAR_HEIGHT + 8;
+    const offset = TOPBAR_HEIGHT + 120; // account for sticky header + tabs
     
     // Get the section ID from data-section attribute
     const sectionId = element.dataset?.section || element.getAttribute('data-section');
