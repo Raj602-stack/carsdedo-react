@@ -1,5 +1,5 @@
 // src/pages/SellPageWeb.jsx
-import React from "react";
+import React, { useState, useCallback } from "react";
 import SellCarHero from "../components/SellCarHero";
 import styles from "../styles/SellPageWeb.module.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,6 +9,8 @@ import SellStats from "../components/SellStats";
 import StoriesSection from "../components/StoriesSection";
 import FAQ from "../components/FAQ";
 import SellGuide from "../components/SellGuide";
+import SellPriceForm from "../components/SellPriceForm";
+import ScrollToTop from "../components/ScrollToTop";
 
 const REVIEWS = [
     {
@@ -50,6 +52,26 @@ const REVIEWS = [
 export default function SellPageWeb() {
     const navigate = useNavigate();
     const logoPath = process.env.PUBLIC_URL + "/carsdedo-background.png";
+    
+    const [priceFormOpen, setPriceFormOpen] = useState(false);
+    const [initialValues, setInitialValues] = useState({});
+
+    const openPriceForm = useCallback((values = {}) => {
+      setInitialValues(values);
+      setPriceFormOpen(true);
+    }, []);
+
+    const closePriceForm = useCallback(() => setPriceFormOpen(false), []);
+
+    const handlePriceSubmit = useCallback((payload) => {
+      try {
+        localStorage.setItem("sellLead", JSON.stringify(payload));
+        console.log("Sell lead saved:", payload);
+      } catch (err) {
+        console.error("Failed to store sell lead", err);
+      }
+    }, []);
+
   return (
     <div className={styles.page}>
       {/* <header className={styles.header}>
@@ -79,7 +101,7 @@ export default function SellPageWeb() {
       <main className={styles.main}>
         {/* HERO */}
         <section className={styles.heroWrap}>
-          <SellCarHero />
+          <SellCarHero onOpenForm={openPriceForm} />
         </section>
 
         {/* BENEFIT STRIP */}
@@ -125,6 +147,17 @@ export default function SellPageWeb() {
 <StoriesSection/>
 <FAQ/>
 <SellGuide/>
+
+      {/* Sell Price Form Drawer */}
+      <SellPriceForm
+        open={priceFormOpen}
+        onClose={closePriceForm}
+        onSubmit={handlePriceSubmit}
+        initialValues={initialValues}
+      />
+
+      {/* Scroll to Top */}
+      <ScrollToTop />
     </div>
   );
 }

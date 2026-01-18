@@ -9,6 +9,7 @@ import PopularCities from "../components/PopularCities";
 import MobileFAQ from "../components/MobileFAQ";
 import { SELL_FAQ_ITEMS } from "../constants/sellFaq";
 import SellPriceForm from "../components/SellPriceForm";
+import ScrollToTop from "../components/ScrollToTop";
 
 /**
  * MobileSellPage - mobile-optimized sell flow landing
@@ -158,6 +159,9 @@ export default function MobileSellPage() {
         onSubmit={handlePriceSubmit}
         initialValues={initialValues}
       />
+
+      {/* Scroll to Top */}
+      <ScrollToTop />
     </div>
   );
 }
