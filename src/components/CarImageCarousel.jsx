@@ -35,7 +35,7 @@ export default function CarImageCarousel({ carId }) {
 
     return [...exterior, ...interior]
       .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
-      .map((img) => `http://localhost:8000${img.image}`);
+      .map((img) => `https:api.carsdedo.com${img.image}`);
   }, [car]);
 
   /* -------------------------------

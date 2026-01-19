@@ -73,7 +73,7 @@ export default function CarFilterMobile() {
           model: car.model,
           title: car.title,
           image: car.images?.exterior?.[0]?.image 
-            ? `http://localhost:8000${car.images.exterior[0].image}`
+            ? `https://lapi.carsdedo.com${car.images.exterior[0].image}`
             : process.env.PUBLIC_URL + "/placeholder-car.png",
           count: 0
         });

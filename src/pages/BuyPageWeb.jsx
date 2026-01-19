@@ -66,17 +66,17 @@ const normalizeCar = (car) => {
     // ✅ OLD image compatibility
     image:
       car.images?.exterior?.[0]?.image
-        ? `http://api.carsdedo.com${car.images.exterior[0].image}`
+        ? `https://api.carsdedo.com${car.images.exterior[0].image}`
         : process.env.PUBLIC_URL + "/placeholder-car.png",
 
     images: {
       exterior:
         car.images?.exterior?.map((i) =>
-          `http://api.carsdedo.com${i.image}`
+          `https://api.carsdedo.com${i.image}`
         ) || [],
       interior:
         car.images?.interior?.map((i) =>
-          `http://api.carsdedo.com${i.image}`
+          `https://api.carsdedo.com${i.image}`
         ) || [],
       engine: [],
       tyres: [],

@@ -1154,12 +1154,12 @@ const mapCarForMobileCard = (car) => {
   // ✅ Properly format image URL with fallback
   const getImageUrl = () => {
     // If car already has formatted image, use it
-    if (car.image && car.image.startsWith('http')) {
+    if (car.image && car.image.startsWith('https')) {
       return car.image;
     }
     // If car has images.exterior array, use first image
     if (car.images?.exterior?.[0]?.image) {
-      return `http://api.carsdedo.com${car.images.exterior[0].image}`;
+      return `https://api.carsdedo.com${car.images.exterior[0].image}`;
     }
     // Fallback to placeholder
     return process.env.PUBLIC_URL + "/placeholder-car.png";
