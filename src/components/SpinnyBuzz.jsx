@@ -5,7 +5,7 @@ const SAMPLE = [
   {
     id: "b1",
     source: "AFAQS",
-    title: "Someone share bond with their dogs in new Spinny ad",
+    title: "Someone share bond with their dogs in new carsdedo ad",
     image: process.env.PUBLIC_URL + "/moneyback.png",
     url: "#",
   },

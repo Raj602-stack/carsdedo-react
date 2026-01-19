@@ -3,7 +3,7 @@ import React from "react";
 export default function Benefits() {
   return (
     <section className="benefits">
-      <h2>Spinny benefits</h2>
+      <h2>carsdedo benefits</h2>
       <div className="cards">
         <div className="card">
           <h3>Assured Quality</h3>

@@ -26,7 +26,7 @@ const STEPS = [
   {
     id: "pick",
     title: "Pick a day",
-    desc: "At home or your nearest Spinny Car Hub, for a free car valuation and a final offer. Easy",
+    desc: "At home or your nearest carsdedo Car Hub, for a free car valuation and a final offer. Easy",
     img: process.env.PUBLIC_URL + "/two.png",
     cta: "Get quote",
     ctaHref: "#quote",

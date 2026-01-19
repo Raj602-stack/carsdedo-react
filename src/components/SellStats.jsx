@@ -46,7 +46,7 @@ export default function SellStats({ stats = DEFAULT_STATS, title = "Recommended 
           ) : (
             <div className={styles.logoPlaceholder}>
               <span>SellRight</span>
-              <span className={styles.by}>by Spinny</span>
+              <span className={styles.by}>by carsdedo</span>
             </div>
           )}
         </div>

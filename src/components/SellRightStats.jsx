@@ -19,7 +19,7 @@ export default function SellRightStats({
       <div className="sr-inner">
         <div className="sr-top">
           <div className="sr-brand">
-            <img  src={process.env.PUBLIC_URL + "/shortlogoo.png"} alt="SellRight by Spinny" className="sr-logo" />
+            <img  src={process.env.PUBLIC_URL + "/shortlogoo.png"} alt="SellRight by carsdedo" className="sr-logo" />
           </div>
 
           <h2 id="sr-heading" className="sr-heading">

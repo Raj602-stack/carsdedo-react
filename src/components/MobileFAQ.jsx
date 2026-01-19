@@ -7,9 +7,9 @@ const HEADER_IMG = "/mnt/data/a7f96920-0a53-47ca-bd6a-bcd114b125a7.png";
 const DEFAULT_FAQ_DATA = [
   {
     id: "q1",
-    q: "Q. How can I sell car online in Noida at Spinny?",
+    q: "Q. How can I sell car online in Noida at carsdedo?",
     a:
-      "To sell car online in Noida, you just need to share the basic car details, get an instant quote, check car valuation online, and book a free doorstep evaluation to complete the sale easily with Spinny.",
+      "To sell car online in Noida, you just need to share the basic car details, get an instant quote, check car valuation online, and book a free doorstep evaluation to complete the sale easily with carsdedo.",
   },
   {
     id: "q2",

@@ -13,7 +13,7 @@ import "../styles/CarsAcrossCity.css"
 const LOCATIONS = [
   {
     id: "l1",
-    title: "Spinny Park EDM, Ghaziabad",
+    title: "carsdedo Park EDM, Ghaziabad",
     badge: "Wider selection",
     cars: "190+ cars",
     rating: "4.8",
@@ -22,7 +22,7 @@ const LOCATIONS = [
   },
   {
     id: "l2",
-    title: "Spinny Car Hub, Taj Vivan",
+    title: "carsdedo Car Hub, Taj Vivan",
     badge: "Hub",
     cars: "120+ cars",
     rating: "4.6",
@@ -31,7 +31,7 @@ const LOCATIONS = [
   },
   {
     id: "l3",
-    title: "Spinny Hub, Noida",
+    title: "carsdedo Hub, Noida",
     badge: "Hub",
     cars: "80+ cars",
     rating: "4.7",

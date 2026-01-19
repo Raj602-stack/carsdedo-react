@@ -13,7 +13,7 @@ export const useShare = (car, formatKm) => {
 
   const getShareText = useCallback(() => {
     if (!car) return 'Check out this car!';
-    return `Check out this ${car.title} - ${formatKm(car.km)} • ${car.fuel} • ${car.transmission} at Spinny!`;
+    return `Check out this ${car.title} - ${formatKm(car.km)} • ${car.fuel} • ${car.transmission} at carsdedo!`;
   }, [car, formatKm]);
 
   const handleShare = useCallback((platform) => {
