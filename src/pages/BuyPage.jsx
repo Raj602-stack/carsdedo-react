@@ -1159,7 +1159,7 @@ const mapCarForMobileCard = (car) => {
     }
     // If car has images.exterior array, use first image
     if (car.images?.exterior?.[0]?.image) {
-      return `http://localhost:8000${car.images.exterior[0].image}`;
+      return `http://api.carsdedo.com${car.images.exterior[0].image}`;
     }
     // Fallback to placeholder
     return process.env.PUBLIC_URL + "/placeholder-car.png";
