@@ -233,14 +233,14 @@ export default function Sidebar({ open, onClose }) {
           <div className="ml-cta-row">
             <button 
               className="ml-help"
-              onClick={() => window.location.href = "tel:7277277275"}
+              onClick={() => window.location.href = "tel:+91 98109 92133"}
             >
               <div className="ml-help-icon">
                 <FontAwesomeIcon icon={faPhone} />
               </div>
               <div className="ml-help-content">
                 <div className="ml-help-small">Need Help?</div>
-                <div className="ml-help-phone">Call us at 727-727-7275</div>
+                <div className="ml-help-phone">Call us at +91 98109 92133</div>
               </div>
               <span className="ml-chevron">›</span>
             </button>
