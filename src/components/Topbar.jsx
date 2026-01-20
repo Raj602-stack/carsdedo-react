@@ -344,7 +344,7 @@ useEffect(() => {
 
 
     <div className="call">
-      Call us: <strong>9664573074</strong>
+      Call us: <strong>+91 98109 92133</strong>
     </div>
   </div>
 </div>

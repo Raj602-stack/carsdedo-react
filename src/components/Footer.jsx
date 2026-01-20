@@ -104,8 +104,8 @@ export default function Footer() {
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
           <div className="footer-actions">
-            <a className="footer-btn primary" href="tel:7277277275">
-              <i className="fa-solid fa-phone"></i> 727-727-7275
+            <a className="footer-btn primary" href="tel:+91 9810992133">
+              <i className="fa-solid fa-phone"></i> +91 98109 92133
             </a>
             <a className="footer-btn outline" href="/sell#quote">
               Get Instant Quotes

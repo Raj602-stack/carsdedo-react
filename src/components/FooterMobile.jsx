@@ -98,9 +98,9 @@ export default function FooterMobile() {
             />
           </div>
 
-          <a className="fm-phone" href="tel:7277277275" aria-label="Call 727-727-7275">
+          <a className="fm-phone" href="tel:+91 9810992133" aria-label="Call +91 98109 92133">
             <svg className="fm-phone-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 5.5C3 4.67 3.67 4 4.5 4h2.5C7.88 4 8.6 4.72 8.6 5.6c0 .28-.04.55-.13.8L10 9.5c.26-.06.53-.1.8-.1.88 0 1.6.72 1.6 1.6v2.5c0 .83-.67 1.5-1.5 1.5C9.27 15.5 6.5 18.27 6.5 21v2.5c0 .83-.67 1.5-1.5 1.5H4.5C3.67 25 3 24.33 3 23.5V5.5z" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            <span className="fm-phone-text">727-727-7275</span>
+            <span className="fm-phone-text">+91 9810 992133</span>
           </a>
         </div>
 
