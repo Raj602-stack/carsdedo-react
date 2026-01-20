@@ -17,6 +17,7 @@ import FaqMob from "./FaqMob";
 import MobileMoreAbout from "./MobileMoreAbout";
 import FooterMobile from "./FooterMobile";
 import ScrollToTop from "./ScrollToTop";
+import NoticeBar from "./NoticeBar";
 
 /**
  * MobileHome - mobile-specific homepage (cards list + hero + filters)
@@ -29,6 +30,7 @@ export default function MobileHome({ cars = [] }) {
   return (
     <>
   <MobileCarousel/>
+  <NoticeBar/>
   <MobileBuySellPanel/>
   <MobileCards/>
   <HowItWorksMob/>

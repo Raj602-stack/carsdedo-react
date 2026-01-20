@@ -1,0 +1,32 @@
+/* src/components/NoticeBar.css */
+.notice-bar {
+    width: 100%;
+    background: linear-gradient(90deg, #111, #222);
+    color: #fff;
+    overflow: hidden;
+    padding: 10px 0;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 15px;
+  }
+  
+  .notice-track {
+    display: flex;
+    width: max-content;
+    animation: scroll-left 14s linear infinite;
+  }
+  
+  .notice-track span {
+    white-space: nowrap;
+    padding-right: 60px;
+  }
+  
+  @keyframes scroll-left {
+    from {
+      transform: translateX(0%);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  

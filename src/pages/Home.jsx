@@ -16,6 +16,7 @@ import StoriesSection from "../components/StoriesSection";
 import FAQ from "../components/FAQ";
 import WhyBuySection from "../components/WhyBuySection";
 import ScrollToTop from "../components/ScrollToTop";
+import NoticeBar from "../components/NoticeBar";
 
 export default function Home() {
   const [mode, setMode] = useState("buy");
@@ -23,6 +24,7 @@ export default function Home() {
   return (
     <>
       <Carousel />
+      <NoticeBar/>
 
       <section className="mode-section">
         <div className="toggle-wrapper">
