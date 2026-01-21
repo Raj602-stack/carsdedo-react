@@ -97,24 +97,25 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-/* Hover effect */
-.location-btn:hover {
-  border-color: #3a506b;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+.location-btn {
+  background: linear-gradient(135deg, #ed8926 0%, #f4a454 100%);
+  border-color: #f8f9fa;
+  color: #ffffff;
   box-shadow: 
-    0 4px 16px rgba(12, 33, 58, 0.08),
-    0 2px 4px rgba(12, 33, 58, 0.08);
-  transform: translateY(-1px);
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Active/focus states */
-.location-btn:active,
-.location-btn:focus {
-  outline: none;
-  border-color: #0c213a;
-  box-shadow: 
-    0 0 0 3px rgba(12, 33, 58, 0.1),
-    0 4px 16px rgba(12, 33, 58, 0.1);
+/* Hover effect */
+
+.location-btn:hover {
+  border-color: #4a5568;
+  background: linear-gradient(135deg, #1e2a44 0%, #223150 100%);
+}
+
+.location-btn[aria-expanded="true"] {
+  background: linear-gradient(135deg, #223150 0%, #1e2a44 100%);
+  border-color: #4299e1;
 }
 
 /* Pseudo-element for subtle shine effect */
@@ -281,7 +282,7 @@ body {
 }
 .top-search {
   color: black;
-  width: 80%;
+  width: 90%;
   min-width: 180px;
   padding: 10px 12px;
   border-radius: 8px;
@@ -1114,7 +1115,7 @@ img, picture, video, iframe {
 .topbar-right {
   display: flex;
   align-items: center;
-  width: 50%;
+  /* width: 50%; */
 }
 
 /* Push user section to extreme right */
@@ -1122,7 +1123,7 @@ img, picture, video, iframe {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 28px;
+  /* gap: 28px; */
 }
 
 /* Shortlist */

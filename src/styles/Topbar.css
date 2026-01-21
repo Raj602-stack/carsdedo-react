@@ -38,7 +38,7 @@
     top: 0;
     left: 0;
     right: 0;
-    min-height: var(--topbar-height);
+    /* min-height: var(--topbar-height); */
     height: auto;
     z-index: 1100;
     box-sizing: border-box;
@@ -96,7 +96,7 @@
   
   .topbar-center {
     flex: 1;
-    padding: 0 18px;
+  
   }
   
   .top-search {
