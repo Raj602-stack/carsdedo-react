@@ -19,7 +19,7 @@ const REVIEWS = [
       date: "17 Nov 2025",
       city: "Kolkata",
       rating: 5,
-      text: "Today I sell my car in Spinny CC2 hub. I am very satisfied. Here all employees are very good. The transaction was quick and the staff explained all documents clearly. I recommend them to everyone who wants a hassle free experience.",
+      text: "Today I sell my car in carsdedo CC2 hub. I am very satisfied. Here all employees are very good. The transaction was quick and the staff explained all documents clearly. I recommend them to everyone who wants a hassle free experience.",
     },
     {
       id: 2,
@@ -27,7 +27,7 @@ const REVIEWS = [
       date: "17 Nov 2025",
       city: "Hyderabad",
       rating: 5,
-      text: "I recently sold my old car through Spinny. Obviously it was a nice experience in dealing with Spinny. The entire process was smooth, hassle-free, transparent and a professional approach that makes me very comfortable in dealing with Spinny. I would strongly recommend Spinny to anyone planning to sell or buy car with complete peace of mind.",
+      text: "I recently sold my old car through carsdedo. Obviously it was a nice experience in dealing with carsdedo. The entire process was smooth, hassle-free, transparent and a professional approach that makes me very comfortable in dealing with carsdedo. I would strongly recommend carsdedo to anyone planning to sell or buy car with complete peace of mind.",
     },
     {
       id: 3,

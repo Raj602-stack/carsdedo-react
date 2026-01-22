@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import styles from "../styles/ScheduleTestDrive.module.css";
 // import cars from "../data/cars";
 import { useCars } from "../context/CarsContext";
+import { API_BASE_URL } from "../config/api";
 
 
 // const DATES = [
@@ -93,7 +94,7 @@ const car = useMemo(() => {
   
     return [...exterior, ...interior]
       .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
-      .map((img) => `https://api.carsdedo.com${img.image}`);
+      .map((img) => `${API_BASE_URL}${img.image}`);
   }, [car]);
   
   

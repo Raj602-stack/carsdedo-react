@@ -3,6 +3,7 @@
  * @param {number} n - Kilometer value
  * @returns {string} Formatted string (e.g., "15K km" or "1,234 km")
  */
+import { API_BASE_URL } from "./config/api";
 export const formatKm = (n) => {
   if (n == null) return "";
   if (n >= 1000 && n < 100000) return `${Math.round(n / 1000)}K km`;
@@ -108,19 +109,20 @@ export const normalizeCar = (car) => {
       tags: car.tags || [],
   
       // ✅ OLD image compatibility
+      // console.log("API:", process.env.REACT_APP_API_BASE_URL);
       image:
         car.images?.exterior?.[0]?.image
-          ? `https://api.carsdedo.com${car.images.exterior[0].image}`
+          ? `${API_BASE_URL}${car.images.exterior[0].image}`
           : process.env.PUBLIC_URL + "/placeholder-car.png",
   
       images: {
         exterior:
           car.images?.exterior?.map((i) =>
-            `https://api.carsdedo.com${i.image}`
+            `${API_BASE_URL}${i.image}`
           ) || [],
         interior:
           car.images?.interior?.map((i) =>
-            `https://api.carsdedo.com${i.image}`
+            `${API_BASE_URL}${i.image}`
           ) || [],
         engine: [],
         tyres: [],

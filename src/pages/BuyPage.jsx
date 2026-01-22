@@ -14,6 +14,8 @@ import Sidebar from "../components/Sidebar";
 import PromotionalCarousel from "../components/PromotionalCarousel";
 import ScrollToTop from "../components/ScrollToTop";
 
+import { API_BASE_URL } from "../config/api";
+
 import { IoCodeSlashOutline } from "react-icons/io5";
 
 // Use uploaded hero/banner image (from conversation files)
@@ -1159,7 +1161,7 @@ const mapCarForMobileCard = (car) => {
     }
     // If car has images.exterior array, use first image
     if (car.images?.exterior?.[0]?.image) {
-      return `https://api.carsdedo.com${car.images.exterior[0].image}`;
+      return `${API_BASE_URL}${car.images.exterior[0].image}`;
     }
     // Fallback to placeholder
     return process.env.PUBLIC_URL + "/placeholder-car.png";

@@ -4,6 +4,7 @@ import { FiHome } from "react-icons/fi";
 import styles from "../styles/ScheduleTestDriveWeb.module.css";
 import { useCars } from "../context/CarsContext";
 import Loader from "../components/Loader";
+import { API_BASE_URL } from "../config/api";
 
 const SLOTS = [
   "10am - 11am",
@@ -58,7 +59,7 @@ export default function ScheduleTestDriveWeb() {
     const interior = car.images.interior || [];
     return [...exterior, ...interior]
       .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
-      .map((img) => `https://api.carsdedo.com${img.image}`);
+      .map((img) => `${API_BASE_URL}${img.image}`);
   }, [car]);
 
   useEffect(() => {

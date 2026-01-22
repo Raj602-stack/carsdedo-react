@@ -5,6 +5,7 @@ import { useCars } from "../context/CarsContext";
 import { useMemo, useState } from "react";
 import styles from "../styles/CheckoutPage.module.css";
 import InterestFormScreen from "../components/InterestFormScreen";
+import { API_BASE_URL } from "../config/api";
 
 export default function CheckoutPage() {
     const { cars, loading } = useCars();
@@ -15,6 +16,7 @@ export default function CheckoutPage() {
   const [loanInterest, setLoanInterest] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("9664573074");
+  
 
 //   const car = useMemo(
 //     () => cars.find(c => c.id === Number(id)),
@@ -34,7 +36,7 @@ const car = useMemo(() => {
 
     return [...exterior, ...interior]
       .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
-      .map((img) => `https://api.carsdedo.com${img.image}`);
+      .map((img) => `${API_BASE_URL}${img.image}`);
   }, [car]);
 
 

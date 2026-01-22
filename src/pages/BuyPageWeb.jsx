@@ -10,6 +10,7 @@ import PromotionalCarousel from "../components/PromotionalCarousel";
 import { useCars } from "../context/CarsContext";
 import Loader from "../components/Loader";
 import ScrollToTop from "../components/ScrollToTop";
+import { API_BASE_URL } from "../config/api";
 
 
 
@@ -66,17 +67,17 @@ const normalizeCar = (car) => {
     // ✅ OLD image compatibility
     image:
       car.images?.exterior?.[0]?.image
-        ? `https://api.carsdedo.com${car.images.exterior[0].image}`
+        ? `${API_BASE_URL}${car.images.exterior[0].image}`
         : process.env.PUBLIC_URL + "/placeholder-car.png",
 
     images: {
       exterior:
         car.images?.exterior?.map((i) =>
-          `https://api.carsdedo.com${i.image}`
+          `${API_BASE_URL}${i.image}`
         ) || [],
       interior:
         car.images?.interior?.map((i) =>
-          `https://api.carsdedo.com${i.image}`
+          `${API_BASE_URL}${i.image}`
         ) || [],
       engine: [],
       tyres: [],

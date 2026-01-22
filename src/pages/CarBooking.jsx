@@ -3,6 +3,7 @@ import { useLocation, useParams } from "react-router-dom";
 import styles from "../styles/CarBooking.module.css";
 import { useCars } from "../context/CarsContext";
 import Loader from "../components/Loader";
+import { API_BASE_URL } from "../config/api";
 import { 
   FaCar, 
   FaHome, 
@@ -40,7 +41,7 @@ export default function CarBooking() {
       return car.image;
     }
     if (car.images?.exterior?.[0]?.image) {
-      return `http://localhost:8000${car.images.exterior[0].image}`;
+      return `${API_BASE_URL}${car.images.exterior[0].image}`;
     }
     return process.env.PUBLIC_URL + "/placeholder-car.png";
   }, [car]);

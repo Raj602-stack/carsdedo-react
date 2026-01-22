@@ -20,6 +20,7 @@ import NoticeBar from "../components/NoticeBar";
 
 export default function Home() {
   const [mode, setMode] = useState("buy");
+  
 
   return (
     <>
