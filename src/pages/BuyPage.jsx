@@ -1,10 +1,9 @@
 // BuyPage.jsx
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { FiMapPin, FiSearch } from "react-icons/fi";
 import { useLocation } from "react-router-dom";
-
 
 import BottomNav from "../components/BottomNav";
 import "../styles/BuyPage.css";
@@ -15,8 +14,7 @@ import PromotionalCarousel from "../components/PromotionalCarousel";
 import ScrollToTop from "../components/ScrollToTop";
 
 import { API_BASE_URL } from "../config/api";
-
-import { IoCodeSlashOutline } from "react-icons/io5";
+import CarCardSkeleton from "../components/CarCardSkeleton";
 
 // Use uploaded hero/banner image (from conversation files)
 const HERO_BANNER = "/mnt/data/93f9b768-4f04-44ea-a832-90320b25060b.png";
@@ -86,16 +84,6 @@ function FilterDropdown({ id, label, options = [], selected = null, onChange }) 
       window.removeEventListener("touchstart", handleClose);
     };
   }, [open]);
-
-
-  // useEffect(() => {
-  //   function onDoc(e) {
-  //     if ((btnRef.current && btnRef.current.contains(e.target)) || (menuRef.current && menuRef.current.contains(e.target))) return;
-  //     setOpen(false);
-  //   }
-  //   window.addEventListener("click", onDoc);
-  //   return () => window.removeEventListener("click", onDoc);
-  // }, []);
 
   // close when another dropdown opens
   useEffect(() => {
@@ -933,6 +921,20 @@ export default function BuyPage() {
   const { cars, loading, error } = useCars();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Add pagination states
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+  const [nextPage, setNextPage] = useState(null);
+  const [totalCount, setTotalCount] = useState(0);
+  const [initialLoad, setInitialLoad] = useState(true);
+  const [filtersChanged, setFiltersChanged] = useState(false);
+  
+  // Refs for infinite scroll
+  const observer = useRef();
+  const lastCarElementRef = useRef();
+  const initialLoadDone = useRef(false);
+  const isInitialMount = useRef(true);
+
   // Lock body scroll when sidebar is open
   useEffect(() => {
     document.body.classList.toggle("no-scroll", sidebarOpen);
@@ -972,39 +974,12 @@ export default function BuyPage() {
       priceMin: priceMin ? Number(priceMin) : prev.priceMin,
       priceMax: priceMax ? Number(priceMax) : prev.priceMax,
     }));
+    
+    // Mark filters as changed when URL params change
+    if (brand || model || body || fuel || trans || q || priceMin || priceMax) {
+      setFiltersChanged(true);
+    }
   }, [location.search]);
-  
-
-  // useEffect(() => {
-  //   const saved = sessionStorage.getItem("buy_scroll_top");
-  //   if (!saved) return;
-  
-  //   let attempts = 0;
-  //   const maxAttempts = 20;
-  
-  //   const tryRestore = () => {
-  //     const scroller = document.querySelector(".buy-main");
-  
-  //     if (
-  //       scroller &&
-  //       scroller.scrollHeight > scroller.clientHeight
-  //     ) {
-  //       scroller.scrollTop = Number(saved);
-  //       return; // ✅ success
-  //     }
-  
-  //     if (attempts < maxAttempts) {
-  //       attempts += 1;
-  //       requestAnimationFrame(tryRestore);
-  //     }
-  //   };
-  
-  //   // unlock body scroll just in case
-  //   document.body.style.overflow = "";
-  
-  //   requestAnimationFrame(tryRestore);
-  // }, []);
-  
 
   useEffect(() => {
     const key = "buy_scroll_top";
@@ -1040,8 +1015,6 @@ export default function BuyPage() {
   
     requestAnimationFrame(tryRestore);
   }, []);
-  
-
 
   const yearOptionsTop = [
     { value: "2024", label: "2024" },
@@ -1068,28 +1041,9 @@ export default function BuyPage() {
     { value: "Red", label: "Red" }
   ];
 
-
- 
-
   // local price defaults (numbers in rupees)
   const PRICE_MIN = 50000;
   const PRICE_MAX = 2000000; // 80 lakh cap
-
-  // const [appliedFilters, setAppliedFilters] = useState({
-  //   year: null,
-  //   kms: null,
-  //   brands: [],
-  //   brandModels: {},
-  //   color: null,
-  //   trans: null,
-  //   features: [],
-  //   seats: [],
-  //   rto: [],
-  //   body: [],
-  //   priceMin: PRICE_MIN,
-  //   priceMax: PRICE_MAX,
-  //   owner: []
-  // });
 
   const [appliedFilters, setAppliedFilters] = useState({
     year: null,
@@ -1105,134 +1059,242 @@ export default function BuyPage() {
     fuel: [],
     category: [],
     hubs: [],
-    priceMin: PRICE_MIN,   // ✅ Set default values
-    priceMax: PRICE_MAX,   // ✅ Set default values
-    owner: []
+    priceMin: PRICE_MIN,
+    priceMax: PRICE_MAX,
+    owner: [],
+    q: null
   });
-  
 
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [sortKey, setSortKey] = useState("relevance");
 
-  /* Transform carsData to match the component's expected structure */
-  // const [cars, setCars] = useState([]);
-  
-  // useEffect(() => {
-  //   const transformedCars = carsData.map((car) => {
-  //     console.log(car);
-  //     const priceNum = car.price / 100000; // Convert to lakhs for sorting/comparison
-  //     const transVal = getTransmissionVal(car.transmission);
-      
-  //     return {
-  //       id: car.id,
-  //       brand: car.brand,
-  //       model: car.model,
-  //       title: car.title,
-  //       priceNum: priceNum,
-  //       price: formatPrice(car.price),
-  //       emi: formatEMI(car.price),
-  //       kmNum: car.km,
-  //       km: formatKM(car.km),
-  //       fuel: car.fuel,
-  //       trans: car.transmission,
-  //       transVal: transVal,
-  //       location: car.city,
-  //       year: String(car.year),
-  //       body: car.body,
-  //       color: car.colorKey,
-  //       thumb: car.image || process.env.PUBLIC_URL + "/car-default.avif",
-  //       variant: `${car.brand} ${car.model}`
-  //     };
-  //   });
+  const mapCarForMobileCard = (car) => {
+    // ✅ Properly format image URL with fallback
+    const getImageUrl = () => {
+      // If car already has formatted image, use it
+      if (car.image && car.image.startsWith('https')) {
+        return car.image;
+      }
+      // If car has images.exterior array, use first image
+      if (car.images?.exterior?.[0]?.image) {
+        return `${API_BASE_URL}${car.images.exterior[0].image}`;
+      }
+      // Fallback to placeholder
+      return process.env.PUBLIC_URL + "/placeholder-car.png";
+    };
+
+    // Get prices - API provides: price (original) and discount_price (discounted)
+    // Check if discount_price exists and is different from price
+    const originalPrice = car.price || 0; // Original price from API
+    const discountedPrice = car.discount_price || car.price || 0; // Discounted price if available
+    const hasDiscount = car.discount_price && car.discount_price < car.price && car.discount_price > 0;
+
+    return {
+      id: car.id,
+      brand: car.brand,
+      model: car.model,
+      title: car.title,
+
+      priceNum: discountedPrice / 100000, // lakhs (use discounted for sorting/filtering)
+      price: formatPrice(discountedPrice), // Discounted price (display)
+      originalPrice: hasDiscount ? formatPrice(originalPrice) : null, // Original price (for strikethrough)
+      hasDiscount: hasDiscount,
+      emi: formatEMI(discountedPrice),
+
+      kmNum: car.km,
+      km: formatKM(car.km),
+
+      fuel: car.fuel,
+      trans: car.transmission || car.trans || '-',
+      transVal: getTransmissionVal(car.transmission || car.trans),
+
+      location: car.city,
+      year: String(car.year),
+      body: car.body,
+      color: car.colorKey,
+
+      thumb: getImageUrl(),
+      variant: `${car.brand} ${car.model}`,
+
+      // ✅ NEW — reuse everywhere
+      features: car.features,
+      reasonsToBuy: car.reasons_to_buy,
+      specs: car.specs,
+      inspections: car.inspections,
+    };
+  };
+
+  // Instead of using useCars context, fetch cars directly with pagination
+  const [mobileCars, setMobileCars] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Build query string from filters
+  const buildQuery = useCallback((filters, page = 1) => {
+    const params = new URLSearchParams();
     
-  //   setCars(transformedCars);
-  //   console.log(cars);
-  // }, []);
-
-// useEffect(()=>{},[])
- 
-const mapCarForMobileCard = (car) => {
-  // ✅ Properly format image URL with fallback
-  const getImageUrl = () => {
-    // If car already has formatted image, use it
-    if (car.image && car.image.startsWith('https')) {
-      return car.image;
+    // Page parameter
+    params.set('page', page.toString());
+    
+    // Text search
+    if (filters.q) {
+      params.set('search', filters.q);
     }
-    // If car has images.exterior array, use first image
-    if (car.images?.exterior?.[0]?.image) {
-      return `${API_BASE_URL}${car.images.exterior[0].image}`;
+    
+    // Price filters
+    if (filters.priceMin && filters.priceMin !== PRICE_MIN) {
+      params.set('price_min', filters.priceMin.toString());
     }
-    // Fallback to placeholder
-    return process.env.PUBLIC_URL + "/placeholder-car.png";
-  };
+    if (filters.priceMax && filters.priceMax !== PRICE_MAX) {
+      params.set('price_max', filters.priceMax.toString());
+    }
+    
+    // Year filter
+    if (filters.year) {
+      if (filters.year === "2024") params.set('year_min', '2024');
+      else if (filters.year === "2023") params.set('year_min', '2023');
+      else if (filters.year === "2022") params.set('year_min', '2022');
+      else if (filters.year === "2019-2021") params.set('year_min', '2019');
+      else if (filters.year === "older") params.set('year_max', '2018');
+    }
+    
+    // Transmission
+    if (filters.trans) {
+      params.set('transmission', filters.trans);
+    }
+    
+    // Body type
+    if (filters.body && filters.body.length > 0) {
+      params.set('body', filters.body.join(','));
+    }
+    
+    // Brands
+    if (filters.brands && filters.brands.length > 0) {
+      params.set('brand', filters.brands.join(','));
+    }
+    
+    // Color
+    if (filters.color) {
+      params.set('color', filters.color);
+    }
+    
+    // Fuel type
+    if (filters.fuel && filters.fuel.length > 0) {
+      params.set('fuel', filters.fuel.join(','));
+    }
+    
+    // Sort
+    let ordering = '-created_at'; // default
+    switch(sortKey) {
+      case 'price_asc': ordering = 'price'; break;
+      case 'price_desc': ordering = '-price'; break;
+      case 'km_asc': ordering = 'km'; break;
+      case 'year_desc': ordering = '-year'; break;
+      case 'newest': ordering = '-created_at'; break;
+      default: ordering = '-created_at';
+    }
+    params.set('ordering', ordering);
+    
+    return params.toString();
+  }, [PRICE_MIN, PRICE_MAX, sortKey]);
 
-  // Get prices - API provides: price (original) and discount_price (discounted)
-  // Check if discount_price exists and is different from price
-  const originalPrice = car.price || 0; // Original price from API
-  const discountedPrice = car.discount_price || car.price || 0; // Discounted price if available
-  const hasDiscount = car.discount_price && car.discount_price < car.price && car.discount_price > 0;
+  // Fetch cars function
+  const fetchCars = useCallback(async (isLoadMore = false) => {
+    if (isLoadMore && !nextPage) return;
+    
+    try {
+      if (isLoadMore) {
+        setLoadingMore(true);
+      } else {
+        setIsLoading(true);
+        if (filtersChanged) {
+          setMobileCars([]);
+          setHasMore(false);
+          setNextPage(null);
+          setTotalCount(0);
+        }
+      }
+      
+      const url = isLoadMore 
+        ? nextPage 
+        : `${API_BASE_URL}/api/cars/?${buildQuery(appliedFilters, 1)}`;
+      
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Failed to fetch cars');
+      
+      const data = await response.json();
+      
+      const newCars = data.results.map(mapCarForMobileCard);
+      
+      if (isLoadMore) {
+        setMobileCars(prev => [...prev, ...newCars]);
+      } else {
+        setMobileCars(newCars);
+      }
+      
+      setTotalCount(data.count || 0);
+      setNextPage(data.next);
+      setHasMore(!!data.next);
+      initialLoadDone.current = true;
+      setFiltersChanged(false);
+      setInitialLoad(false);
+      
+    } catch (err) {
+      console.error('Error fetching cars:', err);
+    } finally {
+      if (isLoadMore) {
+        setLoadingMore(false);
+      } else {
+        setIsLoading(false);
+      }
+    }
+  }, [appliedFilters, buildQuery, nextPage, filtersChanged]);
 
-  return {
-    id: car.id,
-    brand: car.brand,
-    model: car.model,
-    title: car.title,
+  // Initial fetch on mount and when filters change
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    
+    const timer = setTimeout(() => {
+      fetchCars(false);
+    }, 300); // Debounce
+    
+    return () => clearTimeout(timer);
+  }, [fetchCars, appliedFilters, sortKey]);
 
-    priceNum: discountedPrice / 100000, // lakhs (use discounted for sorting/filtering)
-    price: formatPrice(discountedPrice), // Discounted price (display)
-    originalPrice: hasDiscount ? formatPrice(originalPrice) : null, // Original price (for strikethrough)
-    hasDiscount: hasDiscount,
-    emi: formatEMI(discountedPrice),
+  // Infinite scroll observer
+  useEffect(() => {
+    if (isLoading || loadingMore || !hasMore || filtersChanged) {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+      return;
+    }
 
-    kmNum: car.km,
-    km: formatKM(car.km),
+    if (observer.current) {
+      observer.current.disconnect();
+    }
 
-    fuel: car.fuel,
-    trans: car.transmission || car.trans || '-',
-    transVal: getTransmissionVal(car.transmission || car.trans),
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore && !loadingMore && !filtersChanged) {
+        fetchCars(true);
+      }
+    }, {
+      rootMargin: '100px',
+    });
 
-    location: car.city,
-    year: String(car.year),
-    body: car.body,
-    color: car.colorKey,
+    if (lastCarElementRef.current) {
+      observer.current.observe(lastCarElementRef.current);
+    }
 
-    thumb: getImageUrl(),
-    variant: `${car.brand} ${car.model}`,
-
-    // ✅ NEW — reuse everywhere
-    features: car.features,
-    reasonsToBuy: car.reasons_to_buy,
-    specs: car.specs,
-    inspections: car.inspections,
-  };
-};
-
-const mobileCars = React.useMemo(() => {
-  if (!cars || !cars.length) return [];
-  return cars.map(mapCarForMobileCard);
-}, [cars]);
-
-
-
-
-console.log(mobileCars);
-
-const getCarImages = (car) => {
-  if (!car?.images) return [];
-
-  const exterior = car.images.exterior || [];
-  const interior = car.images.interior || [];
-
-  return [...exterior, ...interior]
-    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
-    .map((img) => `${process.env.REACT_APP_BACKEND_URL}${img.image}`);
-};
-
-
-console.log(getCarImages);
-
-  
+    return () => {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+    };
+  }, [isLoading, loadingMore, hasMore, fetchCars, filtersChanged]);
 
   /* matchesFilters - robust price & year handling */
   function matchesFilters(c, filters) {
@@ -1374,7 +1436,6 @@ console.log(getCarImages);
   
     return true;
   }
-  
 
   function applySort(list) {
     const arr = [...list];
@@ -1387,13 +1448,10 @@ console.log(getCarImages);
     }
   }
 
-  // compute visible list using appliedFilters
-  // const filtered = applySort(cars.filter((c) => matchesFilters(c, appliedFilters)));
-  const filtered = applySort(
-    mobileCars.filter((c) => matchesFilters(c, appliedFilters))
-  );
-  console.log(filtered);
-  console.log(cars);
+  // Apply filters to the current cars
+  const filtered = useMemo(() => {
+    return applySort(mobileCars.filter((c) => matchesFilters(c, appliedFilters)));
+  }, [mobileCars, appliedFilters, sortKey]);
 
   const sampleSlides = [
     { title: "Why CarsDedo?", text: "Verified listings · Easy EMI options · 7-day test drive" },
@@ -1408,7 +1466,47 @@ console.log(getCarImages);
       ? `${uniqueCities.slice(0, 2).join(", ")}${uniqueCities.length > 2 ? ` +${uniqueCities.length - 2} more` : ''}`
       : "Delhi"; // Default fallback
 
-  if (loading) {
+  // Handle filter changes
+  const handleSetAppliedFilters = useCallback((updater) => {
+    setAppliedFilters(prev => {
+      const newFilters = typeof updater === 'function' ? updater(prev) : updater;
+      
+      // Check if filters actually changed
+      const oldFilters = { ...prev };
+      const newFiltersCopy = { ...newFilters };
+      
+      if (JSON.stringify(oldFilters) !== JSON.stringify(newFiltersCopy)) {
+        setFiltersChanged(true);
+      }
+      
+      return newFilters;
+    });
+  }, []);
+
+  const handleClearFilters = () => {
+    setAppliedFilters({
+      year: null,
+      kms: null,
+      brands: [],
+      brandModels: {},
+      color: null,
+      trans: null,
+      features: [],
+      seats: [],
+      rto: [],
+      body: [],
+      fuel: [],
+      category: [],
+      hubs: [],
+      priceMin: PRICE_MIN,
+      priceMax: PRICE_MAX,
+      owner: [],
+      q: null
+    });
+    setFiltersChanged(true);
+  };
+
+  if (loading && initialLoad) {
     return <Loader message="Loading cars..." fullScreen={true} />;
   }
 
@@ -1423,15 +1521,13 @@ console.log(getCarImages);
           >
             ☰
           </button>
-          {/* <div className="brand">CarsDedo</div> */}
-            <div className="brand">
-    <img
-      src={process.env.PUBLIC_URL + "/carsdedo-background.png"}
-      alt="CarsDedo"
-      className="brand-logo"
-    />
-</div>
-
+          <div className="brand">
+            <img
+              src={process.env.PUBLIC_URL + "/carsdedo-background.png"}
+              alt="CarsDedo"
+              className="brand-logo"
+            />
+          </div>
           <div className="header-actions">
             <button 
               className="action search-icon-btn" 
@@ -1449,38 +1545,34 @@ console.log(getCarImages);
           </div>
         </div>
 
-        {/* <div className="hero-banner">
-          <img src={HERO_BANNER} alt="Top deals" className="hero-img" />
-        </div> */}
-
         <div className="filters-top" role="toolbar" aria-label="Top filters">
           <FilterDropdown 
             id="year-top" 
             label={`Year${appliedFilters.year ? `: ${appliedFilters.year}` : ""}`} 
             options={yearOptionsTop} 
             selected={appliedFilters.year} 
-            onChange={(v) => setAppliedFilters((s) => ({ ...s, year: v }))} 
+            onChange={(v) => handleSetAppliedFilters((s) => ({ ...s, year: v }))} 
           />
           <FilterDropdown 
             id="trans-top" 
             label={`Transmission${appliedFilters.trans ? `: ${appliedFilters.trans}` : ""}`} 
             options={transOptionsTop} 
             selected={appliedFilters.trans} 
-            onChange={(v) => setAppliedFilters((s) => ({ ...s, trans: v }))} 
+            onChange={(v) => handleSetAppliedFilters((s) => ({ ...s, trans: v }))} 
           />
           <FilterDropdown 
             id="body-top" 
             label={`Body Type${appliedFilters.body && appliedFilters.body.length ? `: ${appliedFilters.body[0]}` : ""}`} 
             options={bodyOptionsTop} 
             selected={appliedFilters.body && appliedFilters.body[0]} 
-            onChange={(v) => setAppliedFilters((s) => ({ ...s, body: v ? [v] : [] }))} 
+            onChange={(v) => handleSetAppliedFilters((s) => ({ ...s, body: v ? [v] : [] }))} 
           />
           <FilterDropdown 
             id="color-top" 
             label={`Color${appliedFilters.color ? `: ${appliedFilters.color}` : ""}`} 
             options={colorOptionsTop} 
             selected={appliedFilters.color} 
-            onChange={(v) => setAppliedFilters((s) => ({ ...s, color: v }))} 
+            onChange={(v) => handleSetAppliedFilters((s) => ({ ...s, color: v }))} 
           />
         </div>
       </header>
@@ -1492,12 +1584,18 @@ console.log(getCarImages);
       {((appliedFilters.year || appliedFilters.kms || appliedFilters.brands?.length || appliedFilters.color || appliedFilters.trans || appliedFilters.body?.length || (appliedFilters.priceMin !== PRICE_MIN || appliedFilters.priceMax !== PRICE_MAX)) && (
         <div className="applied-filters-bar">
           <div className="applied-filters-container">
+            <button 
+              className="clear-all-btn-mobile"
+              onClick={handleClearFilters}
+            >
+              Clear All
+            </button>
             {appliedFilters.year && (
               <span className="applied-filter-tag">
                 Year: {appliedFilters.year}
                 <button 
                   className="filter-remove-btn" 
-                  onClick={() => setAppliedFilters(s => ({ ...s, year: null }))}
+                  onClick={() => handleSetAppliedFilters(s => ({ ...s, year: null }))}
                   aria-label="Remove year filter"
                 >×</button>
               </span>
@@ -1507,7 +1605,7 @@ console.log(getCarImages);
                 KMs: {appliedFilters.kms}
                 <button 
                   className="filter-remove-btn" 
-                  onClick={() => setAppliedFilters(s => ({ ...s, kms: null }))}
+                  onClick={() => handleSetAppliedFilters(s => ({ ...s, kms: null }))}
                   aria-label="Remove kms filter"
                 >×</button>
               </span>
@@ -1517,7 +1615,7 @@ console.log(getCarImages);
                 Brand{appliedFilters.brands.length > 1 ? 's' : ''}: {appliedFilters.brands.join(', ')}
                 <button 
                   className="filter-remove-btn" 
-                  onClick={() => setAppliedFilters(s => ({ ...s, brands: [], brandModels: {} }))}
+                  onClick={() => handleSetAppliedFilters(s => ({ ...s, brands: [], brandModels: {} }))}
                   aria-label="Remove brand filter"
                 >×</button>
               </span>
@@ -1527,7 +1625,7 @@ console.log(getCarImages);
                 Color: {appliedFilters.color}
                 <button 
                   className="filter-remove-btn" 
-                  onClick={() => setAppliedFilters(s => ({ ...s, color: null }))}
+                  onClick={() => handleSetAppliedFilters(s => ({ ...s, color: null }))}
                   aria-label="Remove color filter"
                 >×</button>
               </span>
@@ -1537,7 +1635,7 @@ console.log(getCarImages);
                 Transmission: {appliedFilters.trans}
                 <button 
                   className="filter-remove-btn" 
-                  onClick={() => setAppliedFilters(s => ({ ...s, trans: null }))}
+                  onClick={() => handleSetAppliedFilters(s => ({ ...s, trans: null }))}
                   aria-label="Remove transmission filter"
                 >×</button>
               </span>
@@ -1547,7 +1645,7 @@ console.log(getCarImages);
                 Body: {appliedFilters.body.join(', ')}
                 <button 
                   className="filter-remove-btn" 
-                  onClick={() => setAppliedFilters(s => ({ ...s, body: [] }))}
+                  onClick={() => handleSetAppliedFilters(s => ({ ...s, body: [] }))}
                   aria-label="Remove body filter"
                 >×</button>
               </span>
@@ -1557,7 +1655,7 @@ console.log(getCarImages);
                 Price: ₹{Math.round(appliedFilters.priceMin / 1000)}k - ₹{Math.round(appliedFilters.priceMax / 100000)}L
                 <button 
                   className="filter-remove-btn" 
-                  onClick={() => setAppliedFilters(s => ({ ...s, priceMin: PRICE_MIN, priceMax: PRICE_MAX }))}
+                  onClick={() => handleSetAppliedFilters(s => ({ ...s, priceMin: PRICE_MIN, priceMax: PRICE_MAX }))}
                   aria-label="Remove price filter"
                 >×</button>
               </span>
@@ -1567,164 +1665,181 @@ console.log(getCarImages);
       ))}
 
       <div className="results-header">
-        <h3>{filtered.length} Used cars in {locationText}</h3>
+        <h3>
+          {isLoading && filtersChanged 
+            ? "Searching..." 
+            : isLoading && initialLoad
+              ? "Loading..."
+              : `${totalCount} Used cars in ${locationText}`
+          }
+        </h3>
       </div>
 
       <main className="buy-main">
         <div className="list">
-          {filtered.length > 0 ? filtered.map((car, i) => (
-            <React.Fragment key={car.id}>
-              {/* <article 
-                key={car.id} 
-                className="car-card" 
-                tabIndex={0} 
-                onClick={() => navigate(`/car/${car.id}`, { state: { car } })}
-                role="button"
-              >
-                <div className="car-thumb">
-                  <img src={car.thumb} alt={car.title} loading="lazy" />
-                </div>
+          {/* Show skeletons on initial load OR when filters are changing */}
+          {(initialLoad || (isLoading && filtersChanged)) ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={`skeleton-${i}`} className="car-card skeleton">
+                <div className="car-thumb skeleton-thumb"></div>
                 <div className="car-content">
                   <div className="car-row">
                     <div>
-                      <div className="car-title">{car.title}</div>
-                      <div className="car-variant">{car.variant}</div>
+                      <div className="car-title skeleton-text"></div>
+                      <div className="car-variant skeleton-text"></div>
                     </div>
                     <div className="car-price">
-                      <div className="price">{car.price}</div>
-                      <div className="emi">{car.emi}</div>
+                      <div className="price skeleton-text"></div>
+                      <div className="emi skeleton-text"></div>
                     </div>
                   </div>
-
                   <div className="car-tags">
-                    <span className="tag">{car.km}</span>
-                    <span className="tag">{car.fuel}</span>
-                    <span className="tag">{car.trans}</span>
-                    <span className="tag">{car.location}</span>
+                    <span className="tag skeleton-tag"></span>
+                    <span className="tag skeleton-tag"></span>
+                    <span className="tag skeleton-tag"></span>
                   </div>
-
                   <div className="car-footer">
-                    <div className="hub">HUB · Trillium Avenue, Gurgaon</div>
-                    <button className="fav" aria-label="Add to wishlist">♡</button>
+                    <div className="hub skeleton-text"></div>
+                    <div className="fav skeleton-icon"></div>
                   </div>
                 </div>
-              </article> */}
+              </div>
+            ))
+          ) : (
+            // Show actual cars
+            filtered.map((car, index) => (
+              <React.Fragment key={car.id}>
+                <article 
+                  className="car-card" 
+                  tabIndex={0} 
+                  onClick={() => {
+                    const scroller = document.querySelector(".buy-main");
+                    if (scroller) {
+                      sessionStorage.setItem("buy_scroll_top", scroller.scrollTop);
+                    }
+                    navigate(`/car/${car.id}`, { state: { car } });
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      navigate(`/car/${car.id}`, { state: { car } });
+                    }
+                  }}
+                  role="button"
+                  aria-label={`View details for ${car.title}`}
+                  ref={filtered.length === index + 1 && hasMore ? lastCarElementRef : null}
+                >
+                  {/* Status badge */}
+                  <div className="car-badge">
+                    {car.year || 'Certified'}
+                  </div>
 
-<article 
-  key={car.id} 
-  className="car-card" 
-  tabIndex={0} 
-  // onClick={() => navigate(`/car/${car.id}`, { state: { car } })}
+                  {/* Thumbnail */}
+                  <div className="car-thumb">
+                    <img 
+                      src={car.thumb} 
+                      alt={car.title || "Car image"}
+                      loading="lazy"
+                      onError={(e) => {
+                        if (!e.target.src.includes('placeholder-car.png')) {
+                          e.target.src = process.env.PUBLIC_URL + "/placeholder-car.png";
+                        }
+                      }}
+                    />
+                  </div>
 
-  // onClick={() => {
-   
+                  {/* Content */}
+                  <div className="car-content">
+                    {/* Title and Price row */}
+                    <div className="car-row">
+                      <div>
+                        <div className="car-title">{car.title}</div>
+                        <div className="car-variant">{car.variant}</div>
+                      </div>
+                      <div className="car-price">
+                        {car.hasDiscount && car.originalPrice ? (
+                          <div className="price-with-discount">
+                            <div className="price-discounted">{car.price}</div>
+                            <div className="price-original">{car.originalPrice}</div>
+                          </div>
+                        ) : (
+                          <div className="price">{car.price}</div>
+                        )}
+                        <div className="emi">{car.emi}</div>
+                      </div>
+                    </div>
 
-  //   const el = document.querySelector("main.buy-main");
-  //   if (el) {
-  //     sessionStorage.setItem("buy_main_scroll", el.scrollTop);
-  //   }
-  //   navigate(`/car/${car.id}`, { state: { car } });
-  // }}
+                    {/* Tags */}
+                    <div className="car-tags">
+                      <span className="tag">{car.km}</span>
+                      <span className="tag">{car.fuel}</span>
+                      <span className="tag">{car.trans || '-'}</span>
+                      {car.color && <span className="tag">{car.color}</span>}
+                    </div>
 
-  onClick={() => {
-    // const scroller = document.querySelector(".buy-main");
-    // if (scroller) {
-    //   sessionStorage.setItem(
-    //     "buy_scroll_top",
-    //     scroller.scrollTop
-    //   );
-    // }
+                    {/* Footer */}
+                    <div className="car-footer">
+                      <div className="hub">
+                        <FiMapPin className="hub-icon" />
+                        HUB · Trillium Avenue, Gurgaon
+                      </div>
+                      <button 
+                        className="fav" 
+                        aria-label="Add to wishlist"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Add to wishlist logic here
+                        }}
+                      >
+                        ♡
+                      </button>
+                    </div>
+                  </div>
+                </article>
 
-    const scroller = document.querySelector(".buy-main");
-    if (scroller) {
-      sessionStorage.setItem("buy_scroll_top", scroller.scrollTop);
-    }
-
-    navigate(`/car/${car.id}`, { state: { car } });
-  }}
-  onKeyDown={(e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      navigate(`/car/${car.id}`, { state: { car } });
-    }
-  }}
-  role="button"
-  aria-label={`View details for ${car.title}`}
->
-  {/* Status badge */}
-  <div className="car-badge">
-    {car.year || 'Certified'}
-  </div>
-
-  {/* Thumbnail */}
-  <div className="car-thumb">
-    <img 
-      src={car.thumb} 
-      alt={car.title || "Car image"}
-      loading="lazy"
-      onError={(e) => {
-        // Prevent infinite loop by checking if already on fallback
-        if (!e.target.src.includes('placeholder-car.png')) {
-          e.target.src = process.env.PUBLIC_URL + "/placeholder-car.png";
-        }
-      }}
-    />
-  </div>
-
-  {/* Content */}
-  <div className="car-content">
-    {/* Title and Price row */}
-    <div className="car-row">
-      <div>
-        <div className="car-title">{car.title}</div>
-        <div className="car-variant">{car.variant}</div>
-      </div>
-      <div className="car-price">
-        {car.hasDiscount && car.originalPrice ? (
-          <div className="price-with-discount">
-            <div className="price-discounted">{car.price}</div>
-            <div className="price-original">{car.originalPrice}</div>
-          </div>
-        ) : (
-          <div className="price">{car.price}</div>
-        )}
-        <div className="emi">{car.emi}</div>
-      </div>
-    </div>
-
-    {/* Tags */}
-    <div className="car-tags">
-      <span className="tag">{car.km}</span>
-      <span className="tag">{car.fuel}</span>
-      <span className="tag">{car.trans || '-'}</span>
-      {car.color && <span className="tag">{car.color}</span>}
-    </div>
-
-    {/* Footer */}
-    <div className="car-footer">
-      <div className="hub">
-        <FiMapPin className="hub-icon" />
-        HUB · Trillium Avenue, Gurgaon
-      </div>
-      <button 
-        className="fav" 
-        aria-label="Add to wishlist"
-        onClick={(e) => {
-          e.stopPropagation();
-          // Add to wishlist logic here
-        }}
-      >
-        ♡
-      </button>
-    </div>
-  </div>
-</article>
-
-              {/* inject swipe info after every 6 cards */}
-              {((i + 1) % 6 === 0) && <div key={`swipe-${i}`} className="swipe-insert"><SwipableInfo slides={sampleSlides} /></div>}
-            </React.Fragment>
-          )) : <div style={{ padding: 20 }}>No cars match your filters.</div>}
+                {/* inject swipe info after every 6 cards */}
+                {((index + 1) % 6 === 0) && <div key={`swipe-${index}`} className="swipe-insert"><SwipableInfo slides={sampleSlides} /></div>}
+              </React.Fragment>
+            ))
+          )}
+          
+          {/* Show skeletons while loading more */}
+          {loadingMore && 
+            Array.from({ length: 4 }).map((_, i) => (
+              <div key={`loadmore-skeleton-${i}`} className="car-card skeleton">
+                <div className="car-thumb skeleton-thumb"></div>
+                <div className="car-content">
+                  <div className="car-row">
+                    <div>
+                      <div className="car-title skeleton-text"></div>
+                      <div className="car-variant skeleton-text"></div>
+                    </div>
+                    <div className="car-price">
+                      <div className="price skeleton-text"></div>
+                      <div className="emi skeleton-text"></div>
+                    </div>
+                  </div>
+                  <div className="car-tags">
+                    <span className="tag skeleton-tag"></span>
+                    <span className="tag skeleton-tag"></span>
+                    <span className="tag skeleton-tag"></span>
+                  </div>
+                  <div className="car-footer">
+                    <div className="hub skeleton-text"></div>
+                    <div className="fav skeleton-icon"></div>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
         </div>
+
+        {/* End of results message */}
+        {!hasMore && filtered.length > 0 && (
+          <div className="end-of-results">
+            <p>You've reached the end</p>
+          </div>
+        )}
       </main>
 
       <BottomNav />
@@ -1743,6 +1858,7 @@ console.log(getCarImages);
         onChange={(k) => { 
           setSortKey(k); 
           setSortOpen(false); 
+          setFiltersChanged(true);
         }} 
       />
 
@@ -1754,28 +1870,33 @@ console.log(getCarImages);
           // ensure numeric rupee values and clamp to allowed bounds
           const pm = Math.max(PRICE_MIN, Math.min(PRICE_MAX, Number(filters.priceMin)));
           const px = Math.max(PRICE_MIN, Math.min(PRICE_MAX, Number(filters.priceMax)));
-          setAppliedFilters({
+          handleSetAppliedFilters({
             ...filters,
             priceMin: Number(pm),
             priceMax: Number(px),
           });
           setFilterOpen(false);
         }}
-        onClear={() => setAppliedFilters({ 
-          year: null, 
-          kms: null, 
-          brands: [], 
-          brandModels: {}, 
-          color: null, 
-          trans: null, 
-          features: [], 
-          seats: [], 
-          rto: [], 
-          body: [], 
-          priceMin: PRICE_MIN, 
-          priceMax: PRICE_MAX, 
-          owner: [] 
-        })}
+        onClear={() => {
+          handleSetAppliedFilters({ 
+            year: null, 
+            kms: null, 
+            brands: [], 
+            brandModels: {}, 
+            color: null, 
+            trans: null, 
+            features: [], 
+            seats: [], 
+            rto: [], 
+            body: [], 
+            fuel: [],
+            category: [],
+            hubs: [],
+            priceMin: PRICE_MIN, 
+            priceMax: PRICE_MAX, 
+            owner: [] 
+          });
+        }}
       />
 
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
