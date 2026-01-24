@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { FiX } from "react-icons/fi";
 
 import Filters from "../components/Filters";
 import CarCard from "../components/CarCard";
@@ -108,32 +107,6 @@ const normalizeCar = (car) => {
 };
 
 /* --------------------------------------------------
-  Format filter display values
--------------------------------------------------- */
-const formatPriceRange = (min, max) => {
-  const format = (val) => {
-    if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)} Cr`;
-    if (val >= 100000) return `₹${Math.round(val / 100000)} L`;
-    return `₹${Math.round(val / 1000)}k`;
-  };
-  return `${format(min)} - ${format(max)}`;
-};
-
-const formatYearRange = (min, max) => {
-  if (min && max) return `${min} - ${max}`;
-  if (min) return `${min} & above`;
-  if (max) return `Up to ${max}`;
-  return "";
-};
-
-const formatKmRange = (min, max) => {
-  if (min && max) return `${min.toLocaleString()} - ${max.toLocaleString()} km`;
-  if (min) return `From ${min.toLocaleString()} km`;
-  if (max) return `Up to ${max.toLocaleString()} km`;
-  return "";
-};
-
-/* --------------------------------------------------
   Buy Page
 -------------------------------------------------- */
 
@@ -168,91 +141,6 @@ export default function BuyPage() {
     ordering: "-created_at",
     page: 1,
   });
-
-  /* ----------------------------------------------
-    Active Filters (derived from filters)
-  ---------------------------------------------- */
-  const activeFilters = useMemo(() => {
-    const filtersList = [];
-    
-    // Price filter
-    if (filters.price_min !== null || filters.price_max !== null) {
-      const min = filters.price_min ?? 0;
-      const max = filters.price_max ?? 5000000;
-      filtersList.push({
-        key: 'price',
-        label: formatPriceRange(min, max),
-        remove: () => setFilters(s => ({ ...s, price_min: null, price_max: null, page: 1 }))
-      });
-    }
-    
-    // Year filter
-    if (filters.year_min !== null || filters.year_max !== null) {
-      filtersList.push({
-        key: 'year',
-        label: formatYearRange(filters.year_min, filters.year_max),
-        remove: () => setFilters(s => ({ ...s, year_min: null, year_max: null, page: 1 }))
-      });
-    }
-    
-    // KM filter
-    if (filters.km_min !== null || filters.km_max !== null) {
-      filtersList.push({
-        key: 'km',
-        label: formatKmRange(filters.km_min, filters.km_max),
-        remove: () => setFilters(s => ({ ...s, km_min: null, km_max: null, page: 1 }))
-      });
-    }
-    
-    // Array filters (brand, fuel, body, transmission, color)
-    const arrayFilters = [
-      { key: 'brand', label: 'Brand' },
-      { key: 'fuel', label: 'Fuel' },
-      { key: 'body', label: 'Body' },
-      { key: 'transmission', label: 'Transmission' },
-      { key: 'color', label: 'Color' }
-    ];
-    
-    arrayFilters.forEach(({ key, label }) => {
-      const values = filters[key];
-      if (Array.isArray(values) && values.length > 0) {
-        values.forEach(value => {
-          filtersList.push({
-            key: `${key}_${value}`,
-            label: `${label}: ${value}`,
-            remove: () => {
-              const newValues = values.filter(v => v !== value);
-              setFilters(s => ({ ...s, [key]: newValues, page: 1 }));
-            }
-          });
-        });
-      }
-    });
-    
-    return filtersList;
-  }, [filters]);
-
-  /* ----------------------------------------------
-    Clear all filters
-  ---------------------------------------------- */
-  const clearAllFilters = () => {
-    setFilters({
-      search: "",
-      price_min: null,
-      price_max: null,
-      year_min: null,
-      year_max: null,
-      km_min: null,
-      km_max: null,
-      brand: [],
-      color: [],
-      fuel: [],
-      body: [],
-      transmission: [],
-      ordering: "-created_at",
-      page: 1,
-    });
-  };
 
   /* ----------------------------------------------
     Hydrate filters from URL on load (runs once)
@@ -317,7 +205,7 @@ export default function BuyPage() {
       } finally {
         setLoading(false);
       }
-    }, 1); // ✅ debounce
+    },1); // ✅ debounce
 
     return () => {
       controller.abort();
@@ -342,65 +230,28 @@ export default function BuyPage() {
       <main className={styles["results"]} role="main">
         <PromotionalCarousel isMobile={false} />
 
-        {/* Active Filters Bar */}
-        {activeFilters.length > 0 && (
-          <div className={styles["active-filters-container"]}>
-            <div className={styles["active-filters-header"]}>
-              <span className={styles["active-filters-title"]}>
-                Applied Filters ({activeFilters.length})
-              </span>
-              <button 
-                className={styles["clear-all-btn"]}
-                onClick={clearAllFilters}
-              >
-                Clear All
-              </button>
-            </div>
-            
-            <div className={styles["active-filters-list"]}>
-              {activeFilters.map((filter) => (
-                <div key={filter.key} className={styles["active-filter-item"]}>
-                  <span className={styles["filter-labell"]}>{filter.label}</span>
-                  <button 
-                    className={styles["remove-filter-btn"]}
-                    onClick={filter.remove}
-                    aria-label={`Remove ${filter.label} filter`}
-                  >
-                    <FiX size={14} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         <div className={styles["results-header"]}>
           <div className={styles["results-controls"]}>
             <div className={styles["results-count"]}>
               {loading ? "Loading..." : `${carsData.length} results`}
             </div>
 
-            <div className={styles["sort-container"]}>
-              <span className={styles["sort-label"]}>Sort by:</span>
-              <select
-                className={styles["sort-select"]}
-                value={filters.ordering}
-                onChange={(e) =>
-                  setFilters((s) => ({
-                    ...s,
-                    ordering: e.target.value,
-                    page: 1,
-                  }))
-                }
-              >
-                <option value="-created_at">Newest</option>
-                <option value="price">Price: Low to High</option>
-                <option value="-price">Price: High to Low</option>
-                <option value="km">Km: Low to High</option>
-                <option value="-year">Year: New to Old</option>
-                <option value="year">Year: Old to New</option>
-              </select>
-            </div>
+            <select
+              className={styles["sort-select"]}
+              value={filters.ordering}
+              onChange={(e) =>
+                setFilters((s) => ({
+                  ...s,
+                  ordering: e.target.value,
+                  page: 1,
+                }))
+              }
+            >
+              <option value="-created_at">Newest</option>
+              <option value="price">Price: Low to High</option>
+              <option value="-price">Price: High to Low</option>
+              <option value="km">Km: Low to High</option>
+            </select>
           </div>
         </div>
 
@@ -410,7 +261,7 @@ export default function BuyPage() {
                 <CarCardSkeleton key={i} />
               ))
             : carsData.map((car) => (
-                <CarCard key={car.id} car={car} />
+                <CarCard key={car.id} normalizeCar={car} car={car} />
               ))
           }
         </div>

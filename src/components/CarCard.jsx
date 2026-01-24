@@ -10,6 +10,10 @@ export default function CarCard({ car }) {
   const formatPrice = (p) =>
     p >= 100000 ? `₹${(p / 100000).toFixed(2)} Lakh` : `₹${(p / 1000).toFixed(0)}k`;
 
+    // console.log(car);
+    console.log("RAW CAR SPECS:", car.specs);
+
+
   // Calculate EMI (60 months)
   const formatEMI = (price) => {
     const emi = Math.round(price / 60);
