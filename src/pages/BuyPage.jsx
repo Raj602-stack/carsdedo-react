@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import { FiMapPin, FiSearch } from "react-icons/fi";
+import { FiMapPin, FiSearch, FiX } from "react-icons/fi";
 import { useLocation } from "react-router-dom";
 
 import BottomNav from "../components/BottomNav";
@@ -14,7 +14,6 @@ import PromotionalCarousel from "../components/PromotionalCarousel";
 import ScrollToTop from "../components/ScrollToTop";
 
 import { API_BASE_URL } from "../config/api";
-import CarCardSkeleton from "../components/CarCardSkeleton";
 
 // Use uploaded hero/banner image (from conversation files)
 const HERO_BANNER = "/mnt/data/93f9b768-4f04-44ea-a832-90320b25060b.png";
@@ -127,7 +126,6 @@ function FilterDropdown({ id, label, options = [], selected = null, onChange }) 
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={(e) => {
-          // e.stopPropagation();
           const next = !open;
           setOpen(next);
           if (next) window.dispatchEvent(new CustomEvent("fp-open", { detail: { id } }));
@@ -138,56 +136,55 @@ function FilterDropdown({ id, label, options = [], selected = null, onChange }) 
       </button>
 
       {open &&
-  createPortal(
-    <>
-      {/* OVERLAY */}
-      <div
-        className="fp-overlay"
-        onClick={() => setOpen(false)}
-      />
+        createPortal(
+          <>
+            {/* OVERLAY */}
+            <div
+              className="fp-overlay"
+              onClick={() => setOpen(false)}
+            />
 
-      {/* MENU */}
-      <div
-        className="fp-menu"
-        role="menu"
-        ref={(el) => (menuRef.current = el)}
-        onClick={(e) => e.stopPropagation()}
-        style={menuStyle}
-      >
-        <ul role="none" className="fp-options">
-          <li role="none">
-            <button
-              role="menuitem"
-              className={`fp-opt ${selected === null ? "selected" : ""}`}
-              onClick={() => {
-                onChange?.(null);
-                setOpen(false);
-              }}
+            {/* MENU */}
+            <div
+              className="fp-menu"
+              role="menu"
+              ref={(el) => (menuRef.current = el)}
+              onClick={(e) => e.stopPropagation()}
+              style={menuStyle}
             >
-              All
-            </button>
-          </li>
+              <ul role="none" className="fp-options">
+                <li role="none">
+                  <button
+                    role="menuitem"
+                    className={`fp-opt ${selected === null ? "selected" : ""}`}
+                    onClick={() => {
+                      onChange?.(null);
+                      setOpen(false);
+                    }}
+                  >
+                    All
+                  </button>
+                </li>
 
-          {options.map((o) => (
-            <li role="none" key={o.value}>
-              <button
-                role="menuitem"
-                className={`fp-opt ${selected === o.value ? "selected" : ""}`}
-                onClick={() => {
-                  onChange?.(o.value);
-                  setOpen(false);
-                }}
-              >
-                {o.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </>,
-    document.body
-  )}
-
+                {options.map((o) => (
+                  <li role="none" key={o.value}>
+                    <button
+                      role="menuitem"
+                      className={`fp-opt ${selected === o.value ? "selected" : ""}`}
+                      onClick={() => {
+                        onChange?.(o.value);
+                        setOpen(false);
+                      }}
+                    >
+                      {o.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>,
+          document.body
+        )}
     </div>
   );
 }
@@ -918,7 +915,6 @@ const getTransmissionVal = (transmission) => {
 export default function BuyPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { cars, loading, error } = useCars();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Add pagination states
@@ -1016,6 +1012,7 @@ export default function BuyPage() {
     requestAnimationFrame(tryRestore);
   }, []);
 
+  // FIX: Add fuel options to top dropdown
   const yearOptionsTop = [
     { value: "2024", label: "2024" },
     { value: "2023", label: "2023" },
@@ -1024,6 +1021,7 @@ export default function BuyPage() {
     { value: "older", label: "Before 2019" }
   ];
   const transOptionsTop = [
+    // FIX: Use lowercase values for API
     { value: "automatic", label: "Automatic" },
     { value: "manual", label: "Manual" },
     { value: "amt", label: "AMT" }
@@ -1034,11 +1032,20 @@ export default function BuyPage() {
     { value: "SUV", label: "SUV" },
     { value: "MPV", label: "MPV" }
   ];
+  // FIX: Color values should be lowercase
   const colorOptionsTop = [
-    { value: "White", label: "White" },
-    { value: "Black", label: "Black" },
-    { value: "Silver", label: "Silver" },
-    { value: "Red", label: "Red" }
+    { value: "white", label: "White" },
+    { value: "black", label: "Black" },
+    { value: "silver", label: "Silver" },
+    { value: "red", label: "Red" }
+  ];
+  // ADD: Fuel options for top dropdown
+  const fuelOptionsTop = [
+    { value: "Petrol", label: "Petrol" },
+    { value: "Diesel", label: "Diesel" },
+    { value: "CNG", label: "CNG" },
+    { value: "Electric", label: "Electric" },
+    { value: "Hybrid", label: "Hybrid" }
   ];
 
   // local price defaults (numbers in rupees)
@@ -1090,6 +1097,9 @@ export default function BuyPage() {
     const discountedPrice = car.discount_price || car.price || 0; // Discounted price if available
     const hasDiscount = car.discount_price && car.discount_price < car.price && car.discount_price > 0;
 
+    // FIX: Normalize color to lowercase
+    const normalizedColor = car.colorKey ? car.colorKey.toLowerCase() : null;
+
     return {
       id: car.id,
       brand: car.brand,
@@ -1112,7 +1122,7 @@ export default function BuyPage() {
       location: car.city,
       year: String(car.year),
       body: car.body,
-      color: car.colorKey,
+      color: normalizedColor, // Use normalized color
 
       thumb: getImageUrl(),
       variant: `${car.brand} ${car.model}`,
@@ -1129,7 +1139,7 @@ export default function BuyPage() {
   const [mobileCars, setMobileCars] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Build query string from filters
+  // Build query string from filters - FIXED VERSION
   const buildQuery = useCallback((filters, page = 1) => {
     const params = new URLSearchParams();
     
@@ -1149,21 +1159,30 @@ export default function BuyPage() {
       params.set('price_max', filters.priceMax.toString());
     }
     
-    // Year filter
+    // Year filter - FIX: Handle different year formats
     if (filters.year) {
-      if (filters.year === "2024") params.set('year_min', '2024');
-      else if (filters.year === "2023") params.set('year_min', '2023');
-      else if (filters.year === "2022") params.set('year_min', '2022');
-      else if (filters.year === "2019-2021") params.set('year_min', '2019');
-      else if (filters.year === "older") params.set('year_max', '2018');
+      if (filters.year === "2024") {
+        params.set('year_min', '2024');
+      } else if (filters.year === "2023") {
+        params.set('year_min', '2023');
+      } else if (filters.year === "2022") {
+        params.set('year_min', '2022');
+      } else if (filters.year === "2019-2021") {
+        params.set('year_min', '2019');
+        params.set('year_max', '2021');
+      } else if (filters.year === "older") {
+        params.set('year_max', '2018');
+      }
     }
     
-    // Transmission
+    // Transmission - FIX: Convert to lowercase for API
     if (filters.trans) {
-      params.set('transmission', filters.trans);
+      // Convert display value to lowercase for API
+      const transValue = filters.trans.toLowerCase();
+      params.set('transmission', transValue);
     }
     
-    // Body type
+    // Body type - FIX: Handle array
     if (filters.body && filters.body.length > 0) {
       params.set('body', filters.body.join(','));
     }
@@ -1173,17 +1192,17 @@ export default function BuyPage() {
       params.set('brand', filters.brands.join(','));
     }
     
-    // Color
+    // Color - FIX: Use lowercase
     if (filters.color) {
-      params.set('color', filters.color);
+      params.set('color', filters.color.toLowerCase());
     }
     
-    // Fuel type
+    // Fuel type - FIX: Handle array
     if (filters.fuel && filters.fuel.length > 0) {
       params.set('fuel', filters.fuel.join(','));
     }
     
-    // Sort
+    // Sort - FIX: Map sortKey to proper ordering
     let ordering = '-created_at'; // default
     switch(sortKey) {
       case 'price_asc': ordering = 'price'; break;
@@ -1191,6 +1210,7 @@ export default function BuyPage() {
       case 'km_asc': ordering = 'km'; break;
       case 'year_desc': ordering = '-year'; break;
       case 'newest': ordering = '-created_at'; break;
+      case 'discount_desc': ordering = '-discount'; break;
       default: ordering = '-created_at';
     }
     params.set('ordering', ordering);
@@ -1198,9 +1218,10 @@ export default function BuyPage() {
     return params.toString();
   }, [PRICE_MIN, PRICE_MAX, sortKey]);
 
-  // Fetch cars function
+  // Fetch cars function - FIXED to handle glitches
   const fetchCars = useCallback(async (isLoadMore = false) => {
-    if (isLoadMore && !nextPage) return;
+    // Prevent loading more when already loading or no more pages
+    if (isLoadMore && (!nextPage || !hasMore)) return;
     
     try {
       if (isLoadMore) {
@@ -1218,6 +1239,8 @@ export default function BuyPage() {
       const url = isLoadMore 
         ? nextPage 
         : `${API_BASE_URL}/api/cars/?${buildQuery(appliedFilters, 1)}`;
+      
+      console.log('Fetching cars from:', url);
       
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch cars');
@@ -1241,6 +1264,8 @@ export default function BuyPage() {
       
     } catch (err) {
       console.error('Error fetching cars:', err);
+      // Reset loading states on error
+      setHasMore(false);
     } finally {
       if (isLoadMore) {
         setLoadingMore(false);
@@ -1248,12 +1273,14 @@ export default function BuyPage() {
         setIsLoading(false);
       }
     }
-  }, [appliedFilters, buildQuery, nextPage, filtersChanged]);
+  }, [nextPage, hasMore, loadingMore, appliedFilters, buildQuery, filtersChanged]);
 
-  // Initial fetch on mount and when filters change
+  // Initial fetch on mount and when filters change - FIXED to prevent multiple calls
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
+      // Initial load on mount
+      fetchCars(false);
       return;
     }
     
@@ -1264,39 +1291,40 @@ export default function BuyPage() {
     return () => clearTimeout(timer);
   }, [fetchCars, appliedFilters, sortKey]);
 
-  // Infinite scroll observer
+  // Infinite scroll observer - FIXED to prevent glitches
   useEffect(() => {
-    if (isLoading || loadingMore || !hasMore || filtersChanged) {
+    if (isLoading || loadingMore || !hasMore || !nextPage) {
       if (observer.current) {
         observer.current.disconnect();
       }
       return;
     }
 
-    if (observer.current) {
-      observer.current.disconnect();
-    }
-
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore && !loadingMore && !filtersChanged) {
+    const currentObserver = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore && !loadingMore && nextPage) {
+        console.log('Loading more cars...');
         fetchCars(true);
       }
     }, {
-      rootMargin: '100px',
+      rootMargin: '400px', // Increased margin for smoother loading
+      threshold: 0.1
     });
 
-    if (lastCarElementRef.current) {
-      observer.current.observe(lastCarElementRef.current);
+    observer.current = currentObserver;
+
+    if (lastCarElementRef.current && hasMore && nextPage) {
+      currentObserver.observe(lastCarElementRef.current);
     }
 
     return () => {
       if (observer.current) {
         observer.current.disconnect();
+        observer.current = null;
       }
     };
-  }, [isLoading, loadingMore, hasMore, fetchCars, filtersChanged]);
+  }, [isLoading, loadingMore, hasMore, fetchCars,hasMore, nextPage]);
 
-  /* matchesFilters - robust price & year handling */
+  /* matchesFilters - FIXED to handle normalized values */
   function matchesFilters(c, filters) {
     if (!filters) return true;
   
@@ -1323,7 +1351,17 @@ export default function BuyPage() {
           : null, // lakhs
       color: c.color ?? null,
       body: c.body ?? null,
+      fuel: c.fuel ?? null,
     };
+  
+    /* ------------------------------
+       Fuel Type - NEW
+    ------------------------------ */
+    if (filters.fuel && filters.fuel.length > 0) {
+      if (!car.fuel || !filters.fuel.includes(car.fuel)) {
+        return false;
+      }
+    }
   
     /* ------------------------------
        Brands + Models
@@ -1340,7 +1378,7 @@ export default function BuyPage() {
     }
   
     /* ------------------------------
-       Transmission
+       Transmission - FIX: Use lowercase comparison
     ------------------------------ */
     if (filters.trans) {
       // Normalize both values to lowercase for comparison
@@ -1390,7 +1428,7 @@ export default function BuyPage() {
     }
   
     /* ------------------------------
-       Color
+       Color - FIX: Use lowercase comparison
     ------------------------------ */
     if (filters.color) {
       // Normalize color comparison (case-insensitive)
@@ -1475,7 +1513,12 @@ export default function BuyPage() {
       const oldFilters = { ...prev };
       const newFiltersCopy = { ...newFilters };
       
-      if (JSON.stringify(oldFilters) !== JSON.stringify(newFiltersCopy)) {
+      // Compare stringified versions to detect changes
+      const oldStr = JSON.stringify(oldFilters);
+      const newStr = JSON.stringify(newFiltersCopy);
+      
+      if (oldStr !== newStr) {
+        console.log('Filters changed, setting filtersChanged to true');
         setFiltersChanged(true);
       }
       
@@ -1506,7 +1549,23 @@ export default function BuyPage() {
     setFiltersChanged(true);
   };
 
-  if (loading && initialLoad) {
+  // Format filter display labels
+  const formatFilterLabel = (filterType, value) => {
+    switch(filterType) {
+      case 'trans':
+        return value === 'automatic' ? 'Automatic' : 
+               value === 'manual' ? 'Manual' : 
+               value === 'amt' ? 'AMT' : value;
+      case 'color':
+        return value ? value.charAt(0).toUpperCase() + value.slice(1) : '';
+      case 'fuel':
+        return Array.isArray(value) ? value.join(', ') : value;
+      default:
+        return value;
+    }
+  };
+
+  if (initialLoad && isLoading) {
     return <Loader message="Loading cars..." fullScreen={true} />;
   }
 
@@ -1555,7 +1614,7 @@ export default function BuyPage() {
           />
           <FilterDropdown 
             id="trans-top" 
-            label={`Transmission${appliedFilters.trans ? `: ${appliedFilters.trans}` : ""}`} 
+            label={`Transmission${appliedFilters.trans ? `: ${formatFilterLabel('trans', appliedFilters.trans)}` : ""}`} 
             options={transOptionsTop} 
             selected={appliedFilters.trans} 
             onChange={(v) => handleSetAppliedFilters((s) => ({ ...s, trans: v }))} 
@@ -1569,10 +1628,18 @@ export default function BuyPage() {
           />
           <FilterDropdown 
             id="color-top" 
-            label={`Color${appliedFilters.color ? `: ${appliedFilters.color}` : ""}`} 
+            label={`Color${appliedFilters.color ? `: ${formatFilterLabel('color', appliedFilters.color)}` : ""}`} 
             options={colorOptionsTop} 
             selected={appliedFilters.color} 
             onChange={(v) => handleSetAppliedFilters((s) => ({ ...s, color: v }))} 
+          />
+          {/* ADD: Fuel type dropdown */}
+          <FilterDropdown 
+            id="fuel-top" 
+            label={`Fuel${appliedFilters.fuel && appliedFilters.fuel.length > 0 ? `: ${formatFilterLabel('fuel', appliedFilters.fuel[0])}` : ""}`} 
+            options={fuelOptionsTop} 
+            selected={appliedFilters.fuel && appliedFilters.fuel[0]} 
+            onChange={(v) => handleSetAppliedFilters((s) => ({ ...s, fuel: v ? [v] : [] }))} 
           />
         </div>
       </header>
@@ -1580,8 +1647,8 @@ export default function BuyPage() {
       {/* Promotional Carousel */}
       <PromotionalCarousel isMobile={true} />
 
-      {/* Applied Filters Display */}
-      {((appliedFilters.year || appliedFilters.kms || appliedFilters.brands?.length || appliedFilters.color || appliedFilters.trans || appliedFilters.body?.length || (appliedFilters.priceMin !== PRICE_MIN || appliedFilters.priceMax !== PRICE_MAX)) && (
+      {/* Applied Filters Display - UPDATED to include fuel type */}
+      {((appliedFilters.year || appliedFilters.kms || appliedFilters.brands?.length || appliedFilters.color || appliedFilters.trans || appliedFilters.body?.length || appliedFilters.fuel?.length > 0 || (appliedFilters.priceMin !== PRICE_MIN || appliedFilters.priceMax !== PRICE_MAX)) && (
         <div className="applied-filters-bar">
           <div className="applied-filters-container">
             <button 
@@ -1597,7 +1664,9 @@ export default function BuyPage() {
                   className="filter-remove-btn" 
                   onClick={() => handleSetAppliedFilters(s => ({ ...s, year: null }))}
                   aria-label="Remove year filter"
-                >×</button>
+                >
+                  <FiX size={12} />
+                </button>
               </span>
             )}
             {appliedFilters.kms && (
@@ -1607,7 +1676,9 @@ export default function BuyPage() {
                   className="filter-remove-btn" 
                   onClick={() => handleSetAppliedFilters(s => ({ ...s, kms: null }))}
                   aria-label="Remove kms filter"
-                >×</button>
+                >
+                  <FiX size={12} />
+                </button>
               </span>
             )}
             {appliedFilters.brands?.length > 0 && (
@@ -1617,27 +1688,33 @@ export default function BuyPage() {
                   className="filter-remove-btn" 
                   onClick={() => handleSetAppliedFilters(s => ({ ...s, brands: [], brandModels: {} }))}
                   aria-label="Remove brand filter"
-                >×</button>
+                >
+                  <FiX size={12} />
+                </button>
               </span>
             )}
             {appliedFilters.color && (
               <span className="applied-filter-tag">
-                Color: {appliedFilters.color}
+                Color: {formatFilterLabel('color', appliedFilters.color)}
                 <button 
                   className="filter-remove-btn" 
                   onClick={() => handleSetAppliedFilters(s => ({ ...s, color: null }))}
                   aria-label="Remove color filter"
-                >×</button>
+                >
+                  <FiX size={12} />
+                </button>
               </span>
             )}
             {appliedFilters.trans && (
               <span className="applied-filter-tag">
-                Transmission: {appliedFilters.trans}
+                Transmission: {formatFilterLabel('trans', appliedFilters.trans)}
                 <button 
                   className="filter-remove-btn" 
                   onClick={() => handleSetAppliedFilters(s => ({ ...s, trans: null }))}
                   aria-label="Remove transmission filter"
-                >×</button>
+                >
+                  <FiX size={12} />
+                </button>
               </span>
             )}
             {appliedFilters.body?.length > 0 && (
@@ -1647,7 +1724,21 @@ export default function BuyPage() {
                   className="filter-remove-btn" 
                   onClick={() => handleSetAppliedFilters(s => ({ ...s, body: [] }))}
                   aria-label="Remove body filter"
-                >×</button>
+                >
+                  <FiX size={12} />
+                </button>
+              </span>
+            )}
+            {appliedFilters.fuel?.length > 0 && (
+              <span className="applied-filter-tag">
+                Fuel: {appliedFilters.fuel.join(', ')}
+                <button 
+                  className="filter-remove-btn" 
+                  onClick={() => handleSetAppliedFilters(s => ({ ...s, fuel: [] }))}
+                  aria-label="Remove fuel filter"
+                >
+                  <FiX size={12} />
+                </button>
               </span>
             )}
             {(appliedFilters.priceMin !== PRICE_MIN || appliedFilters.priceMax !== PRICE_MAX) && (
@@ -1657,7 +1748,9 @@ export default function BuyPage() {
                   className="filter-remove-btn" 
                   onClick={() => handleSetAppliedFilters(s => ({ ...s, priceMin: PRICE_MIN, priceMax: PRICE_MAX }))}
                   aria-label="Remove price filter"
-                >×</button>
+                >
+                  <FiX size={12} />
+                </button>
               </span>
             )}
           </div>
@@ -1774,7 +1867,7 @@ export default function BuyPage() {
                       <span className="tag">{car.km}</span>
                       <span className="tag">{car.fuel}</span>
                       <span className="tag">{car.trans || '-'}</span>
-                      {car.color && <span className="tag">{car.color}</span>}
+                      {car.color && <span className="tag">{formatFilterLabel('color', car.color)}</span>}
                     </div>
 
                     {/* Footer */}
@@ -1834,10 +1927,17 @@ export default function BuyPage() {
           }
         </div>
 
-        {/* End of results message */}
+        {/* End of results message - FIX: Only show when no more results AND we have some cars */}
         {!hasMore && filtered.length > 0 && (
           <div className="end-of-results">
-            <p>You've reached the end</p>
+            <p>You've reached the end of results</p>
+          </div>
+        )}
+
+        {/* No results message */}
+        {!isLoading && !loadingMore && filtered.length === 0 && mobileCars.length > 0 && (
+          <div className="no-results">
+            <p>No cars match your filters. Try adjusting your search criteria.</p>
           </div>
         )}
       </main>
