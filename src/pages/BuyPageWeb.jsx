@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FiX } from "react-icons/fi";
 
@@ -139,13 +139,22 @@ const formatKmRange = (min, max) => {
 
 export default function BuyPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [initialLoad, setInitialLoad] = useState(true);
 
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
+  const [hasMore, setHasMore] = useState(false);
+  const [nextPage, setNextPage] = useState(null);
+  const [totalCount, setTotalCount] = useState(0);
   
-  // Add a ref to track initial hydration
+  // Add refs
   const isInitialHydrate = useRef(true);
+  const observer = useRef();
+  const lastCarElementRef = useRef();
+  const initialLoadDone = useRef(false);
+  const [filtersChanged, setFiltersChanged] = useState(false);
 
   /* ----------------------------------------------
     Filters (BACKEND ALIGNED)
@@ -182,7 +191,10 @@ export default function BuyPage() {
       filtersList.push({
         key: 'price',
         label: formatPriceRange(min, max),
-        remove: () => setFilters(s => ({ ...s, price_min: null, price_max: null, page: 1 }))
+        remove: () => {
+          setFilters(s => ({ ...s, price_min: null, price_max: null, page: 1 }));
+          setFiltersChanged(true);
+        }
       });
     }
     
@@ -191,7 +203,10 @@ export default function BuyPage() {
       filtersList.push({
         key: 'year',
         label: formatYearRange(filters.year_min, filters.year_max),
-        remove: () => setFilters(s => ({ ...s, year_min: null, year_max: null, page: 1 }))
+        remove: () => {
+          setFilters(s => ({ ...s, year_min: null, year_max: null, page: 1 }));
+          setFiltersChanged(true);
+        }
       });
     }
     
@@ -200,7 +215,10 @@ export default function BuyPage() {
       filtersList.push({
         key: 'km',
         label: formatKmRange(filters.km_min, filters.km_max),
-        remove: () => setFilters(s => ({ ...s, km_min: null, km_max: null, page: 1 }))
+        remove: () => {
+          setFilters(s => ({ ...s, km_min: null, km_max: null, page: 1 }));
+          setFiltersChanged(true);
+        }
       });
     }
     
@@ -223,6 +241,7 @@ export default function BuyPage() {
             remove: () => {
               const newValues = values.filter(v => v !== value);
               setFilters(s => ({ ...s, [key]: newValues, page: 1 }));
+              setFiltersChanged(true);
             }
           });
         });
@@ -252,7 +271,28 @@ export default function BuyPage() {
       ordering: "-created_at",
       page: 1,
     });
+    setFiltersChanged(true);
   };
+
+  /* ----------------------------------------------
+    Custom setFilters to track filter changes
+  ---------------------------------------------- */
+  const handleSetFilters = useCallback((updater) => {
+    setFilters(prev => {
+      const newFilters = typeof updater === 'function' ? updater(prev) : updater;
+      // Check if filters actually changed (not just page)
+      const oldFilters = { ...prev };
+      delete oldFilters.page;
+      const newFiltersCopy = { ...newFilters };
+      delete newFiltersCopy.page;
+      
+      if (JSON.stringify(oldFilters) !== JSON.stringify(newFiltersCopy)) {
+        setFiltersChanged(true);
+      }
+      
+      return newFilters;
+    });
+  }, []);
 
   /* ----------------------------------------------
     Hydrate filters from URL on load (runs once)
@@ -289,41 +329,113 @@ export default function BuyPage() {
   }, [filters, setSearchParams]);
 
   /* ----------------------------------------------
-    Debounced backend fetch (only for API calls)
+    Fetch cars function
+  ---------------------------------------------- */
+  const fetchCars = useCallback(async (url, isLoadMore = false) => {
+    const controller = new AbortController();
+    
+    try {
+      if (isLoadMore) {
+        setLoadingMore(true);
+      } else {
+        // Clear cars immediately when filters change
+        if (filtersChanged) {
+          setCars([]);
+          setHasMore(false);
+          setNextPage(null);
+          setTotalCount(0);
+        }
+        setLoading(true);
+      }
+      setError(null);
+
+      const res = await fetch(url, { signal: controller.signal });
+
+      if (!res.ok) throw new Error("Failed to fetch cars");
+
+      const data = await res.json();
+      
+      if (isLoadMore) {
+        // Append new cars to existing ones
+        setCars(prevCars => [...prevCars, ...(data.results || [])]);
+      } else {
+        // Replace cars on initial load or filter change
+        setCars(data.results || []);
+      }
+      
+      setTotalCount(data.count || 0);
+      setNextPage(data.next);
+      setHasMore(!!data.next);
+      initialLoadDone.current = true;
+      setFiltersChanged(false);
+      setInitialLoad(false); // FIX: Set initial load to false
+      
+    } catch (err) {
+      if (err.name !== "AbortError") {
+        setError(err.message);
+      }
+    } finally {
+      if (isLoadMore) {
+        setLoadingMore(false);
+      } else {
+        setLoading(false);
+      }
+    }
+
+    return controller;
+  }, [filtersChanged]);
+
+  /* ----------------------------------------------
+    Debounced initial fetch on filter changes
   ---------------------------------------------- */
   useEffect(() => {
     const controller = new AbortController();
 
     const timer = setTimeout(async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const query = buildQuery(filters);
-
-        const res = await fetch(
-          `${API_BASE_URL}/api/cars/?${query}`,
-          { signal: controller.signal }
-        );
-
-        if (!res.ok) throw new Error("Failed to fetch cars");
-
-        const data = await res.json();
-        setCars(data.results || data);
-      } catch (err) {
-        if (err.name !== "AbortError") {
-          setError(err.message);
-        }
-      } finally {
-        setLoading(false);
-      }
-    }, 1); // ✅ debounce
+      const query = buildQuery(filters);
+      fetchCars(`${API_BASE_URL}/api/cars/?${query}`, false);
+    }, 300);
 
     return () => {
       controller.abort();
       clearTimeout(timer);
     };
-  }, [filters]); // Remove setSearchParams from dependencies
+  }, [filters, fetchCars]);
+
+  /* ----------------------------------------------
+    Infinite scroll observer
+  ---------------------------------------------- */
+  useEffect(() => {
+    // Don't set up observer if we're loading initial data or filters changed
+    if (loading || !hasMore || filtersChanged) {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+      return;
+    }
+
+    if (observer.current) {
+      observer.current.disconnect();
+    }
+
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore && !loadingMore && !filtersChanged) {
+        fetchCars(nextPage, true);
+      }
+    }, {
+      rootMargin: '100px',
+    });
+
+    if (lastCarElementRef.current) {
+      observer.current.observe(lastCarElementRef.current);
+    }
+
+    return () => {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+    };
+  }, [loading, loadingMore, hasMore, nextPage, fetchCars, filtersChanged]);
 
   const carsData = useMemo(() => cars.map(normalizeCar), [cars]);
 
@@ -337,7 +449,7 @@ export default function BuyPage() {
 
   return (
     <div className={styles["buy-page"]}>
-      <Filters filters={filters} setFilters={setFilters} />
+      <Filters filters={filters} setFilters={handleSetFilters} />
 
       <main className={styles["results"]} role="main">
         <PromotionalCarousel isMobile={false} />
@@ -377,7 +489,12 @@ export default function BuyPage() {
         <div className={styles["results-header"]}>
           <div className={styles["results-controls"]}>
             <div className={styles["results-count"]}>
-              {loading ? "Loading..." : `${carsData.length} results`}
+              {initialLoad 
+                ? "Loading..." 
+                : loading && filtersChanged
+                  ? "Searching..." 
+                  : `${totalCount} cars found`
+              }
             </div>
 
             <div className={styles["sort-container"]}>
@@ -386,12 +503,13 @@ export default function BuyPage() {
                 className={styles["sort-select"]}
                 value={filters.ordering}
                 onChange={(e) =>
-                  setFilters((s) => ({
+                  handleSetFilters((s) => ({
                     ...s,
                     ordering: e.target.value,
                     page: 1,
                   }))
                 }
+                disabled={loading && filtersChanged}
               >
                 <option value="-created_at">Newest</option>
                 <option value="price">Price: Low to High</option>
@@ -405,19 +523,51 @@ export default function BuyPage() {
         </div>
 
         <div className={styles["cars-grid"]}>
-          {loading
-            ? Array.from({ length: 8 }).map((_, i) => (
-                <CarCardSkeleton key={i} />
-              ))
-            : carsData.map((car) => (
-                <CarCard key={car.id} car={car} />
-              ))
+          {/* Show skeletons on initial load OR when filters are changing */}
+          {(initialLoad || (loading && filtersChanged)) ? (
+            Array.from({ length: 12 }).map((_, i) => (
+              <CarCardSkeleton key={`skeleton-${i}`} />
+            ))
+          ) : (
+            // Show actual cars
+            carsData.map((car, index) => {
+              if (carsData.length === index + 1 && hasMore) {
+                return (
+                  <div ref={lastCarElementRef} key={car.id}>
+                    <CarCard car={car} />
+                  </div>
+                );
+              } else {
+                return <CarCard key={car.id} car={car} />;
+              }
+            })
+          )}
+          
+          {/* Show skeletons while loading more */}
+          {loadingMore && 
+            Array.from({ length: 8 }).map((_, i) => (
+              <CarCardSkeleton key={`loadmore-skeleton-${i}`} />
+            ))
           }
         </div>
 
-        {carsData.length === 0 && !loading && (
+        {!loading && !loadingMore && carsData.length === 0 && (
           <div className={styles["no-results"]}>
             No cars match your filters.
+          </div>
+        )}
+        
+        {/* Loading indicator at bottom */}
+        {loadingMore && (
+          <div className={styles["loading-more"]}>
+            Loading more cars...
+          </div>
+        )}
+        
+        {/* End of results message */}
+        {!hasMore && carsData.length > 0 && (
+          <div className={styles["end-of-results"]}>
+            You've reached the end
           </div>
         )}
       </main>
