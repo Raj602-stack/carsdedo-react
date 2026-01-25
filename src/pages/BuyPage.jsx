@@ -913,6 +913,7 @@ const getTransmissionVal = (transmission) => {
 
 /* Main BuyPage component */
 export default function BuyPage() {
+  const loadingLockRef = useRef(false);
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -1292,38 +1293,94 @@ export default function BuyPage() {
   }, [fetchCars, appliedFilters, sortKey]);
 
   // Infinite scroll observer - FIXED to prevent glitches
+  // useEffect(() => {
+  //   if (isLoading || loadingMore || !hasMore || !nextPage) {
+  //     if (observer.current) {
+  //       observer.current.disconnect();
+  //     }
+  //     return;
+  //   }
+
+  //   const currentObserver = new IntersectionObserver(entries => {
+  //     if (entries[0].isIntersecting && hasMore && !loadingMore && nextPage) {
+  //       console.log('Loading more cars...');
+  //       fetchCars(true);
+  //     }
+  //   }, {
+  //     rootMargin: '400px', // Increased margin for smoother loading
+  //     threshold: 0.1
+  //   });
+
+  //   observer.current = currentObserver;
+
+  //   if (lastCarElementRef.current && hasMore && nextPage) {
+  //     currentObserver.observe(lastCarElementRef.current);
+  //   }
+
+  //   return () => {
+  //     if (observer.current) {
+  //       observer.current.disconnect();
+  //       observer.current = null;
+  //     }
+  //   };
+  // }, [isLoading, loadingMore, hasMore, fetchCars,hasMore, nextPage]);
+
   useEffect(() => {
+    // Clean up previous observer
+    if (observer.current) {
+      observer.current.disconnect();
+      observer.current = null;
+    }
+  
+    // Don't set up observer if conditions aren't met
     if (isLoading || loadingMore || !hasMore || !nextPage) {
-      if (observer.current) {
-        observer.current.disconnect();
-      }
       return;
     }
-
-    const currentObserver = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore && !loadingMore && nextPage) {
-        console.log('Loading more cars...');
-        fetchCars(true);
+  
+    // Create handler with lock to prevent multiple calls
+    const handleIntersection = (entries) => {
+      const [entry] = entries;
+      
+      // Check if element is intersecting AND we're not already loading
+      if (entry.isIntersecting && 
+          hasMore && 
+          !loadingMore && 
+          !loadingLockRef.current && 
+          !isLoading) {
+        
+        console.log('Loading more triggered');
+        
+        // Set lock to prevent multiple calls
+        loadingLockRef.current = true;
+        
+        // Load more data
+        fetchCars(true).finally(() => {
+          // Release lock after loading completes
+          loadingLockRef.current = false;
+        });
       }
-    }, {
-      rootMargin: '400px', // Increased margin for smoother loading
-      threshold: 0.1
+    };
+  
+    // Create new observer with more conservative settings
+    observer.current = new IntersectionObserver(handleIntersection, {
+      rootMargin: '100px', // Reduced from 400px
+      threshold: 0.5 // Wait until 50% is visible
     });
-
-    observer.current = currentObserver;
-
-    if (lastCarElementRef.current && hasMore && nextPage) {
-      currentObserver.observe(lastCarElementRef.current);
+  
+    // Observe the last element
+    if (lastCarElementRef.current) {
+      observer.current.observe(lastCarElementRef.current);
     }
-
+  
+    // Cleanup
     return () => {
       if (observer.current) {
         observer.current.disconnect();
         observer.current = null;
       }
+      loadingLockRef.current = false; // Reset lock on cleanup
     };
-  }, [isLoading, loadingMore, hasMore, fetchCars,hasMore, nextPage]);
-
+  }, [isLoading, loadingMore, hasMore, nextPage, fetchCars]);
   /* matchesFilters - FIXED to handle normalized values */
   function matchesFilters(c, filters) {
     if (!filters) return true;
