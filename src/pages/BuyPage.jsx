@@ -1222,6 +1222,14 @@ export default function BuyPage() {
   // Fetch cars function - FIXED to handle glitches
   const fetchCars = useCallback(async (isLoadMore = false) => {
     // Prevent loading more when already loading or no more pages
+    // if (!isLoadMore) {
+    //   console.log('🚫🚫🚫 BLOCKING INITIAL FETCH TO DEBUG INFINITE LOOP');
+    //   console.trace('Trace to see who called fetchCars(false)');
+    //   return;
+    // }
+
+    
+    
     if (isLoadMore && (!nextPage || !hasMore)) return;
     
     try {
@@ -1290,40 +1298,10 @@ export default function BuyPage() {
     }, 300); // Debounce
     
     return () => clearTimeout(timer);
-  }, [fetchCars, appliedFilters, sortKey]);
+  }, [appliedFilters, sortKey]);
 
   // Infinite scroll observer - FIXED to prevent glitches
-  // useEffect(() => {
-  //   if (isLoading || loadingMore || !hasMore || !nextPage) {
-  //     if (observer.current) {
-  //       observer.current.disconnect();
-  //     }
-  //     return;
-  //   }
-
-  //   const currentObserver = new IntersectionObserver(entries => {
-  //     if (entries[0].isIntersecting && hasMore && !loadingMore && nextPage) {
-  //       console.log('Loading more cars...');
-  //       fetchCars(true);
-  //     }
-  //   }, {
-  //     rootMargin: '400px', // Increased margin for smoother loading
-  //     threshold: 0.1
-  //   });
-
-  //   observer.current = currentObserver;
-
-  //   if (lastCarElementRef.current && hasMore && nextPage) {
-  //     currentObserver.observe(lastCarElementRef.current);
-  //   }
-
-  //   return () => {
-  //     if (observer.current) {
-  //       observer.current.disconnect();
-  //       observer.current = null;
-  //     }
-  //   };
-  // }, [isLoading, loadingMore, hasMore, fetchCars,hasMore, nextPage]);
+  
 
   useEffect(() => {
     // Clean up previous observer
